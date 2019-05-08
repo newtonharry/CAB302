@@ -1,0 +1,21 @@
+.headerBtn{
+    -fx-background-color: #3B4046;
+}
+
+.headerBtn:hover{
+    -fx-border-color: #FF7C00;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 5 0;
+}
+
+.headerBtnActive{
+    -fx-background-color: #41454b;
+    -fx-border-color: #FF7C00;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 5 0;
+}
+
+.color-picker .color-picker-label .text {
+    visibility: false;
+}
+

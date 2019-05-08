@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <HBox minHeight="65.0" minWidth="1280.0" style="-fx-background-color: #3B4046;">
+         <children>
+            <MenuButton maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="65.0" style="-fx-background-color: #3B4046; -fx-mark-color: #3B4046; -fx-padding: 10;">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/menu.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </MenuButton>
+
+
+
+             <Button fx:id="penToolBtn" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#penToolClick" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/pen.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+             <Button fx:id="lineToolBtn" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#lineToolClick" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn">
+                 <graphic>
+                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                             <Image url="@images/line.png" />
+                         </image>
+                     </ImageView>
+                 </graphic></Button>
+             <Button fx:id="rectangleToolBtn" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#rectangleToolClick" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn">
+                 <graphic>
+                     <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                             <Image url="@images/rectange.png" />
+                         </image>
+                     </ImageView>
+                 </graphic></Button>
+             <Button fx:id="ellipseToolBtn" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#ellipseToolClick" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn">
+             <graphic>
+                 <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                         <Image url="@images/ellipse.png" />
+                     </image>
+                 </ImageView>
+             </graphic></Button>
+             <Button fx:id="polygonToolBtn" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#polygonToolClick" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn">
+                 <graphic>
+                     <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                             <Image url="@images/polygon.png" />
+                         </image>
+                     </ImageView>
+                 </graphic></Button>
+             <ColorPicker maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn"/>
+             <ColorPicker maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" styleClass="headerBtn"/>
+         </children></HBox>
+      <Pane layoutY="65.0" minHeight="655.0" minWidth="1280.0" style="-fx-background-color: #BABABA;" />
+   </children>
+</Pane>
