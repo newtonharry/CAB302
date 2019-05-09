@@ -18,10 +18,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javax.swing.*;
+import javax.tools.Tool;
 
 
 public class Controller implements Initializable{
@@ -32,13 +37,25 @@ public class Controller implements Initializable{
     @FXML private Button rectangleToolBtn;
     @FXML private Button ellipseToolBtn;
     @FXML private Button polygonToolBtn;
+    @FXML private ColorPicker lineColorPicker;
+    @FXML private ColorPicker fillColorPicker;
 
-    @FXML
-    private Canvas canvas;
+    @FXML private Canvas canvas;
+    @FXML private AnchorPane canvasPane;
 
     boolean toolSelected = false;
+    String selectedTool;
 
     GraphicsContext brush;
+
+    Line line = new Line();
+    Rectangle rectangle = new Rectangle();
+    Rectangle ellipseBounds = new Rectangle();
+    Polygon polygon = new Polygon();
+    double[] polygonXPoints = new double[9999]; //Set to max 9999 points
+    double[] polygonYPoints = new double[9999]; //Set to max 9999 points
+    int polygonPoints = 0;
+
 
     @FXML
     private void onMousePressedListener(MouseEvent e){
@@ -53,28 +70,62 @@ public class Controller implements Initializable{
 
     @FXML
     private void penToolClick(){
+
         changeActiveButton("pen");
+        this.selectedTool = "plot";
+        handleMouseEvent();
+
+
     }
+
+
 
     @FXML
     private void lineToolClick(){
         changeActiveButton("line");
-    }
+        this.selectedTool = "line";
+        handleMouseEvent();
+
+        }
 
     @FXML
     private void rectangleToolClick(){
         changeActiveButton("rectangle");
+        this.selectedTool = "rectangle";
+        handleMouseEvent();
     }
 
     @FXML
     private void ellipseToolClick(){
         changeActiveButton("ellipse");
+        this.selectedTool = "ellipse";
+        handleMouseEvent();
     }
 
     @FXML
     private void polygonToolClick(){
         changeActiveButton("polygon");
+        this.selectedTool = "polygon";
+        handleMouseEvent();
     }
+
+    @FXML
+    private void closePolygon(){
+        brush.strokePolygon(polygonXPoints, polygonYPoints, polygonPoints);
+    }
+
+
+    @FXML private void newCanvasMenuBtnClick(){
+        System.out.println("New Canvas Menu Button Click");
+
+    }
+
+    @FXML private void openMenuBtnClick(){ System.out.println("Open Menu Button Click"); }
+    @FXML private void saveMenuBtnClick(){ System.out.println("Save Menu Button Click"); }
+    @FXML private void exportMenuBtnClick(){ System.out.println("Export Menu Button Click"); }
+    @FXML private void undoMenuBtnClick(){ System.out.println("Undo Menu Button Click"); }
+    @FXML private void showGridMenuBtnClick(){ System.out.println("Show Grid Menu Button Click"); }
+
 
     private void changeActiveButton(String btnType){
         penToolBtn.getStyleClass().remove("headerBtnActive");
@@ -100,75 +151,142 @@ public class Controller implements Initializable{
                 polygonToolBtn.getStyleClass().add("headerBtnActive");
                 break;
         }
-
-
-
-
-
     }
 
 
+    private void handleMouseEvent(){
 
-    @FXML
-    public void newCanvas(ActionEvent e){
-        TextField getCanvasWidth = new TextField();
-        getCanvasWidth.setPromptText("Width");
-        getCanvasWidth.setPrefWidth(150);
-        getCanvasWidth.setAlignment(Pos.CENTER);
 
-        TextField getCanvasHeight = new TextField();
-        getCanvasHeight.setPromptText("Height");
-        getCanvasHeight.setPrefHeight(150);
-        getCanvasHeight.setAlignment(Pos.CENTER);
+                canvas.setOnMouseClicked(event -> {
+                    brush.setStroke(lineColorPicker.getValue());
+                    if(selectedTool == "plot"){
+                        brush.beginPath();
+                        brush.lineTo(event.getX(), event.getY());
+                        brush.stroke();
+                    }
 
-        Button createButton = new Button();
-        createButton.setText("Create Canvas");
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(5);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(getCanvasWidth, getCanvasHeight, createButton);
+                });
+                canvas.setOnMousePressed(event -> {
+                    brush.setStroke(lineColorPicker.getValue());
 
-        Stage createStage = new Stage();
-        AnchorPane root = new AnchorPane();
-        root.setPrefWidth(200);
-        root.setPrefHeight(200);
-        root.getChildren().add(vBox);
+                    if(selectedTool == "line") {
+                        brush.beginPath();
+                        line.setStartX(event.getX());
+                        line.setStartY(event.getY());
+                    }
 
-        Scene getDimension = new Scene(root);
-        createStage.setTitle("Canvas!!");
-        createStage.setScene(getDimension);
-        createStage.show();
+                    if(selectedTool == "rectangle"){
+                        rectangle.setX(event.getX());
+                        rectangle.setY(event.getY());
+                    }
 
-        createButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                double canvasWidthReceived = Double.parseDouble(getCanvasWidth.getText());
-                double canvasHeightReceived = Double.parseDouble(getCanvasHeight.getText());
+                    if(selectedTool == "ellipse"){
+                        ellipseBounds.setX(event.getX());
+                        ellipseBounds.setY(event.getY());
+                    }
 
-                Pane pane = new Pane();
-                pane.setPrefSize(canvasWidthReceived, canvasHeightReceived);
-                pane.setStyle("-fx-background-color: blue;");
+                    if(selectedTool == "polygon"){
+                        double[] xPoints = {300.0, 450.0, 300.0, 150.0};
+                        double[] yPoints = {50.0, 150.0, 250.0, 150.0};
+                        polygonXPoints[polygonPoints] = event.getX();
+                        polygonYPoints[polygonPoints] = event.getY();
+                        polygonPoints++;
+                        /*polygon.getPoints().addAll(new Double[]{
+                                300.0, 50.0,
+                                450.0, 150.0,
+                                300.0, 250.0,
+                                150.0, 150.0,
+                        });*/
 
-                canvas = new Canvas();
-                canvas.setWidth(canvasWidthReceived);
-                canvas.setHeight(canvasHeightReceived);
 
-                pane.getChildren().add(canvas);
 
-                vBox.getChildren().add(pane);
-                createStage.close();
-            }
-        });
+                    }
+
+                });
+
+                canvas.setOnMouseReleased(event->{
+                    if(selectedTool == "line") {
+                        line.setEndX(event.getX());
+                        line.setEndY(event.getY());
+                        brush.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+                        brush.stroke();
+                    }
+
+                    if(selectedTool == "rectangle"){
+                        rectangle.setWidth(event.getX() - rectangle.getX());
+                        rectangle.setHeight(event.getY() - rectangle.getY());
+
+                        if(rectangle.getWidth() < 0){
+                            rectangle.setWidth(rectangle.getWidth()*-1.0);
+                            rectangle.setX(rectangle.getX() - rectangle.getWidth());
+                        }
+
+                        if(rectangle.getHeight() < 0){
+                            rectangle.setHeight(rectangle.getHeight()*-1.0);
+                            rectangle.setY(rectangle.getY() - rectangle.getHeight());
+                        }
+
+                        brush.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+                    }
+
+                    if(selectedTool == "ellipse"){
+                        ellipseBounds.setWidth(event.getX() - ellipseBounds.getX());
+                        ellipseBounds.setHeight(event.getY() - ellipseBounds.getY());
+
+                        if(ellipseBounds.getWidth() < 0){
+                            ellipseBounds.setWidth(ellipseBounds.getWidth()*-1.0);
+                            ellipseBounds.setX(ellipseBounds.getX() - ellipseBounds.getWidth());
+                        }
+
+                        if(ellipseBounds.getHeight() < 0){
+                            ellipseBounds.setHeight(ellipseBounds.getHeight()*-1.0);
+                            ellipseBounds.setY(ellipseBounds.getY() - ellipseBounds.getHeight());
+                        }
+
+                        brush.strokeOval(ellipseBounds.getX(), ellipseBounds.getY(), ellipseBounds.getWidth(), ellipseBounds.getHeight());
+                    }
+                });
+
+
+
+
     }
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb){
+        lineColorPicker.getStyleClass().add("button");
+        fillColorPicker.getStyleClass().add("button");
 
-        //brush = canvas.getGraphicsContext2D();
+        brush = canvas.getGraphicsContext2D();
+        brush.setLineWidth(1);
 
-        //canvas.onMouseClickedProperty();
+
+        if(selectedTool != null){
+
+        } else {
+            System.out.println("Please Select a Tool");
+        }
+
+
+        /*brush = canvas.getGraphicsContext2D();
+        brush.setLineWidth(1);
+
+        canvas.setOnMouseClicked(event -> {
+            //double x = event.getX(), y = event.getY();
+            System.out.println("Canvas Clicked");
+            double coordX = event.getX();
+            double coordY = event.getY();
+
+            System.out.println(coordX);
+            System.out.println(coordY);
+
+            brush.beginPath();
+            brush.lineTo(coordX, coordY);
+            brush.stroke();
+
+        });*/
         //canvas.setOnMouseDragged(e -> {
 //            double brushSize = Double.parseDouble(brushSizeInput.getText());
 //
@@ -180,6 +298,8 @@ public class Controller implements Initializable{
 //                brush.fillRoundRect(mouseX, mouseY, brushSize, brushSize, brushSize, brushSize);
 //            }
         //});
+
+
 
 
     }

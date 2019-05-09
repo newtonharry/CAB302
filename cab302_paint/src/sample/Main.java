@@ -4,6 +4,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,6 +22,19 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         primaryStage.show();
+
+        sample.stage.setStageWidth(scene.getWidth());
+        sample.stage.setStageHeight(scene.getHeight());
+
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            sample.stage.setStageWidth(scene.getWidth());
+
+        });
+
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            sample.stage.setStageHeight(scene.getHeight());
+        });
+
     }
 
 
