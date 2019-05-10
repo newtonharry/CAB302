@@ -76,7 +76,6 @@ public class Parser {
                     shapes.add(new Plot(pen,fill,coordinates)); // Load co-ordinates into Plot object
                     break;
                 case "ELLIPSE":
-                    // This will have to have a radius as well
                     shapes.add(new Ellipse(pen,fill,coordinates)); // Load co-ordinates into Ellipse object
                     break;
                 case "POLYGON":
