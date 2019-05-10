@@ -1,18 +1,18 @@
 package sample;
 
+import java.util.ArrayList;
+
 public class Shape {
 
-    // Define pen and fill default values
-    private int pen = 0;
-    private int fill = 0;
-
-    // Overloading constructor so we can have "default" values
-    public Shape(){}
+    private int pen; // Pen colour
+    private int fill = 0; // Fill colour
+    private ArrayList<int[]> coordinates; // Coordinates for shape
 
     // Constructor to change pen and fill values
-    public Shape(int pen, int fill){
+    public Shape(int pen, int fill,ArrayList<int[]> coordinates){
         this.pen = pen;
         this.fill = fill;
+        this.coordinates = coordinates;
     }
 
     public int getPen(){

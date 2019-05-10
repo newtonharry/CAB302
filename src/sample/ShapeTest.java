@@ -10,7 +10,7 @@ public class ShapeTest {
 
     @Test
     public void testConstructor(){
-       shape = new Rectangle(1,1,1,1);
+       shape = new Shape();
     }
 
 }
