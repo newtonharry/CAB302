@@ -20,9 +20,10 @@ public class Parser {
     /*
     Parser to read from a file
      */
-    public Parser(String file) throws FileNotFoundException {
+    public Parser(String file) throws IOException {
         reader = new BufferedReader(new FileReader(file));
         shapes = new ArrayList<Shape>();
+        this.readShapes(); // Read shapes into list
     }
 
     /*
@@ -31,6 +32,7 @@ public class Parser {
     public Parser(String file,ArrayList<Shape> shapes) throws IOException {
         writer = new BufferedWriter(new FileWriter(file));
         this.shapes = shapes;
+        this.writeShapes(); // Write shapes to file
     }
 
 
