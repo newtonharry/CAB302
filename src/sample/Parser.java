@@ -50,32 +50,38 @@ public class Parser {
         ArrayList<int[]> coordinates;
         while((line = reader.readLine()) != null){
             String[] parts = line.split(" ");
+
+
+            // This seems pretty inefficent having this if statement,
+            // but it stops us from having code duplication to generate the co-ordinates on each switch case
+           // plz make better
+            if(!(parts[0].equals("PEN") || parts[0].equals("FILL"))){
+                // Generate co-cordinates here
+            }
+
             switch(parts[0]){
-                case "LINE":
-                    // Generate coordinates here
-                    shapes.add(new Line(pen,fill,coordinates)); // Load co-ordinates into Line object
-                    break;
-                case "RECTANGLE":
-                    // Generate coordinates here
-                    shapes.add(new Rectangle(pen,fill,coordinates)); // Load co-ordinates into Rectangle object
-                    break;
-                case "PLOT":
-                    // Generate coordinates here
-                    shapes.add(new Plot(pen,fill,coordinates)); // Load co-ordinates into Plot object
-                    break;
-                case "ELLIPSE":
-                    // Generate coordinates here
-                    shapes.add(new Ellipse(pen,fill,coordinates)); // Load co-ordinates into Ellipse object
-                    break;
-                case "POLYGON":
-                    // Generate coordinates here
-                    shapes.add(new Polygon(pen,fill,coordinates)); // Load co-ordinates into Polygon object
-                    break;
                 case "PEN":
                     pen = Integer.parseInt(parts[1],16);
                     break;
                 case "FILL":
                     fill = Integer.parseInt(parts[1],16);
+                    break;
+                case "LINE":
+                    shapes.add(new Line(pen,fill,coordinates)); // Load co-ordinates into Line object
+                    break;
+                case "RECTANGLE":
+                    shapes.add(new Rectangle(pen,fill,coordinates)); // Load co-ordinates into Rectangle object
+                    break;
+                case "PLOT":
+                    shapes.add(new Plot(pen,fill,coordinates)); // Load co-ordinates into Plot object
+                    break;
+                case "ELLIPSE":
+                    // This will have to have a radius as well
+                    shapes.add(new Ellipse(pen,fill,coordinates)); // Load co-ordinates into Ellipse object
+                    break;
+                case "POLYGON":
+                    shapes.add(new Polygon(pen,fill,coordinates)); // Load co-ordinates into Polygon object
+                    break;
                 default:
                     continue;
             }
