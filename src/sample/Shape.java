@@ -23,4 +23,12 @@ public class Shape {
         return this.fill;
     }
 
+    public ArrayList<int[]> getCoordinates(){
+        return this.coordinates;
+    }
+
+
+    // Add potential draw method
+    // Can just call "Shape".Draw() and it draws the shape to the canvas
+
 }
