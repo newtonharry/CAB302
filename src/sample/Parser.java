@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Parser {
@@ -35,8 +36,7 @@ public class Parser {
         int pen  =  0x000000, // no pen
             fill = -0xFFFFFF; // no fill
 
-        for(String line: lines)
-         {
+        for(String line: lines){
             String[] params = line.split(" ");
 
             switch (params[0]) {
@@ -99,11 +99,16 @@ public class Parser {
 
     public void writeShapes() throws IOException {
         // Need to convert the shapes ArrayList into proper format for the VEC file
-        Files.writeString(this.vecFile,this.shapes.toString(),this.charset); // Overwrites file with new instructions
+        String instructions = String.join("\n",shapes.stream().map(shape -> shape.toString())); // Need to work on the shape toString method
+        Files.writeString(this.vecFile,instructions,this.charset); // Overwrites file with new instructions
     }
 
 
     public void addShapes(ArrayList<Shape> shapes){
         this.shapes.addAll(shapes);
+    }
+
+    public void popShape(){
+        this.shapes.remove(this.shapes.size() - 1);
     }
 }
