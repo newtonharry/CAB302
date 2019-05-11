@@ -9,21 +9,21 @@ import java.io.IOException;
 
 public class ParserTest {
 
-   Parser parser;
+    Parser parser;
 
-   @Before
-   public void setUpParser() throws IOException {
-      parser = new Parser("vec_files/test");
-   }
+    @Before
+    public void setUpParser() throws IOException {
+        parser = new Parser("vec_files/test");
+    }
 
-   @Test
-   public void testConstruction() throws IOException {
-     parser = new Parser("vec_files/test");
-   }
+    @Test
+    public void testConstruction() throws IOException {
+        parser = new Parser("vec_files/test");
+    }
 
-   @Test
+    @Test
     public void testRead() throws IOException {
-       parser.readShapes();
-   }
+        parser.readShapes();
+    }
 
 }

@@ -98,11 +98,13 @@ public class Parser {
                 default:
             }
         }
+
+
+        for (Shape shape : shapes)
+            ;// shape.draw();
     }
 
     public void writeShapes() throws IOException {
-        for (Shape shape : shapes)
-            ;// shape.draw();
     }
 
 
