@@ -12,12 +12,12 @@ public class ParserTest {
    Parser parser;
 
    @Before
-   public void setUpParser() throws FileNotFoundException {
+   public void setUpParser() throws IOException {
       parser = new Parser("vec_files/test");
    }
 
    @Test
-   public void testConstruction() throws FileNotFoundException {
+   public void testConstruction() throws IOException {
      parser = new Parser("vec_files/test");
    }
 

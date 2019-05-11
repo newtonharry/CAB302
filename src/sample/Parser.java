@@ -1,12 +1,7 @@
 package sample;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Parser {
     /*
@@ -15,7 +10,7 @@ public class Parser {
 
     private BufferedReader reader; // Buffer for reading data from VEC files
     private BufferedWriter writer; // Buffer for writing data to VEC files
-    private ArrayList shapes; // ArrayList for storing Shapes and their co-ordinates
+    private ArrayList<Shape> shapes; // ArrayList for storing Shapes and their co-ordinates
 
     /*
     Parser to read from a file
@@ -36,62 +31,86 @@ public class Parser {
     }
 
 
+    public void readShapes() throws IOException {
+        String line;
+        ArrayList<Double> coordinates = new ArrayList<>();
+        int pen  =  0x000000,
+            fill = -0xFFFFFF; // no fill
+
+        while((line = reader.readLine()) != null) {
+            String[] params = line.split(" ");
+
+            switch (params[0]) {
+
+                case "PEN":
+
+                    pen = Integer.parseInt(params[1],16);
+                    break;
+
+                case "FILL":
+
+                    if (params[1].equals("OFF"))
+                        fill = -0xFFFFFF;
+                    else
+                        fill = Integer.parseInt(params[1],16);
+                    break;
+
+                case "LINE":
+
+                    for (int i = 1; i < 5; i++)
+                        coordinates.add(Double.parseDouble(params[i]));
+
+                    shapes.add(new Line(pen,coordinates));
+                    break;
+
+                case "RECTANGLE":
+
+                    for (int i = 1; i < 5; i++)
+                        coordinates.add(Double.parseDouble(params[i]));
+
+                    shapes.add(new Rectangle(pen,fill,coordinates));
+                    break;
+
+                case "PLOT":
+
+                    for (int i = 1; i < 3; i++)
+                        coordinates.add(Double.parseDouble(params[i]));
+
+                    shapes.add(new Plot(pen,coordinates));
+                    break;
+
+                case "ELLIPSE":
+
+                    for (int i = 1; i < 5; i++)
+                        coordinates.add(Double.parseDouble(params[i]));
+
+                    shapes.add(new Ellipse(pen,fill,coordinates));
+                    break;
+
+                case "POLYGON":
+
+                    for (int i = 1; i < coordinates.size(); i++)
+                        coordinates.add(Double.parseDouble(params[i]));
+
+                    shapes.add(new Polygon(pen,fill,coordinates));
+                    break;
+
+                default:
+            }
+        }
+    }
+
+    public void writeShapes() throws IOException {
+        for (Shape shape : shapes)
+            ;// shape.draw();
+    }
+
+
     /*
-    * Return the list of shapes
-    * @return An ArrayList of shapes
+     * Return the list of shapes
+     * @return An ArrayList of shapes
      */
     public ArrayList<Shape> getShapes(){
         return this.shapes;
     }
-
-
-    public void readShapes() throws IOException {
-        String line;
-        int pen, fill;
-        pen = fill = 0;
-        ArrayList<int[]> coordinates;
-        while((line = reader.readLine()) != null){
-            String[] parts = line.split(" ");
-
-
-            // This seems pretty inefficent having this if statement,
-            // but it stops us from having code duplication to generate the co-ordinates on each switch case
-           // plz make better
-            if(!(parts[0].equals("PEN") || parts[0].equals("FILL"))){
-                // Generate co-cordinates here
-            }
-
-            switch(parts[0]){
-                case "PEN":
-                    pen = Integer.parseInt(parts[1],16);
-                    break;
-                case "FILL":
-                    fill = Integer.parseInt(parts[1],16);
-                    break;
-                case "LINE":
-                    shapes.add(new Line(pen,fill,coordinates)); // Load co-ordinates into Line object
-                    break;
-                case "RECTANGLE":
-                    shapes.add(new Rectangle(pen,fill,coordinates)); // Load co-ordinates into Rectangle object
-                    break;
-                case "PLOT":
-                    shapes.add(new Plot(pen,fill,coordinates)); // Load co-ordinates into Plot object
-                    break;
-                case "ELLIPSE":
-                    shapes.add(new Ellipse(pen,fill,coordinates)); // Load co-ordinates into Ellipse object
-                    break;
-                case "POLYGON":
-                    shapes.add(new Polygon(pen,fill,coordinates)); // Load co-ordinates into Polygon object
-                    break;
-                default:
-                    continue;
-            }
-
-        }
-    }
-
-    public void writeShapes() throws IOException { }
-
-
-
 }
