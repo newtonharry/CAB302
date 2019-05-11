@@ -1,43 +1,42 @@
 package sample;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Parser {
     /*
     * A class which reads and writes to VEC files
      */
 
-    private BufferedReader reader; // Buffer for reading data from VEC files
-    private BufferedWriter writer; // Buffer for writing data to VEC files
+    private Path vecFile; // Buffer for writing and reading data to/from VEC files
+    private Charset charset =  Charset.forName("ISO-8859-1"); // Charset to identify file
     private ArrayList<Shape> shapes; // ArrayList for storing Shapes and their co-ordinates
 
     /*
-    Parser to read from a file
+    Parser to begin reading/writing from/to a file
      */
     public Parser(String file) throws IOException {
-        reader = new BufferedReader(new FileReader(file));
-        shapes = new ArrayList<Shape>();
-        this.readShapes(); // Read shapes into list
+        vecFile = Paths.get(file);
     }
 
-    /*
-    Parser to write to a file
-     */
-    public Parser(String file,ArrayList<Shape> shapes) throws IOException {
-        writer = new BufferedWriter(new FileWriter(file));
-        this.shapes = shapes;
-        this.writeShapes(); // Write shapes to file
+    private void genCoordinates(ArrayList<Double> coordinates, String[] points){
+        for (int i = 1; i < 5; i++)
+            coordinates.add(Double.parseDouble(points[i]));
     }
-
 
     public void readShapes() throws IOException {
-        String line;
+        List<String> lines = Files.readAllLines(this.vecFile,this.charset);
         ArrayList<Double> coordinates = new ArrayList<>();
-        int pen  =  0x000000,
+        int pen  =  0x000000, // no pen
             fill = -0xFFFFFF; // no fill
 
-        while((line = reader.readLine()) != null) {
+        for(String line: lines)
+         {
             String[] params = line.split(" ");
 
             switch (params[0]) {
@@ -57,41 +56,31 @@ public class Parser {
 
                 case "LINE":
 
-                    for (int i = 1; i < 5; i++)
-                        coordinates.add(Double.parseDouble(params[i]));
-
+                    genCoordinates(coordinates,params);
                     shapes.add(new Line(pen,coordinates));
                     break;
 
                 case "RECTANGLE":
 
-                    for (int i = 1; i < 5; i++)
-                        coordinates.add(Double.parseDouble(params[i]));
-
+                    genCoordinates(coordinates,params);
                     shapes.add(new Rectangle(pen,fill,coordinates));
                     break;
 
                 case "PLOT":
 
-                    for (int i = 1; i < 3; i++)
-                        coordinates.add(Double.parseDouble(params[i]));
-
+                    genCoordinates(coordinates,params);
                     shapes.add(new Plot(pen,coordinates));
                     break;
 
                 case "ELLIPSE":
 
-                    for (int i = 1; i < 5; i++)
-                        coordinates.add(Double.parseDouble(params[i]));
-
+                    genCoordinates(coordinates,params);
                     shapes.add(new Ellipse(pen,fill,coordinates));
                     break;
 
                 case "POLYGON":
 
-                    for (int i = 1; i < coordinates.size(); i++)
-                        coordinates.add(Double.parseDouble(params[i]));
-
+                    genCoordinates(coordinates,params);
                     shapes.add(new Polygon(pen,fill,coordinates));
                     break;
 
@@ -99,20 +88,22 @@ public class Parser {
             }
         }
 
-
+        /*
+        * Potentially draw shapes here
         for (Shape shape : shapes)
             ;// shape.draw();
+
+         */
     }
+
 
     public void writeShapes() throws IOException {
+        // Need to convert the shapes ArrayList into proper format for the VEC file
+        Files.writeString(this.vecFile,this.shapes.toString(),this.charset); // Overwrites file with new instructions
     }
 
 
-    /*
-     * Return the list of shapes
-     * @return An ArrayList of shapes
-     */
-    public ArrayList<Shape> getShapes(){
-        return this.shapes;
+    public void addShapes(ArrayList<Shape> shapes){
+        this.shapes.addAll(shapes);
     }
 }
