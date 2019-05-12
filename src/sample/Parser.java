@@ -6,17 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Parser {
     /*
-    * A class which reads and writes to VEC files
+     * A class which reads and writes to VEC files
      */
 
     private Path vecFile; // Buffer for writing and reading data to/from VEC files
-    private Charset charset =  Charset.forName("ISO-8859-1"); // Charset to identify file
-    private ArrayList<Shape> shapes; // ArrayList for storing Shapes and their co-ordinates
+    private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
+    private ArrayList<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Shapes and their co-ordinates
 
     /*
     Parser to begin reading/writing from/to a file
@@ -25,90 +25,88 @@ public class Parser {
         vecFile = Paths.get(file);
     }
 
-    private void genCoordinates(ArrayList<Double> coordinates, String[] points){
-        for (int i = 1; i < 5; i++)
-            coordinates.add(Double.parseDouble(points[i]));
-    }
 
     public void readShapes() throws IOException {
-        List<String> lines = Files.readAllLines(this.vecFile,this.charset);
+        List<String> lines = Files.readAllLines(this.vecFile, this.charset);
         ArrayList<Double> coordinates = new ArrayList<>();
-        int pen  =  0x000000, // no pen
-            fill = -0xFFFFFF; // no fill
 
-        for(String line: lines){
+        int pen = 0x000000, // no pen
+                fill = -0xFFFFFF; // no fill
+
+        Instruction instruction;
+
+        for (String line : lines) {
             String[] params = line.split(" ");
+            instruction = Instruction.valueOf(params[0]); // Convert instruction to enum
+            switch (instruction) {
 
-            switch (params[0]) {
+                case PEN:
 
-                case "PEN":
-
-                    pen = Integer.parseInt(params[1],16);
+                    instructions.add(new Pen(params[1]));
                     break;
 
-                case "FILL":
+                case FILL:
 
-                    if (params[1].equals("OFF"))
-                        fill = -0xFFFFFF;
-                    else
-                        fill = Integer.parseInt(params[1],16);
+                    instructions.add(new Fill(params[1]));
                     break;
 
-                case "LINE":
+                case LINE:
 
-                    genCoordinates(coordinates,params);
-                    shapes.add(new Line(pen,coordinates));
+                    parseCoordinates(coordinates, params);
+                    instructions.add(new Line(pen, coordinates));
                     break;
 
-                case "RECTANGLE":
+                case RECTANGLE:
 
-                    genCoordinates(coordinates,params);
-                    shapes.add(new Rectangle(pen,fill,coordinates));
+                    parseCoordinates(coordinates, params);
+                    instructions.add(new Rectangle(pen, fill, coordinates));
                     break;
 
-                case "PLOT":
+                case PLOT:
 
-                    genCoordinates(coordinates,params);
-                    shapes.add(new Plot(pen,coordinates));
+                    parseCoordinates(coordinates, params);
+                    instructions.add(new Plot(pen, coordinates));
                     break;
 
-                case "ELLIPSE":
+                case ELLIPSE:
 
-                    genCoordinates(coordinates,params);
-                    shapes.add(new Ellipse(pen,fill,coordinates));
+                    parseCoordinates(coordinates, params);
+                    instructions.add(new Ellipse(pen, fill, coordinates));
                     break;
 
-                case "POLYGON":
+                case POLYGON:
 
-                    genCoordinates(coordinates,params);
-                    shapes.add(new Polygon(pen,fill,coordinates));
+                    parseCoordinates(coordinates, params);
+                    instructions.add(new Polygon(pen, fill, coordinates));
                     break;
 
                 default:
             }
         }
-
-        /*
-        * Potentially draw shapes here
-        for (Shape shape : shapes)
-            ;// shape.draw();
-
-         */
     }
 
 
     public void writeShapes() throws IOException {
         // Need to convert the shapes ArrayList into proper format for the VEC file
-        String instructions = String.join("\n",shapes.stream().map(shape -> shape.toString())); // Need to work on the shape toString method
-        Files.writeString(this.vecFile,instructions,this.charset); // Overwrites file with new instructions
+        String instructions = String.join("\n", this.instructions
+                .stream()
+                .map(instruction -> instruction.toString())
+                .collect(Collectors.toList())); // Need to work on the shape toString method
+
+        Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
+    }
+
+    private void parseCoordinates(ArrayList<Double> coordinates, String[] points) {
+        for (int i = 1; i < 5; i++)
+            coordinates.add(Double.parseDouble(points[i]));
     }
 
 
-    public void addShapes(ArrayList<Shape> shapes){
-        this.shapes.addAll(shapes);
+    public void addInstructions(ArrayList<Shape> shapes) {
+        this.instructions.addAll(shapes);
     }
 
-    public void popShape(){
-        this.shapes.remove(this.shapes.size() - 1);
+    public void popInstruction() {
+        this.instructions.remove(this.instructions.size() - 1);
     }
 }

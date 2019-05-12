@@ -9,11 +9,10 @@ public class Rectangle extends Shape {
                    x2, y2;
 
     public Rectangle(int pen, int fill, ArrayList<Double> coordinates){
-        super(pen,fill);
+        super(pen,fill,coordinates);
 
-        x1 = coordinates.get(0);
-        y1 = coordinates.get(1);
-        x2 = coordinates.get(2);
-        y2 = coordinates.get(3);
     }
+
+
+    // In each of these shape classes, can potentially specify how they are each drawn to the canvas
 }
