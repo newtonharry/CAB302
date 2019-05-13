@@ -53,31 +53,31 @@ public class Parser {
                 case LINE:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Line(pen, coordinates));
+                    instructions.add(new Line(Instruction.LINE,pen, coordinates));
                     break;
 
                 case RECTANGLE:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Rectangle(pen, fill, coordinates));
+                    instructions.add(new Rectangle(Instruction.RECTANGLE,pen, fill, coordinates));
                     break;
 
                 case PLOT:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Plot(pen, coordinates));
+                    instructions.add(new Plot(Instruction.RECTANGLE,pen, coordinates));
                     break;
 
                 case ELLIPSE:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Ellipse(pen, fill, coordinates));
+                    instructions.add(new Ellipse(Instruction.ELLIPSE,pen, fill, coordinates));
                     break;
 
                 case POLYGON:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Polygon(pen, fill, coordinates));
+                    instructions.add(new Polygon(Instruction.POLYGON ,pen, fill, coordinates));
                     break;
 
                 default:

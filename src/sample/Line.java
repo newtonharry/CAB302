@@ -7,8 +7,8 @@ public class Line extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public Line(int pen, ArrayList<Double> coordinates) {
-        super(pen);
+    public Line(Instruction type, int pen, ArrayList<Double> coordinates) {
+        super(type,pen,coordinates);
 
         x1 = coordinates.get(0);
         y1 = coordinates.get(1);

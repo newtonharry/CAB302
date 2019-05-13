@@ -7,8 +7,8 @@ public class Plot extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public Plot(int pen, ArrayList<Double> coordinates) {
-        super(pen);
+    public Plot(Instruction type, int pen, ArrayList<Double> coordinates) {
+        super(type,pen);
 
         x1 = coordinates.get(0);
         y1 = coordinates.get(1);

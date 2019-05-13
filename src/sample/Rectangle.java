@@ -8,8 +8,8 @@ public class Rectangle extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public Rectangle(int pen, int fill, ArrayList<Double> coordinates){
-        super(pen,fill,coordinates);
+    public Rectangle(Instruction type,int pen, int fill, ArrayList<Double> coordinates){
+        super(type,pen,fill,coordinates);
 
     }
 

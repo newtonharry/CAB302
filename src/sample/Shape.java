@@ -2,41 +2,53 @@ package sample;
 
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Shape implements VecInstruction {
 
+    private Instruction type;
     private int pen;  // pen colour
     private int fill; // fill colour
     private ArrayList<Double> coordinates;
 
     // Constructor to change pen and fill values
-    public Shape(int pen, int fill,ArrayList<Double> coordinates){
+    public Shape(Instruction type, int pen, int fill, ArrayList<Double> coordinates) {
+        this.type = type;
         this.pen = pen;
         this.fill = fill;
         // Could potentially generate co-ordinates here instead of doing it multiple times in parser class
         this.coordinates = coordinates;
     }
 
-    public Shape(int pen){
+    public Shape(Instruction type, int pen, ArrayList<Double> coordinates) {
+        this.type = type;
         this.pen = pen;
+        this.coordinates = coordinates;
     }
 
-    public int getPen(){
+    public int getPen() {
         return this.pen;
     }
 
-    public int getFill(){
+    public int getFill() {
         return this.fill;
     }
 
-    public ArrayList<Double> getCoordinates(){
+    public ArrayList<Double> getCoordinates() {
         return this.coordinates;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         // Should return "INSTRUCTION_TYPE VALUES"
-        return "test";
+        return String.format(
+                "%s %s",
+                this.type.toString(),
+                this.coordinates
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(" ")));
     }
+
 
 }
