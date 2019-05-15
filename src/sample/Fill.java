@@ -1,15 +1,16 @@
 package sample;
 
-public class Fill implements VecInstruction{
+public class Fill implements VecInstruction {
     private int colour;
+    private Instruction type;
 
 
-    public Fill(String value){
-          if (value.equals("OFF")){
-              this.colour = -0xFFFFFF;
-          } else{
-              this.colour = Integer.parseInt(value, 16);
-          }
+    public Fill(Instruction type, String value) {
+        if (value.equals("OFF")) {
+            this.colour = -0xFFFFFF;
+        } else {
+            this.colour = Integer.parseInt(value, 16);
+        }
     }
 
     public int getColour() {
@@ -18,6 +19,14 @@ public class Fill implements VecInstruction{
 
     @Override
     public String toString() {
-        return null;
+        String value;
+
+        if (this.colour == -0xFFFFFF) {
+            value = "OFF";
+        } else {
+            value = Integer.toHexString(this.colour);
+        }
+
+        return String.format("%s %s", this.type.toString(), value);
     }
 }

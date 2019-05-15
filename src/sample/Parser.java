@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,8 @@ public class Parser {
         vecFile = Paths.get(file);
     }
 
-
+    // IMPORTANT: need to check if VEC file has correct syntax whilst parsing, assert error is there is one
+    // Perhaps introduce a string cleaning method (might have to use regex as will be easier for that)
     public void readShapes() throws IOException {
         List<String> lines = Files.readAllLines(this.vecFile, this.charset);
         ArrayList<Double> coordinates = new ArrayList<>();
@@ -42,12 +44,12 @@ public class Parser {
 
                 case PEN:
 
-                    instructions.add(new Pen(params[1]));
+                    instructions.add(new Pen(Instruction.PEN,params[1].replace("#","")));
                     break;
 
                 case FILL:
 
-                    instructions.add(new Fill(params[1]));
+                    instructions.add(new Fill(Instruction.FILL,params[1].replace("#","")));
                     break;
 
                 case LINE:
@@ -65,7 +67,7 @@ public class Parser {
                 case PLOT:
 
                     parseCoordinates(coordinates, params);
-                    instructions.add(new Plot(Instruction.RECTANGLE,pen, coordinates));
+                    instructions.add(new Plot(Instruction.PLOT,pen, coordinates));
                     break;
 
                 case ELLIPSE:
@@ -88,17 +90,18 @@ public class Parser {
 
     public void writeShapes() throws IOException {
         // Need to convert the shapes ArrayList into proper format for the VEC file
-        String instructions = String.join("\n", this.instructions
+        String instructions =  this.instructions
                 .stream()
                 .map(instruction -> instruction.toString())
-                .collect(Collectors.toList())); // Need to work on the shape toString method
+                .collect(Collectors.joining("\n")); // Need to work on the shape toString method
 
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
     }
 
     private void parseCoordinates(ArrayList<Double> coordinates, String[] points) {
-        for (int i = 1; i < 5; i++)
-            coordinates.add(Double.parseDouble(points[i]));
+        String[] new_points = Arrays.copyOfRange(points, 1, points.length);
+        for(String coordinate : new_points)
+            coordinates.add(Double.parseDouble(coordinate));
     }
 
 
@@ -106,6 +109,7 @@ public class Parser {
         this.instructions.addAll(shapes);
     }
 
+    // Used for undo
     public void popInstruction() {
         this.instructions.remove(this.instructions.size() - 1);
     }

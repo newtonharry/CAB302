@@ -4,8 +4,9 @@ public class Pen implements VecInstruction {
 
 
     private int colour;
+    private Instruction type;
 
-    public Pen(String colour) {
+    public Pen(Instruction type,String colour) {
         this.colour = Integer.parseInt(colour, 16);
     }
 
@@ -15,6 +16,6 @@ public class Pen implements VecInstruction {
 
     @Override
     public String toString() {
-        return null;
+        return String.format("%s %s",this.type.toString(),Integer.toHexString(this.colour));
     }
 }

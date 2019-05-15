@@ -9,10 +9,5 @@ public class Line extends Shape {
 
     public Line(Instruction type, int pen, ArrayList<Double> coordinates) {
         super(type,pen,coordinates);
-
-        x1 = coordinates.get(0);
-        y1 = coordinates.get(1);
-        x2 = coordinates.get(2);
-        y2 = coordinates.get(3);
     }
 }
