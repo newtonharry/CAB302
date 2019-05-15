@@ -1,12 +1,14 @@
 package sample.GUI;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,14 +20,17 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 import javax.swing.*;
 import javax.tools.Tool;
@@ -414,21 +419,34 @@ public class Controller implements Initializable{
         });
     }
 
+    private static void hex2Rgb(String colorStr) {
+        //String hex[] = colorStr.split("0x");
+        //System.out.println(hex[1]);
+        //Color test = Color.decode("#FFCCEE");
+        /*for(int i=0; i<hex.length; i++){
+            System.out.println(hex[i]);
+        }*/
+        //System.out.println(Integer.valueOf( colorStr.substring( 1, 3 ), 16 ));
+        //System.out.println(Integer.valueOf( colorStr.substring( 3, 5 ), 16 ));
+        //System.out.println(Integer.valueOf( colorStr.substring( 5, 7 ), 16 ));
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb){
+        Color transparent = Color.web("0xffffff00", 0);
+
+        lineColorPicker.setValue(Color.BLACK);
+        fillColorPicker.setValue(transparent);
+
         lineColorPicker.getStyleClass().add("button");
         fillColorPicker.getStyleClass().add("button");
 
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
-
-        if(selectedTool != null){
-
-        } else {
-            System.out.println("Please Select a Tool");
-        }
     }
+
+
 
     @FXML
     public void toolSelected(ActionEvent e){
