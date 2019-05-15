@@ -2,6 +2,7 @@ package sample;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Shape implements VecInstruction {
@@ -9,10 +10,10 @@ public class Shape implements VecInstruction {
     private Instruction type;
     private int pen;  // pen colour
     private int fill; // fill colour
-    private ArrayList<Double> coordinates;
+    private List<Double> coordinates;
 
     // Constructor to change pen and fill values
-    public Shape(Instruction type, int pen, int fill, ArrayList<Double> coordinates) {
+    public Shape(Instruction type, int pen, int fill, List<Double> coordinates) {
         this.type = type;
         this.pen = pen;
         this.fill = fill;
@@ -20,7 +21,7 @@ public class Shape implements VecInstruction {
         this.coordinates = coordinates;
     }
 
-    public Shape(Instruction type, int pen, ArrayList<Double> coordinates) {
+    public Shape(Instruction type, int pen, List<Double> coordinates) {
         this.type = type;
         this.pen = pen;
         this.coordinates = coordinates;
@@ -34,7 +35,7 @@ public class Shape implements VecInstruction {
         return this.fill;
     }
 
-    public ArrayList<Double> getCoordinates() {
+    public List<Double> getCoordinates() {
         return this.coordinates;
     }
 
