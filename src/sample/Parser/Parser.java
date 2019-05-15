@@ -1,7 +1,5 @@
 package sample.Parser;
 
-import sample.Instructions.Fill;
-import sample.Instructions.Pen;
 import sample.Instructions.*;
 
 import java.io.*;
@@ -104,7 +102,9 @@ public class Parser {
                         break;
 
                     case FILL:
-                        fill = Integer.parseInt(colourMatcher.group("value"),16);
+                        if(!colourMatcher.group("value").equals("OFF"))
+                            fill = Integer.parseInt(colourMatcher.group("value"),16);
+
                         instructions.add(new Fill(Instruction.FILL, colourMatcher.group("value")));
                         break;
 
