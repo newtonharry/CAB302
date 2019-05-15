@@ -22,7 +22,7 @@ public class ParserTest {
 
     @Test
     public void testRead() throws IOException {
-        parser.readShapes();
+        parser.readInstructions();
     }
 
 }
