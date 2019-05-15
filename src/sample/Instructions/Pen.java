@@ -1,4 +1,4 @@
-package sample;
+package sample.Instructions;
 
 public class Pen implements VecInstruction {
 

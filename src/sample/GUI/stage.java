@@ -1,4 +1,4 @@
-package sample;
+package sample.GUI;
 
 public class stage {
     private static double stageWidth;

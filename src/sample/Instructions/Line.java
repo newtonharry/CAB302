@@ -1,14 +1,13 @@
-package sample;
+package sample.Instructions;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Plot extends Shape {
+public class Line extends Shape {
 
     private double x1, y1,
                    x2, y2;
 
-    public Plot(Instruction type, int pen, List<Double> coordinates) {
+    public Line(Instruction type, int pen, List<Double> coordinates) {
         super(type,pen,coordinates);
 
         x1 = coordinates.get(0);

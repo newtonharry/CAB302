@@ -1,8 +1,6 @@
-package sample;
+package sample.Instructions;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ShapeTest {
 

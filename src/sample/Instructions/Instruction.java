@@ -1,4 +1,4 @@
-package sample;
+package sample.Instructions;
 
 public enum Instruction {
     LINE,

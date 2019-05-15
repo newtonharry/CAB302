@@ -1,4 +1,8 @@
-package sample;
+package sample.Parser;
+
+import sample.Instructions.Fill;
+import sample.Instructions.Pen;
+import sample.Instructions.*;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -20,7 +24,7 @@ public class Parser {
 
     private Path vecFile; // Buffer for writing and reading data to/from VEC files
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
-    private ArrayList<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Shapes and their co-ordinates
+    private ArrayList<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Instructions and their co-ordinates
 
     // Two patters
     // One to match a shape
@@ -46,7 +50,7 @@ public class Parser {
     // Perhaps introduce a string cleaning method (might have to use regex as will be easier for that)
     public void readInstructions() throws IOException {
         List<String> lines = Files.readAllLines(this.vecFile, this.charset);
-        List<Double> coordinates = new ArrayList<>();
+        List<Double> coordinates;
 
         int pen = 0x000000, // no pen
                 fill = -0xFFFFFF; // no fill

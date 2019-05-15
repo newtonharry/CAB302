@@ -1,7 +1,8 @@
-package sample;
+package sample.Parser;
 
 import org.junit.Before;
 import org.junit.Test;
+import sample.Instructions.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

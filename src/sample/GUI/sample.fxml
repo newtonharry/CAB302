@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GUI.Controller">
    <children>
        <HBox prefHeight="25.0" prefWidth="1280.0" style="-fx-background-color: #727B87; -fx-padding: 0 0 0 65;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <children>
@@ -38,7 +38,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/menu.png" />
+                        <Image url="@../images/menu.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -50,7 +50,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/pen.png" />
+                        <Image url="@../images/pen.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -58,7 +58,7 @@
                  <graphic>
                      <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                          <image>
-                             <Image url="@images/line.png" />
+                             <Image url="@../images/line.png" />
                          </image>
                      </ImageView>
                  </graphic></Button>
@@ -66,7 +66,7 @@
                  <graphic>
                      <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                          <image>
-                             <Image url="@images/rectange.png" />
+                             <Image url="@../images/rectange.png" />
                          </image>
                      </ImageView>
                  </graphic></Button>
@@ -74,7 +74,7 @@
              <graphic>
                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                         <Image url="@images/ellipse.png" />
+                         <Image url="@../images/ellipse.png" />
                      </image>
                  </ImageView>
              </graphic></Button>
@@ -82,7 +82,7 @@
                  <graphic>
                      <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                          <image>
-                             <Image url="@images/polygon.png" />
+                             <Image url="@../images/polygon.png" />
                          </image>
                      </ImageView>
                  </graphic></Button>

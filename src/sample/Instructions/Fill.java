@@ -1,4 +1,4 @@
-package sample;
+package sample.Instructions;
 
 public class Fill implements VecInstruction {
     private int colour;
