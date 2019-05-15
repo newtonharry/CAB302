@@ -8,10 +8,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
@@ -90,14 +88,13 @@
                  </graphic></Button>
              <ColorPicker fx:id="lineColorPicker" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" style="-fx-padding: 15;" styleClass="headerBtn" />
              <ColorPicker fx:id="fillColorPicker" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" style="-fx-padding: 15;" styleClass="headerBtn" />
-            <Button mnemonicParsing="false" onAction="#closePolygon" text="Button" />
          </children>
       </HBox>
-       <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="90.0">
+       <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
          <children>
-            <AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"> <!--AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"-->
+            <AnchorPane fx:id="canvasAnchorPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"> <!--AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"-->
                <children>
-                  <Canvas width="700.0" height="500.0" fx:id="canvas" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
+                  <Canvas fx:id="canvas" height="500.0" width="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
                </children>
             </AnchorPane>
          </children>
