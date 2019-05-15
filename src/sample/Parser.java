@@ -28,7 +28,7 @@ public class Parser {
 
     // IMPORTANT: need to check if VEC file has correct syntax whilst parsing, assert error is there is one
     // Perhaps introduce a string cleaning method (might have to use regex as will be easier for that)
-    public void readShapes() throws IOException {
+    public void readInstructions() throws IOException {
         List<String> lines = Files.readAllLines(this.vecFile, this.charset);
         ArrayList<Double> coordinates = new ArrayList<>();
 
@@ -90,11 +90,11 @@ public class Parser {
     }
 
 
-    public void writeShapes() throws IOException {
+    public void writeInstructions() throws IOException {
         // Need to convert the shapes ArrayList into proper format for the VEC file
         String instructions =  this.instructions
                 .stream()
-                .map(instruction -> instruction.toString())
+                .map(VecInstruction::toString)
                 .collect(Collectors.joining("\n")); // Need to work on the shape toString method
 
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
