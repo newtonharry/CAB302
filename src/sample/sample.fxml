@@ -95,7 +95,7 @@
       </HBox>
        <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="90.0">
          <children>
-            <AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"> <!--AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"-->
+            <AnchorPane fx:id="canvasAnchorPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"> <!--AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"-->
                <children>
                   <Canvas width="700.0" height="500.0" fx:id="canvas" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
                </children>
