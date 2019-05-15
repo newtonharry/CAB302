@@ -121,7 +121,12 @@ public class Controller implements Initializable{
 
     @FXML
     private void closePolygon(){
-        brush.strokePolygon(polygonXPoints, polygonYPoints, polygonPoints);
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        brush.strokePolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
+
+        polygonPointsX = new double[9999];
+        polygonPointsY = new double[9999];
+        polygonPointsCount = 0;
     }
 
 
@@ -190,7 +195,7 @@ public class Controller implements Initializable{
     }
 
     private void endLine(){
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         brush.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
         line = new Line();
     }
