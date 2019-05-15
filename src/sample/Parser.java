@@ -41,6 +41,8 @@ public class Parser {
             String[] params = line.split(" ");
             instruction = Instruction.valueOf(params[0]); // Convert instruction to enum
             switch (instruction) {
+                // Clean strings in the case clause,just before adding the instruction to the list,
+                // or implement it in the shape class??? can't make my mind up
 
                 case PEN:
 
