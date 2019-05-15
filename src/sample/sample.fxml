@@ -88,7 +88,6 @@
                  </graphic></Button>
              <ColorPicker fx:id="lineColorPicker" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" style="-fx-padding: 15;" styleClass="headerBtn" />
              <ColorPicker fx:id="fillColorPicker" maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" prefHeight="65.0" prefWidth="65.0" style="-fx-padding: 15;" styleClass="headerBtn" />
-            <Button mnemonicParsing="false" onAction="#closePolygon" text="Button" />
          </children>
       </HBox>
        <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
