@@ -6,6 +6,7 @@ public class Fill implements VecInstruction {
 
 
     public Fill(Instruction type, String value) {
+        this.type = type;
         if (value.equals("OFF")) {
             this.colour = -0xFFFFFF;
         } else {

@@ -4,7 +4,7 @@ package sample.Instructions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Shape implements VecInstruction {
+public abstract class Shape implements VecInstruction {
 
     private Instruction type;
     private int pen;  // pen colour
@@ -49,6 +49,8 @@ public class Shape implements VecInstruction {
                 .map(Object::toString)
                 .collect(Collectors.joining(" ")));
     }
+
+    public abstract void draw();
 
 
 }

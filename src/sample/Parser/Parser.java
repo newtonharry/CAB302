@@ -1,5 +1,7 @@
 package sample.Parser;
 
+import sample.Exceptions.ParserException;
+import sample.Exceptions.ShapeException;
 import sample.Instructions.*;
 
 import java.io.*;
@@ -27,8 +29,10 @@ public class Parser {
     // Two patters
     // One to match a shape
     // One to match a colour fill
-    private Pattern shapeInstruction = Pattern.compile("(?<type>\\w+) (?<coordinates>(\\d+\\.?\\d+ ?){2,})");
-    private Pattern colourInstruction = Pattern.compile("(?<type>\\w+) #?(?<value>([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|(?<=FILL )OFF)");
+    private Pattern shapeInstruction = Pattern
+            .compile("(?<type>RECTANGLE|PLOT|LINE|ELLIPSE|POLYGON) (?<coordinates>(\\d+\\.?\\d+ ?){2,})");
+    private Pattern colourInstruction = Pattern
+            .compile("(?<type>FILL|PEN) #?(?<value>([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|(?<=FILL )OFF)");
 
     /*
     Parser to begin reading/writing from/to a file
@@ -46,29 +50,34 @@ public class Parser {
 
     // IMPORTANT: need to check if VEC file has correct syntax whilst parsing, assert error is there is one
     // Perhaps introduce a string cleaning method (might have to use regex as will be easier for that)
-    public void readInstructions() throws IOException {
-        List<String> lines = Files.readAllLines(this.vecFile, this.charset);
-        List<Double> coordinates;
+    public void readInstructions() throws IOException, ParserException, ShapeException {
+        List<String> lines = Files.readAllLines(this.vecFile, this.charset); // Lines from VEC file
 
-        int pen = 0x000000, // no pen
-                fill = -0xFFFFFF; // no fill
+        List<Double> coordinates; // Used to generate coordinates from instructions
+        String value; // Used to store value of colour value (fill/pen)
 
-        Instruction instruction;
+        int pen = 0x000000; // no pen
+        int fill = -0xFFFFFF; // no fill
+
+        Instruction instruction; // Used in switch case, to identify instruction types
 
         Matcher colourMatcher;
         Matcher shapeMatcher;
 
         for (String line : lines) {
-            if(line.isEmpty()) continue;
+            if (line.isEmpty()) continue;
 
             colourMatcher = colourInstruction.matcher(line);
             shapeMatcher = shapeInstruction.matcher(line);
 
             if (shapeMatcher.find()) {
                 instruction = Instruction.valueOf(shapeMatcher.group("type"));
+
                 coordinates = Stream.of(shapeMatcher            // Generate coordinates
                         .group("coordinates")
-                        .split(" ")).map(Double::parseDouble).collect(Collectors.toList());
+                        .split(" ")).map(Double::parseDouble)
+                        .collect(Collectors.toList());
+
                 switch (instruction) {
                     case LINE:
                         instructions.add(new Line(Instruction.LINE, pen, coordinates));
@@ -95,83 +104,28 @@ public class Parser {
 
             } else if (colourMatcher.find()) {
                 instruction = Instruction.valueOf(colourMatcher.group("type"));
+                value = colourMatcher.group("value");
                 switch (instruction) {
                     case PEN:
-                        pen = Integer.parseInt(colourMatcher.group("value"),16);
-                        instructions.add(new Pen(Instruction.PEN, colourMatcher.group("value")));
+                        pen = Integer.parseInt(value, 16);
+                        instructions.add(new Pen(Instruction.PEN, value));
                         break;
 
                     case FILL:
-                        if(!colourMatcher.group("value").equals("OFF"))
-                            fill = Integer.parseInt(colourMatcher.group("value"),16);
+                        if (!value.equals("OFF"))
+                            fill = Integer.parseInt(value, 16);
 
-                        instructions.add(new Fill(Instruction.FILL, colourMatcher.group("value")));
+                        instructions.add(new Fill(Instruction.FILL, value));
                         break;
 
                     default:
                 }
             } else {
-                // Raise exception here
-                System.out.println("NO MATCH");
+                throw new ParserException("Could not read VEC file, incorrect syntax");
             }
 
-
-
-
-
-            /*
-            String[] params = line.split(" ");
-            instruction = Instruction.valueOf(params[0]); // Convert instruction to enum
-            switch (instruction) {
-                // Clean strings in the case clause,just before adding the instruction to the list,
-                // or implement it in the shape class??? can't make my mind up
-
-                case PEN:
-
-                    instructions.add(new Pen(Instruction.PEN,params[1].replace("#","")));
-                    break;
-
-                case FILL:
-
-                    instructions.add(new Fill(Instruction.FILL,params[1].replace("#","")));
-                    break;
-
-                case LINE:
-
-                    parseCoordinates(coordinates, params);
-                    instructions.add(new Line(Instruction.LINE,pen, coordinates));
-                    break;
-
-                case RECTANGLE:
-
-                    parseCoordinates(coordinates, params);
-                    instructions.add(new Rectangle(Instruction.RECTANGLE,pen, fill, coordinates));
-                    break;
-
-                case PLOT:
-
-                    parseCoordinates(coordinates, params);
-                    instructions.add(new Plot(Instruction.PLOT,pen, coordinates));
-                    break;
-
-                case ELLIPSE:
-
-                    parseCoordinates(coordinates, params);
-                    instructions.add(new Ellipse(Instruction.ELLIPSE,pen, fill, coordinates));
-                    break;
-
-                case POLYGON:
-
-                    parseCoordinates(coordinates, params);
-                    instructions.add(new Polygon(Instruction.POLYGON ,pen, fill, coordinates));
-                    break;
-
-                default:
-            }
-             */
         }
     }
-
 
     public void writeInstructions() throws IOException {
         // Need to convert the shapes ArrayList into proper format for the VEC file
@@ -182,13 +136,6 @@ public class Parser {
 
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
     }
-
-    private void parseCoordinates(ArrayList<Double> coordinates, String[] points) {
-        String[] new_points = Arrays.copyOfRange(points, 1, points.length);
-        for (String coordinate : new_points)
-            coordinates.add(Double.parseDouble(coordinate));
-    }
-
 
     public void addInstructions(ArrayList<VecInstruction> shapes) {
         this.instructions.addAll(shapes);
