@@ -362,7 +362,7 @@ public class Controller implements Initializable{
 
     private void handleMouseEvent(){
         canvas.setOnMouseClicked(event -> {
-            canvasPane.setPrefWidth(Main.getScene().getWidth());
+            //canvasPane.setPrefWidth(Main.getScene().getWidth());
 
             refreshColors();
             if(selectedTool == "plot") {
