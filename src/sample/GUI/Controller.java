@@ -48,7 +48,7 @@ public class Controller implements Initializable{
     @FXML private ColorPicker fillColorPicker;
 
     @FXML private Canvas canvas;
-    @FXML private AnchorPane canvasPane;
+    @FXML public static AnchorPane canvasPane;
     @FXML private AnchorPane canvasAnchorPane;
 
     Color lineColor;
@@ -362,6 +362,8 @@ public class Controller implements Initializable{
 
     private void handleMouseEvent(){
         canvas.setOnMouseClicked(event -> {
+            canvasPane.setPrefWidth(Main.getScene().getWidth());
+
             refreshColors();
             if(selectedTool == "plot") {
                 plotPoint(event.getX(), event.getY());
@@ -434,6 +436,8 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle rb){
+
+
         Color transparent = Color.web("0xffffff00", 0);
 
         lineColorPicker.setValue(Color.BLACK);
@@ -444,9 +448,24 @@ public class Controller implements Initializable{
 
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
+
+
+
+        /*double stageWidth = Main.getStageWidth();
+        double stageHeight = Main.getStageHeight();
+        while(true){
+            if(stageWidth != Main.getStageWidth()){
+                stageWidth = Main.getStageWidth();
+                System.out.println("width changed");
+            }
+
+            if(stageHeight != Main.getStageHeight()){
+                stageHeight = Main.getStageHeight();
+                System.out.println("height changed");
+            }
+        }*/
+
     }
-
-
 
     @FXML
     public void toolSelected(ActionEvent e){

@@ -1,5 +1,7 @@
 package sample.GUI;
 
+import java.util.Observable;
+
 public class stage {
     private static double stageWidth;
     private static double stageHeight;
