@@ -10,8 +10,8 @@ public class RectangleInstruction extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public RectangleInstruction(Instruction type, int pen, int fill, List<Double> coordinates) throws ShapeException {
-        super(type,pen,fill,coordinates);
+    public RectangleInstruction( int pen, int fill, List<Double> coordinates) throws ShapeException {
+        super(Instruction.RECTANGLE,pen,fill,coordinates);
         if(coordinates.size() < 4){
             throw new ShapeException("Could not process coordinates correctly");
         }

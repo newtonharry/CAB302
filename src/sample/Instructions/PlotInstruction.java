@@ -11,8 +11,8 @@ public class PlotInstruction extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public PlotInstruction(Instruction type, int pen, List<Double> coordinates) throws ShapeException {
-        super(type,pen,coordinates);
+    public PlotInstruction(int pen, List<Double> coordinates) throws ShapeException {
+        super(Instruction.PLOT,pen,coordinates);
         if(coordinates.size() > 2){
             throw new ShapeException("Could not process coordinates correctly");
         }

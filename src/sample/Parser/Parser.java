@@ -80,23 +80,23 @@ public class Parser extends Controller{
 
                 switch (instruction) {
                     case LINE:
-                        instructions.add(new LineInstruction(Instruction.LINE, pen, coordinates));
+                        instructions.add(new LineInstruction(pen, coordinates));
                         break;
 
                     case RECTANGLE:
-                        instructions.add(new RectangleInstruction(Instruction.RECTANGLE, pen, fill, coordinates));
+                        instructions.add(new RectangleInstruction(pen, fill, coordinates));
                         break;
 
                     case PLOT:
-                        instructions.add(new PlotInstruction(Instruction.PLOT, pen, coordinates));
+                        instructions.add(new PlotInstruction(pen, coordinates));
                         break;
 
                     case ELLIPSE:
-                        instructions.add(new EllipseInstruction(Instruction.ELLIPSE, pen, fill, coordinates));
+                        instructions.add(new EllipseInstruction(pen, fill, coordinates));
                         break;
 
                     case POLYGON:
-                        instructions.add(new PolygonInstruction(Instruction.POLYGON, pen, fill, coordinates));
+                        instructions.add(new PolygonInstruction(pen, fill, coordinates));
                         break;
 
                     default:
@@ -108,14 +108,14 @@ public class Parser extends Controller{
                 switch (instruction) {
                     case PEN:
                         pen = Integer.parseInt(value, 16);
-                        instructions.add(new PenInstruction(Instruction.PEN, value));
+                        instructions.add(new PenInstruction(value));
                         break;
 
                     case FILL:
                         if (!value.equals("OFF"))
                             fill = Integer.parseInt(value, 16);
 
-                        instructions.add(new FillInstruction(Instruction.FILL, value));
+                        instructions.add(new FillInstruction(value));
                         break;
 
                     default:

@@ -12,8 +12,8 @@ public class LineInstruction extends Shape {
     private double x1, y1,
             x2, y2;
 
-    public LineInstruction(Instruction type, int pen, List<Double> coordinates) throws ShapeException {
-        super(type, pen, coordinates);
+    public LineInstruction(int pen, List<Double> coordinates) throws ShapeException {
+        super(Instruction.LINE, pen, coordinates);
         if (coordinates.size() < 4) {
             throw new ShapeException("Could not process coordinates correctly");
         }

@@ -4,10 +4,9 @@ public class PenInstruction implements VecInstruction {
 
 
     private int colour;
-    private Instruction type;
+    private Instruction type = Instruction.PEN;
 
-    public PenInstruction(Instruction type, String colour) {
-        this.type = type;
+    public PenInstruction(String colour) {
         this.colour = Integer.parseInt(colour, 16);
     }
 

@@ -42,12 +42,12 @@ public class ParserTest {
         coordinates.add(0.5);
         coordinates.add(0.5);
 
-        instructions.add(new RectangleInstruction(Instruction.RECTANGLE,50,50,coordinates));
-        instructions.add(new LineInstruction(Instruction.LINE,50,coordinates));
-        instructions.add(new EllipseInstruction(Instruction.ELLIPSE,50,50,coordinates));
-        instructions.add(new PolygonInstruction(Instruction.POLYGON,50,50,coordinates));
-        instructions.add(new PlotInstruction(Instruction.PLOT,50,coordinates));
-        instructions.add(new PenInstruction(Instruction.PEN,"FFFFFF"));
+        instructions.add(new RectangleInstruction(50,50,coordinates));
+        instructions.add(new LineInstruction(50,coordinates));
+        instructions.add(new EllipseInstruction(50,50,coordinates));
+        instructions.add(new PolygonInstruction(50,50,coordinates));
+        instructions.add(new PlotInstruction(50,coordinates));
+        instructions.add(new PenInstruction("FFFFFF"));
         parser.addInstructions(instructions);
         parser.writeInstructions();
     }

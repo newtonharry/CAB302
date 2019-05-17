@@ -9,8 +9,8 @@ public class PolygonInstruction extends Shape {
 
     private List<Double> coordinates;
 
-    public PolygonInstruction(Instruction type, int pen, int fill, List<Double> coordinates) throws ShapeException {
-        super(type,pen, fill,coordinates);
+    public PolygonInstruction(int pen, int fill, List<Double> coordinates) throws ShapeException {
+        super(Instruction.POLYGON,pen, fill,coordinates);
         if(coordinates.size() < 4){
            throw new ShapeException("Could not process coordinates properly");
         }
