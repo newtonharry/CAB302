@@ -1,11 +1,11 @@
 package sample.Instructions;
 
-public class Fill implements VecInstruction {
+public class FillInstruction implements VecInstruction {
     private int colour;
     private Instruction type;
 
 
-    public Fill(Instruction type, String value) {
+    public FillInstruction(Instruction type, String value) {
         this.type = type;
         if (value.equals("OFF")) {
             this.colour = -0xFFFFFF;

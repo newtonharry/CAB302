@@ -2,6 +2,7 @@ package sample.Parser;
 
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
+import sample.GUI.Controller;
 import sample.Instructions.*;
 
 import java.io.*;
@@ -10,14 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Parser {
+public class Parser extends Controller{
     /*
      * A class which reads and writes to VEC files
      */
@@ -80,23 +80,23 @@ public class Parser {
 
                 switch (instruction) {
                     case LINE:
-                        instructions.add(new Line(Instruction.LINE, pen, coordinates));
+                        instructions.add(new LineInstruction(Instruction.LINE, pen, coordinates));
                         break;
 
                     case RECTANGLE:
-                        instructions.add(new Rectangle(Instruction.RECTANGLE, pen, fill, coordinates));
+                        instructions.add(new RectangleInstruction(Instruction.RECTANGLE, pen, fill, coordinates));
                         break;
 
                     case PLOT:
-                        instructions.add(new Plot(Instruction.PLOT, pen, coordinates));
+                        instructions.add(new PlotInstruction(Instruction.PLOT, pen, coordinates));
                         break;
 
                     case ELLIPSE:
-                        instructions.add(new Ellipse(Instruction.ELLIPSE, pen, fill, coordinates));
+                        instructions.add(new EllipseInstruction(Instruction.ELLIPSE, pen, fill, coordinates));
                         break;
 
                     case POLYGON:
-                        instructions.add(new Polygon(Instruction.POLYGON, pen, fill, coordinates));
+                        instructions.add(new PolygonInstruction(Instruction.POLYGON, pen, fill, coordinates));
                         break;
 
                     default:
@@ -108,14 +108,14 @@ public class Parser {
                 switch (instruction) {
                     case PEN:
                         pen = Integer.parseInt(value, 16);
-                        instructions.add(new Pen(Instruction.PEN, value));
+                        instructions.add(new PenInstruction(Instruction.PEN, value));
                         break;
 
                     case FILL:
                         if (!value.equals("OFF"))
                             fill = Integer.parseInt(value, 16);
 
-                        instructions.add(new Fill(Instruction.FILL, value));
+                        instructions.add(new FillInstruction(Instruction.FILL, value));
                         break;
 
                     default:

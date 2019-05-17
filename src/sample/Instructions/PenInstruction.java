@@ -1,12 +1,12 @@
 package sample.Instructions;
 
-public class Pen implements VecInstruction {
+public class PenInstruction implements VecInstruction {
 
 
     private int colour;
     private Instruction type;
 
-    public Pen(Instruction type,String colour) {
+    public PenInstruction(Instruction type, String colour) {
         this.type = type;
         this.colour = Integer.parseInt(colour, 16);
     }

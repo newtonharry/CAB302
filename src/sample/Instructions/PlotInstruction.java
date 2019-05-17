@@ -1,21 +1,21 @@
 package sample.Instructions;
 
-
+import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
+import sample.Parser.Parser;
 
 import java.util.List;
 
-public class Rectangle extends Shape {
+public class PlotInstruction extends Shape {
 
     private double x1, y1,
                    x2, y2;
 
-    public Rectangle(Instruction type, int pen, int fill, List<Double> coordinates) throws ShapeException {
-        super(type,pen,fill,coordinates);
-        if(coordinates.size() < 4){
+    public PlotInstruction(Instruction type, int pen, List<Double> coordinates) throws ShapeException {
+        super(type,pen,coordinates);
+        if(coordinates.size() > 2){
             throw new ShapeException("Could not process coordinates correctly");
         }
-
     }
 
     @Override

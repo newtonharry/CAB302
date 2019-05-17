@@ -1,12 +1,13 @@
-package sample.Instructions;
+package sample.Tests;
 
 import org.junit.Test;
+import sample.Instructions.Shape;
 
 public class ShapeTest {
 
     private Shape shape;
 
-    // This is not how the Shape objects are used, Pen and Fill have their own classes
+    // This is not how the Shape objects are used, PenInstruction and FillInstruction have their own classes
     @Test
     public void testPenConstruct() {
         //shape = new Shape(0x000000, -0xFFFFFF);

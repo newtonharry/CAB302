@@ -1,6 +1,8 @@
 package sample.Instructions;
 
 
+import sample.Exceptions.ShapeException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,7 @@ public abstract class Shape implements VecInstruction {
                 .collect(Collectors.joining(" ")));
     }
 
-    public abstract void draw();
+    public abstract void draw() throws ShapeException;
 
 
 }
