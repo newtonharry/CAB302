@@ -16,8 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -362,6 +361,7 @@ public class Controller implements Initializable{
 
     private void handleMouseEvent(){
         canvas.setOnMouseClicked(event -> {
+
             //canvasPane.setPrefWidth(Main.getScene().getWidth());
 
             refreshColors();
@@ -421,19 +421,6 @@ public class Controller implements Initializable{
         });
     }
 
-    private static void hex2Rgb(String colorStr) {
-        //String hex[] = colorStr.split("0x");
-        //System.out.println(hex[1]);
-        //Color test = Color.decode("#FFCCEE");
-        /*for(int i=0; i<hex.length; i++){
-            System.out.println(hex[i]);
-        }*/
-        //System.out.println(Integer.valueOf( colorStr.substring( 1, 3 ), 16 ));
-        //System.out.println(Integer.valueOf( colorStr.substring( 3, 5 ), 16 ));
-        //System.out.println(Integer.valueOf( colorStr.substring( 5, 7 ), 16 ));
-
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb){
 
@@ -451,19 +438,7 @@ public class Controller implements Initializable{
 
 
 
-        /*double stageWidth = Main.getStageWidth();
-        double stageHeight = Main.getStageHeight();
-        while(true){
-            if(stageWidth != Main.getStageWidth()){
-                stageWidth = Main.getStageWidth();
-                System.out.println("width changed");
-            }
 
-            if(stageHeight != Main.getStageHeight()){
-                stageHeight = Main.getStageHeight();
-                System.out.println("height changed");
-            }
-        }*/
 
     }
 
