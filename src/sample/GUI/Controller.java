@@ -130,16 +130,12 @@ public class Controller implements Initializable{
     }
 
 
-    @FXML private void newCanvasMenuBtnClick(){
-        System.out.println("New Canvas Menu Button Click");
-
-    }
-
-    @FXML private void openMenuBtnClick(){ System.out.println("Open Menu Button Click"); }
-    @FXML private void saveMenuBtnClick(){ System.out.println("Save Menu Button Click"); }
-    @FXML private void exportMenuBtnClick(){ System.out.println("Export Menu Button Click"); }
-    @FXML private void undoMenuBtnClick(){ System.out.println("Undo Menu Button Click"); }
-    @FXML private void showGridMenuBtnClick(){ System.out.println("Show Grid Menu Button Click"); }
+    @FXML private void newCanvasMenuBtnClick(){ sample.GUI.KeyboardShortcuts.newCommand();  }
+    @FXML private void openMenuBtnClick(){ sample.GUI.KeyboardShortcuts.openCommand(); }
+    @FXML private void saveMenuBtnClick(){ sample.GUI.KeyboardShortcuts.saveCommand(); }
+    @FXML private void exportMenuBtnClick(){ sample.GUI.KeyboardShortcuts.exportCommand(); }
+    @FXML private void undoMenuBtnClick(){ sample.GUI.KeyboardShortcuts.undoCommand(); }
+    @FXML private void showGridMenuBtnClick(){ sample.GUI.KeyboardShortcuts.gridCommand(); }
 
 
     private void changeActiveButton(String btnType){
