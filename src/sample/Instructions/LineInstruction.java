@@ -15,7 +15,7 @@ public class LineInstruction extends Shape {
     public LineInstruction(int pen, List<Double> coordinates) throws ShapeException {
         super(Instruction.LINE, pen, coordinates);
         if (coordinates.size() < 4) {
-            throw new ShapeException("Could not process coordinates correctly");
+            throw new ShapeException(Instruction.ELLIPSE + "Incorrect number of co-ordinates");
         }
 
         x1 = coordinates.get(0);
@@ -24,11 +24,4 @@ public class LineInstruction extends Shape {
         y2 = coordinates.get(3);
     }
 
-    @Override
-    public void draw() throws ShapeException {
-        // Need to get canvas width and height
-        Line line = new Line();
-
-
-    }
 }

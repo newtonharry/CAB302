@@ -14,12 +14,7 @@ public class PlotInstruction extends Shape {
     public PlotInstruction(int pen, List<Double> coordinates) throws ShapeException {
         super(Instruction.PLOT,pen,coordinates);
         if(coordinates.size() > 2){
-            throw new ShapeException("Could not process coordinates correctly");
+            throw new ShapeException(Instruction.PLOT + ": Incorrect number of coordinates");
         }
-    }
-
-    @Override
-    public void draw() {
-
     }
 }

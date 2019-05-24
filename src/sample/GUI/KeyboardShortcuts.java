@@ -1,12 +1,17 @@
 package sample.GUI;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 public class KeyboardShortcuts {
     static public void newCommand(){
         System.out.println("New");
     }
 
-    static public void openCommand(){
-        System.out.println("Open");
+    static public void openCommand(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open VEC File");
+        fileChooser.showOpenDialog(stage);
     }
 
     static public void saveCommand(){

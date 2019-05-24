@@ -13,7 +13,7 @@ public class EllipseInstruction extends Shape {
     public EllipseInstruction(int pen, int fill, List<Double> coordinates) throws ShapeException {
         super(Instruction.ELLIPSE, pen, fill, coordinates);
         if(coordinates.size() < 4){
-            throw new ShapeException("Could not process coordinates correctly");
+            throw new ShapeException(Instruction.ELLIPSE + ": Incorrect number of co-ordinates");
         }
 
         x1 = coordinates.get(0);
@@ -22,8 +22,4 @@ public class EllipseInstruction extends Shape {
         y2 = coordinates.get(3);
     }
 
-    @Override
-    public void draw() {
-
-    }
 }

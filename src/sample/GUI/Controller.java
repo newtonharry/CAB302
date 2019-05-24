@@ -3,6 +3,7 @@ package sample.GUI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,20 +36,31 @@ import javax.swing.*;
 import javax.tools.Tool;
 
 
-public class Controller implements Initializable{
+public class Controller implements Initializable {
 
-    @FXML private ColorPicker colourSelector;
-    @FXML private Button penToolBtn;
-    @FXML private Button lineToolBtn;
-    @FXML private Button rectangleToolBtn;
-    @FXML private Button ellipseToolBtn;
-    @FXML private Button polygonToolBtn;
-    @FXML private ColorPicker lineColorPicker;
-    @FXML private ColorPicker fillColorPicker;
+    @FXML
+    private ColorPicker colourSelector;
+    @FXML
+    private Button penToolBtn;
+    @FXML
+    private Button lineToolBtn;
+    @FXML
+    private Button rectangleToolBtn;
+    @FXML
+    private Button ellipseToolBtn;
+    @FXML
+    private Button polygonToolBtn;
+    @FXML
+    private ColorPicker lineColorPicker;
+    @FXML
+    private ColorPicker fillColorPicker;
 
-    @FXML private Canvas canvas;
-    @FXML public static AnchorPane canvasPane;
-    @FXML private AnchorPane canvasAnchorPane;
+    @FXML
+    private Canvas canvas;
+    @FXML
+    public static AnchorPane canvasPane;
+    @FXML
+    private AnchorPane canvasAnchorPane;
 
     Color lineColor;
     Color fillColor;
@@ -75,7 +87,7 @@ public class Controller implements Initializable{
     GraphicsContext tempDrawingLayerGC;
 
     @FXML
-    private void penToolClick(){
+    private void penToolClick() {
 
         changeActiveButton("pen");
         this.selectedTool = "plot";
@@ -83,37 +95,36 @@ public class Controller implements Initializable{
     }
 
 
-
     @FXML
-    private void lineToolClick(){
+    private void lineToolClick() {
         changeActiveButton("line");
         this.selectedTool = "line";
         handleMouseEvent();
     }
 
     @FXML
-    private void rectangleToolClick(){
+    private void rectangleToolClick() {
         changeActiveButton("rectangle");
         this.selectedTool = "rectangle";
         handleMouseEvent();
     }
 
     @FXML
-    private void ellipseToolClick(){
+    private void ellipseToolClick() {
         changeActiveButton("ellipse");
         this.selectedTool = "ellipse";
         handleMouseEvent();
     }
 
     @FXML
-    private void polygonToolClick(){
+    private void polygonToolClick() {
         changeActiveButton("polygon");
         this.selectedTool = "polygon";
         handleMouseEvent();
     }
 
     @FXML
-    private void closePolygon(){
+    private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         brush.setStroke(lineColor);
@@ -130,22 +141,46 @@ public class Controller implements Initializable{
     }
 
 
-    @FXML private void newCanvasMenuBtnClick(){ sample.GUI.KeyboardShortcuts.newCommand();  }
-    @FXML private void openMenuBtnClick(){ sample.GUI.KeyboardShortcuts.openCommand(); }
-    @FXML private void saveMenuBtnClick(){ sample.GUI.KeyboardShortcuts.saveCommand(); }
-    @FXML private void exportMenuBtnClick(){ sample.GUI.KeyboardShortcuts.exportCommand(); }
-    @FXML private void undoMenuBtnClick(){ sample.GUI.KeyboardShortcuts.undoCommand(); }
-    @FXML private void showGridMenuBtnClick(){ sample.GUI.KeyboardShortcuts.gridCommand(); }
+    @FXML
+    private void newCanvasMenuBtnClick() {
+        sample.GUI.KeyboardShortcuts.newCommand();
+    }
+
+    @FXML
+    public void openMenuBtnClick() {
+        //sample.GUI.KeyboardShortcuts.openCommand(stage);
+
+    }
+
+    @FXML
+    private void saveMenuBtnClick() {
+        sample.GUI.KeyboardShortcuts.saveCommand();
+    }
+
+    @FXML
+    private void exportMenuBtnClick() {
+        sample.GUI.KeyboardShortcuts.exportCommand();
+    }
+
+    @FXML
+    private void undoMenuBtnClick() {
+        sample.GUI.KeyboardShortcuts.undoCommand();
+    }
+
+    @FXML
+    private void showGridMenuBtnClick() {
+        sample.GUI.KeyboardShortcuts.gridCommand();
+    }
 
 
-    private void changeActiveButton(String btnType){
+    private void changeActiveButton(String btnType) {
         penToolBtn.getStyleClass().remove("headerBtnActive");
         lineToolBtn.getStyleClass().remove("headerBtnActive");
         rectangleToolBtn.getStyleClass().remove("headerBtnActive");
         ellipseToolBtn.getStyleClass().remove("headerBtnActive");
         polygonToolBtn.getStyleClass().remove("headerBtnActive");
 
-        switch(btnType){
+        switch (btnType) {
             case "pen":
                 penToolBtn.getStyleClass().add("headerBtnActive");
                 break;
@@ -165,7 +200,7 @@ public class Controller implements Initializable{
     }
 
 
-    private void setupLine(Double x, Double y){
+    private void setupLine(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -177,7 +212,7 @@ public class Controller implements Initializable{
     }
 
 
-    private void renderLinePreview(Double x, Double y){
+    private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -193,15 +228,16 @@ public class Controller implements Initializable{
         tempDrawingLayerGC.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
     }
 
-    private void plotPoint(Double x, Double y){
+    private void plotPoint(Double x, Double y) {
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
 
         brush.strokeLine(x, y, x, y);
     }
 
-    private void endLine(){
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+    private void endLine() {
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
@@ -210,7 +246,7 @@ public class Controller implements Initializable{
         line = new Line();
     }
 
-    private void setupRectangle(Double x, Double y){
+    private void setupRectangle(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -218,7 +254,7 @@ public class Controller implements Initializable{
         rectangle.setY(y);
     }
 
-    private void renderRectanglePreview(Double x, Double y){
+    private void renderRectanglePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -243,7 +279,7 @@ public class Controller implements Initializable{
         rectangle.setY(startY);
     }
 
-    private void endRectangle(Double x, Double y){
+    private void endRectangle(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         double startX = rectangle.getX();
@@ -264,7 +300,7 @@ public class Controller implements Initializable{
         rectangle = new Rectangle();
     }
 
-    private void setupEllipse(Double x, Double y){
+    private void setupEllipse(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -276,7 +312,7 @@ public class Controller implements Initializable{
         ellipse.setRadiusY(0);
     }
 
-    private void renderEllipsePreview(Double x, Double y){
+    private void renderEllipsePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -298,7 +334,7 @@ public class Controller implements Initializable{
         tempDrawingLayerGC.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
     }
 
-    private void endEllipse(Double x, Double y){
+    private void endEllipse(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         ellipseBounds.setWidth(Math.abs(x - ellipseBounds.getX()));
@@ -313,15 +349,15 @@ public class Controller implements Initializable{
 
     }
 
-    private void polygonClick(){
+    private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
-            if(selectedTool == "polygon") {
+            if (selectedTool == "polygon") {
                 renderPolygonPreview(event.getX(), event.getY(), event.getButton());
             }
         });
     }
 
-    private void setupPolygon(Double x, Double y){
+    private void setupPolygon(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
@@ -333,8 +369,8 @@ public class Controller implements Initializable{
         polygonClick();
     }
 
-    private void renderPolygonPreview(Double x, Double y, MouseButton button){
-        if(button == MouseButton.SECONDARY){
+    private void renderPolygonPreview(Double x, Double y, MouseButton button) {
+        if (button == MouseButton.SECONDARY) {
             closePolygon();
             return;
         }
@@ -346,27 +382,27 @@ public class Controller implements Initializable{
         tempDrawingLayerGC.setLineWidth(1);
 
         tempDrawingLayerGC.setStroke(lineColorPicker.getValue());
-        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount-1], polygonPointsY[polygonPointsCount-1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
+        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount - 1], polygonPointsY[polygonPointsCount - 1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
         polygonPointsCount++;
     }
 
-    private void refreshColors(){
+    private void refreshColors() {
         lineColor = lineColorPicker.getValue();
         fillColor = fillColorPicker.getValue();
     }
 
-    private void handleMouseEvent(){
+    private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
 
             //canvasPane.setPrefWidth(Main.getScene().getWidth());
 
             refreshColors();
-            if(selectedTool == "plot") {
+            if (selectedTool == "plot") {
                 plotPoint(event.getX(), event.getY());
             }
 
-            if(selectedTool == "polygon") {
-                if(polygonPointsCount == 0){
+            if (selectedTool == "polygon") {
+                if (polygonPointsCount == 0) {
                     setupPolygon(event.getX(), event.getY());
                 } else {
                     renderPolygonPreview(event.getX(), event.getY(), event.getButton());
@@ -377,13 +413,15 @@ public class Controller implements Initializable{
         canvas.setOnMousePressed(event -> {
             refreshColors();
 
-            if(selectedTool == "line") {    setupLine(event.getX(), event.getY());  }
+            if (selectedTool == "line") {
+                setupLine(event.getX(), event.getY());
+            }
 
-            if(selectedTool == "rectangle"){
+            if (selectedTool == "rectangle") {
                 setupRectangle(event.getX(), event.getY());
             }
 
-            if(selectedTool == "ellipse"){
+            if (selectedTool == "ellipse") {
                 setupEllipse(event.getX(), event.getY());
             }
         });
@@ -391,34 +429,38 @@ public class Controller implements Initializable{
         canvas.setOnMouseDragged(event -> {
             refreshColors();
 
-            if(selectedTool == "line") {    renderLinePreview(event.getX(), event.getY());  }
+            if (selectedTool == "line") {
+                renderLinePreview(event.getX(), event.getY());
+            }
 
-            if(selectedTool == "rectangle"){
+            if (selectedTool == "rectangle") {
                 renderRectanglePreview(event.getX(), event.getY());
             }
 
-            if(selectedTool == "ellipse"){
+            if (selectedTool == "ellipse") {
                 renderEllipsePreview(event.getX(), event.getY());
             }
         });
 
-        canvas.setOnMouseReleased(event->{
+        canvas.setOnMouseReleased(event -> {
             refreshColors();
 
-            if(selectedTool == "line") {    endLine();  }
+            if (selectedTool == "line") {
+                endLine();
+            }
 
-            if(selectedTool == "rectangle"){
+            if (selectedTool == "rectangle") {
                 endRectangle(event.getX(), event.getY());
             }
 
-            if(selectedTool == "ellipse"){
+            if (selectedTool == "ellipse") {
                 endEllipse(event.getX(), event.getY());
             }
         });
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
 
 
         Color transparent = Color.web("0xffffff00", 0);
@@ -433,13 +475,10 @@ public class Controller implements Initializable{
         brush.setLineWidth(1);
 
 
-
-
-
     }
 
     @FXML
-    public void toolSelected(ActionEvent e){
+    public void toolSelected(ActionEvent e) {
         toolSelected = true;
     }
 }

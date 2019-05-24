@@ -18,7 +18,6 @@ public abstract class Shape implements VecInstruction {
         this.type = type;
         this.pen = pen;
         this.fill = fill;
-        // Could potentially generate co-ordinates here instead of doing it multiple times in parser class
         this.coordinates = coordinates;
     }
 
@@ -28,16 +27,16 @@ public abstract class Shape implements VecInstruction {
         this.coordinates = coordinates;
     }
 
+    public List<Double> getCoordinates(){
+        return this.coordinates;
+    }
+
     public int getPen() {
         return this.pen;
     }
 
     public int getFill() {
         return this.fill;
-    }
-
-    public List<Double> getCoordinates() {
-        return this.coordinates;
     }
 
     @Override
@@ -51,8 +50,4 @@ public abstract class Shape implements VecInstruction {
                 .map(Object::toString)
                 .collect(Collectors.joining(" ")));
     }
-
-    public abstract void draw() throws ShapeException;
-
-
 }

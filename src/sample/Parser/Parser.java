@@ -17,14 +17,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Parser extends Controller{
+public class Parser{
     /*
      * A class which reads and writes to VEC files
      */
-
-    private Path vecFile; // Buffer for writing and reading data to/from VEC files
+    private Path vecFile; // Buffer for writing and reading data to/from VEC files, with default filename
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
-    private ArrayList<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Instructions and their co-ordinates
+    private List<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Instructions and their co-ordinates
 
     // Two patters
     // One to match a shape
@@ -37,20 +36,15 @@ public class Parser extends Controller{
     /*
     Parser to begin reading/writing from/to a file
      */
-    public Parser(String file) throws IOException {
-        vecFile = Paths.get(file);
+    public Parser(String file) throws IOException, ParserException {
+        if(file.isEmpty() || file.isBlank())
+            throw new ParserException("Filename cannot be blank or empty");
+
+        this.vecFile = Paths.get(file);
     }
 
-    // Potential algorithm update
-
-    /*
-    1. Check weather line is a PEN/FILL or Shape instruction
-    2. Depending on type of instruction, cleanse the string and extract data
-     */
-
-    // IMPORTANT: need to check if VEC file has correct syntax whilst parsing, assert error is there is one
-    // Perhaps introduce a string cleaning method (might have to use regex as will be easier for that)
     public void readInstructions() throws IOException, ParserException, ShapeException {
+
         List<String> lines = Files.readAllLines(this.vecFile, this.charset); // Lines from VEC file
 
         List<Double> coordinates; // Used to generate coordinates from instructions
@@ -127,22 +121,32 @@ public class Parser extends Controller{
         }
     }
 
+    /*
+     */
     public void writeInstructions() throws IOException {
-        // Need to convert the shapes ArrayList into proper format for the VEC file
         String instructions = this.instructions
                 .stream()
                 .map(VecInstruction::toString)
-                .collect(Collectors.joining("\n")); // Need to work on the shape toString method
+                .collect(Collectors.joining("\n")); // Convert instructions to strings
 
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
     }
 
-    public void addInstructions(ArrayList<VecInstruction> shapes) {
-        this.instructions.addAll(shapes);
+   public void addInstruction(VecInstruction shape) {
+        this.instructions.add(shape);
     }
 
     // Used for undo
     public void popInstruction() {
         this.instructions.remove(this.instructions.size() - 1);
     }
+
+    public void setFileName(String file){
+        this.vecFile = Paths.get(file);
+    }
+
+    public String getFileName() {
+       return this.vecFile.getFileName().toString();
+    }
+
 }
