@@ -41,7 +41,7 @@ public class Main extends Application{
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.openCommand(primaryStage);
+        rn = ()-> sample.GUI.KeyboardShortcuts.openCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);

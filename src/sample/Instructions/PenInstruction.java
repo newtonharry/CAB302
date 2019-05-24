@@ -18,4 +18,9 @@ public class PenInstruction implements VecInstruction {
     public String toString() {
         return String.format("%s %s",this.type.toString(),Integer.toHexString(this.colour).toUpperCase());
     }
+
+    @Override
+    public Instruction getType() {
+        return this.type;
+    }
 }

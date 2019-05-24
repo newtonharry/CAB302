@@ -29,4 +29,9 @@ public class FillInstruction implements VecInstruction {
 
         return String.format("%s %s", this.type.toString(), value);
     }
+
+    @Override
+    public Instruction getType() {
+        return this.type;
+    }
 }

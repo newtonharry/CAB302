@@ -61,4 +61,13 @@ public class ParserTest {
 
     }
 
+
+    @Test
+    public void testIterator() throws ShapeException, ParserException, IOException {
+        parser.readInstructions();
+        for(VecInstruction shape: parser){
+            System.out.println(shape.toString());
+        }
+    }
+
 }

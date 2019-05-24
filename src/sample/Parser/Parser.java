@@ -11,13 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Parser{
+public class Parser implements Iterable<VecInstruction> {
     /*
      * A class which reads and writes to VEC files
      */
@@ -37,7 +38,7 @@ public class Parser{
     Parser to begin reading/writing from/to a file
      */
     public Parser(String file) throws IOException, ParserException {
-        if(file.isEmpty() || file.isBlank())
+        if (file.isEmpty() || file.isBlank())
             throw new ParserException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
@@ -132,7 +133,7 @@ public class Parser{
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
     }
 
-   public void addInstruction(VecInstruction shape) {
+    public void addInstruction(VecInstruction shape) {
         this.instructions.add(shape);
     }
 
@@ -141,12 +142,17 @@ public class Parser{
         this.instructions.remove(this.instructions.size() - 1);
     }
 
-    public void setFileName(String file){
+    public void setFileName(String file) {
         this.vecFile = Paths.get(file);
     }
 
     public String getFileName() {
-       return this.vecFile.getFileName().toString();
+        return this.vecFile.getFileName().toString();
     }
 
+    @Override
+    public Iterator<VecInstruction> iterator() {
+        return this.instructions.stream().filter(instruction -> !(instruction.getType().equals(Instruction.PEN) ||
+                instruction.getType().equals(Instruction.FILL))).iterator();
+    }
 }

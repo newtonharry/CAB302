@@ -39,9 +39,12 @@ public abstract class Shape implements VecInstruction {
         return this.fill;
     }
 
+    public Instruction getType(){
+        return this.type;
+    }
+
     @Override
     public String toString() {
-        // Should return "INSTRUCTION_TYPE VALUES"
         return String.format(
                 "%s %s",
                 this.type.toString(),
