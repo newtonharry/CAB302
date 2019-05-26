@@ -1,8 +1,5 @@
 package sample.GUI;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
 public class KeyboardShortcuts {
     static public void newCommand() {
         System.out.println("New");

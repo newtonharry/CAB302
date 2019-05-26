@@ -1,18 +1,15 @@
 package sample.Instructions;
 
-import javafx.scene.canvas.Canvas;
 import sample.Exceptions.ShapeException;
 
 import java.util.List;
 
-import javafx.scene.shape.Line;
-
 public class LineInstruction extends Shape {
 
     private double x1, y1,
-            x2, y2;
+                   x2, y2;
 
-    public LineInstruction(int pen, List<Double> coordinates) throws ShapeException {
+    public LineInstruction(String pen, List<Double> coordinates) throws ShapeException {
         super(Instruction.LINE, pen, coordinates);
         if (coordinates.size() < 4) {
             throw new ShapeException(Instruction.ELLIPSE + "Incorrect number of co-ordinates");

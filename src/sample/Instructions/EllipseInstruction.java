@@ -10,7 +10,7 @@ public class EllipseInstruction extends Shape {
     private double x1, y1,
                    x2, y2;
 
-    public EllipseInstruction(int pen, int fill, List<Double> coordinates) throws ShapeException {
+    public EllipseInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
         super(Instruction.ELLIPSE, pen, fill, coordinates);
         if(coordinates.size() < 4){
             throw new ShapeException(Instruction.ELLIPSE + ": Incorrect number of co-ordinates");
@@ -21,5 +21,4 @@ public class EllipseInstruction extends Shape {
         x2 = coordinates.get(2);
         y2 = coordinates.get(3);
     }
-
 }

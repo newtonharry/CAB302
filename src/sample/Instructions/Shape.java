@@ -1,27 +1,24 @@
 package sample.Instructions;
 
-
-import sample.Exceptions.ShapeException;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class Shape implements VecInstruction {
 
     private Instruction type;
-    private int pen;  // pen colour
-    private int fill; // fill colour
+    private String pen;  // pen colour
+    private String fill; // fill colour
     private List<Double> coordinates;
 
     // Constructor to change pen and fill values
-    public Shape(Instruction type, int pen, int fill, List<Double> coordinates) {
+    Shape(Instruction type, String pen, String fill, List<Double> coordinates) {
         this.type = type;
         this.pen = pen;
         this.fill = fill;
         this.coordinates = coordinates;
     }
 
-    public Shape(Instruction type, int pen, List<Double> coordinates) {
+    Shape(Instruction type, String pen, List<Double> coordinates) {
         this.type = type;
         this.pen = pen;
         this.coordinates = coordinates;
@@ -31,13 +28,11 @@ public abstract class Shape implements VecInstruction {
         return this.coordinates;
     }
 
-    public int getPen() {
+    public String getPen() {
         return this.pen;
     }
 
-    public int getFill() {
-        return this.fill;
-    }
+    public String getFill() { return this.fill; }
 
     public Instruction getType(){
         return this.type;

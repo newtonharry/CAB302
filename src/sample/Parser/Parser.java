@@ -2,7 +2,7 @@ package sample.Parser;
 
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
-import sample.GUI.Controller;
+import sample.GUI.Model;
 import sample.Instructions.*;
 
 import java.io.*;
@@ -25,8 +25,13 @@ public class Parser implements Iterable<VecInstruction> {
     private Path vecFile; // Buffer for writing and reading data to/from VEC files, with default filename
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
     private List<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Instructions and their co-ordinates
+    private Instruction instruction; // Used in switch case, to identify instruction types
+    private Model model;
 
-    // Two patters
+    private PenInstruction pen  =  new PenInstruction("000000"); // black pen
+    private FillInstruction fill = new FillInstruction("OFF"); // no fill
+
+    // Two patterns
     // One to match a shape
     // One to match a colour fill
     private Pattern shapeInstruction = Pattern
@@ -37,24 +42,18 @@ public class Parser implements Iterable<VecInstruction> {
     /*
     Parser to begin reading/writing from/to a file
      */
-    public Parser(String file) throws IOException, ParserException {
+    public Parser(String file, Model model) throws ParserException {
         if (file.isEmpty() || file.isBlank())
             throw new ParserException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
+        this.model = model;
+        model.addPenInstruction(pen);
     }
 
     public void readInstructions() throws IOException, ParserException, ShapeException {
 
         List<String> lines = Files.readAllLines(this.vecFile, this.charset); // Lines from VEC file
-
-        List<Double> coordinates; // Used to generate coordinates from instructions
-        String value; // Used to store value of colour value (fill/pen)
-
-        int pen = 0x000000; // no pen
-        int fill = -0xFFFFFF; // no fill
-
-        Instruction instruction; // Used in switch case, to identify instruction types
 
         Matcher colourMatcher;
         Matcher shapeMatcher;
@@ -66,55 +65,10 @@ public class Parser implements Iterable<VecInstruction> {
             shapeMatcher = shapeInstruction.matcher(line);
 
             if (shapeMatcher.find()) {
-                instruction = Instruction.valueOf(shapeMatcher.group("type"));
-
-                coordinates = Stream.of(shapeMatcher            // Generate coordinates
-                        .group("coordinates")
-                        .split(" ")).map(Double::parseDouble)
-                        .collect(Collectors.toList());
-
-                switch (instruction) {
-                    case LINE:
-                        instructions.add(new LineInstruction(pen, coordinates));
-                        break;
-
-                    case RECTANGLE:
-                        instructions.add(new RectangleInstruction(pen, fill, coordinates));
-                        break;
-
-                    case PLOT:
-                        instructions.add(new PlotInstruction(pen, coordinates));
-                        break;
-
-                    case ELLIPSE:
-                        instructions.add(new EllipseInstruction(pen, fill, coordinates));
-                        break;
-
-                    case POLYGON:
-                        instructions.add(new PolygonInstruction(pen, fill, coordinates));
-                        break;
-
-                    default:
-                }
+                matchShape(shapeMatcher);
 
             } else if (colourMatcher.find()) {
-                instruction = Instruction.valueOf(colourMatcher.group("type"));
-                value = colourMatcher.group("value");
-                switch (instruction) {
-                    case PEN:
-                        pen = Integer.parseInt(value, 16);
-                        instructions.add(new PenInstruction(value));
-                        break;
-
-                    case FILL:
-                        if (!value.equals("OFF"))
-                            fill = Integer.parseInt(value, 16);
-
-                        instructions.add(new FillInstruction(value));
-                        break;
-
-                    default:
-                }
+                matchColour(colourMatcher);
             } else {
                 throw new ParserException("Could not read VEC file, incorrect syntax");
             }
@@ -154,5 +108,70 @@ public class Parser implements Iterable<VecInstruction> {
     public Iterator<VecInstruction> iterator() {
         return this.instructions.stream().filter(instruction -> !(instruction.getType().equals(Instruction.PEN) ||
                 instruction.getType().equals(Instruction.FILL))).iterator();
+    }
+
+    private void matchShape(Matcher shapeMatcher) throws ShapeException {
+        instruction = Instruction.valueOf(shapeMatcher.group("type"));
+        List<Double> coordinates; // Used to generate coordinates from instructions
+
+        // Generate coordinates
+        coordinates = Stream.of(shapeMatcher
+                .group("coordinates")
+                .split(" ")).map(Double::parseDouble)
+                .collect(Collectors.toList());
+
+        switch (instruction) {
+            case LINE:
+                LineInstruction lineInst = new LineInstruction(pen.getColour(), coordinates);
+                model.addLineInstruction(lineInst);
+                instructions.add(lineInst);
+                break;
+
+            case RECTANGLE:
+                RectangleInstruction rectInst = new RectangleInstruction(pen.getColour(), fill.getColour(), coordinates);
+                model.addRectangleInstruction(rectInst);
+                instructions.add(rectInst);
+                break;
+
+            case PLOT:
+                PlotInstruction plotInst = new PlotInstruction(pen.getColour(), coordinates);
+                model.addPlotInstruction(plotInst);
+                instructions.add(plotInst);
+                break;
+
+            case ELLIPSE:
+                EllipseInstruction ellipseInst = new EllipseInstruction(pen.getColour(), fill.getColour(), coordinates);
+                model.addEllipseInstruction(ellipseInst);
+                instructions.add(ellipseInst);
+                break;
+
+            case POLYGON:
+                PolygonInstruction polyInst = new PolygonInstruction(pen.getColour(), fill.getColour(), coordinates);
+                model.addPolygonInstruction(polyInst);
+                instructions.add(polyInst);
+                break;
+
+            default:
+        }
+    }
+
+    private void matchColour(Matcher colourMatcher) {
+        instruction = Instruction.valueOf(colourMatcher.group("type"));
+        String value = colourMatcher.group("value");
+        switch (instruction) {
+            case PEN:
+                PenInstruction penInst = new PenInstruction(value);
+                model.addPenInstruction(penInst);
+                instructions.add(penInst);
+                break;
+
+            case FILL:
+                FillInstruction fillInst = new FillInstruction(value);
+                model.addFillInstruction(fillInst);
+                instructions.add(fillInst);
+                break;
+
+            default:
+        }
     }
 }

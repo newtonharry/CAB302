@@ -1,14 +1,5 @@
 package sample.GUI;
 
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ResourceBundle;
-
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,8 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -25,88 +15,99 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
-import sample.Exceptions.FileExistsException;
-import sample.Exceptions.InvalidPathException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class Controller_BMPExport implements Initializable{
-
-    // TODO: remove?
-    @FXML private ColorPicker colourSelector;
-    private boolean toolSelected = false;
-    private Polygon polygon = new Polygon();
-    //
-
-    @FXML private Button penToolBtn;
-    @FXML private Button lineToolBtn;
-    @FXML private Button rectangleToolBtn;
-    @FXML private Button ellipseToolBtn;
-    @FXML private Button polygonToolBtn;
-    @FXML private ColorPicker lineColorPicker;
-    @FXML private ColorPicker fillColorPicker;
-
-    @FXML private Canvas canvas;
-    @FXML public static AnchorPane canvasPane;
-    @FXML private AnchorPane canvasAnchorPane;
-
-    private Color lineColor;
-    private Color fillColor;
-
-    private String selectedTool;
-
-    private GraphicsContext brush;
-
-    private Line line = new Line();
-    private Rectangle rectangle = new Rectangle();
-    private Ellipse ellipse = new Ellipse();
-    private Rectangle ellipseBounds = new Rectangle();
-    private double[] polygonPointsX = new double[9999];
-    private double[] polygonPointsY = new double[9999];
-    private int polygonPointsCount = 0;
-
-    // Temp Drawing Layers
-    private Canvas tempDrawingLayer;
-    private GraphicsContext tempDrawingLayerGC;
+public class Controller_Old implements Initializable {
 
     @FXML
-    private void penToolClick(){
+    private ColorPicker colourSelector;
+    @FXML
+    private Button penToolBtn;
+    @FXML
+    private Button lineToolBtn;
+    @FXML
+    private Button rectangleToolBtn;
+    @FXML
+    private Button ellipseToolBtn;
+    @FXML
+    private Button polygonToolBtn;
+    @FXML
+    private ColorPicker lineColorPicker;
+    @FXML
+    private ColorPicker fillColorPicker;
+
+    @FXML
+    private Canvas canvas;
+    @FXML
+    public static AnchorPane canvasPane;
+    @FXML
+    private AnchorPane canvasAnchorPane;
+
+    Color lineColor;
+    Color fillColor;
+
+    boolean toolSelected = false;
+    String selectedTool;
+
+    GraphicsContext brush;
+
+    Line line = new Line();
+    Rectangle rectangle = new Rectangle();
+    Ellipse ellipse = new Ellipse();
+    Rectangle ellipseBounds = new Rectangle();
+    Polygon polygon = new Polygon();
+    double[] polygonXPoints = new double[9999]; //Set to max 9999 points
+    double[] polygonYPoints = new double[9999]; //Set to max 9999 points
+    int polygonPoints = 0;
+    double[] polygonPointsX = new double[9999];
+    double[] polygonPointsY = new double[9999];
+    int polygonPointsCount = 0;
+
+    // Temp Drawing Layers
+    Canvas tempDrawingLayer;
+    GraphicsContext tempDrawingLayerGC;
+
+    @FXML
+    private void penToolClick() {
+
         changeActiveButton("pen");
         this.selectedTool = "plot";
         handleMouseEvent();
     }
 
 
-
     @FXML
-    private void lineToolClick(){
+    private void lineToolClick() {
         changeActiveButton("line");
         this.selectedTool = "line";
         handleMouseEvent();
     }
 
     @FXML
-    private void rectangleToolClick(){
+    private void rectangleToolClick() {
         changeActiveButton("rectangle");
         this.selectedTool = "rectangle";
         handleMouseEvent();
     }
 
     @FXML
-    private void ellipseToolClick(){
+    private void ellipseToolClick() {
         changeActiveButton("ellipse");
         this.selectedTool = "ellipse";
         handleMouseEvent();
     }
 
     @FXML
-    private void polygonToolClick(){
+    private void polygonToolClick() {
         changeActiveButton("polygon");
         this.selectedTool = "polygon";
         handleMouseEvent();
     }
 
     @FXML
-    private void closePolygon(){
+    private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         brush.setStroke(lineColor);
@@ -123,32 +124,46 @@ public class Controller_BMPExport implements Initializable{
     }
 
 
-    @FXML private void newCanvasMenuBtnClick(){ sample.GUI.KeyboardShortcuts.newCommand();  }
-    @FXML private void openMenuBtnClick(){ sample.GUI.KeyboardShortcuts.openCommand(); }
-    @FXML private void saveMenuBtnClick(){ sample.GUI.KeyboardShortcuts.saveCommand(); }
-    @FXML private void undoMenuBtnClick(){ sample.GUI.KeyboardShortcuts.undoCommand(); }
-    @FXML private void showGridMenuBtnClick(){ sample.GUI.KeyboardShortcuts.gridCommand(); }
-    @FXML private void exportMenuBtnClick() {
-        try {
-            exportBMP("", "CanvasImage.bmp", 4096);
-        } catch (IOException e) {
+    @FXML
+    private void newCanvasMenuBtnClick() {
+        KeyboardShortcuts.newCommand();
+    }
 
-        } catch (FileExistsException e) {
+    @FXML
+    public void openMenuBtnClick() {
+        //sample.GUI.KeyboardShortcuts.openCommand(stage);
 
-        } catch (InvalidPathException e) {
+    }
 
-        }
+    @FXML
+    private void saveMenuBtnClick() {
+        KeyboardShortcuts.saveCommand();
+    }
+
+    @FXML
+    private void exportMenuBtnClick() {
+        KeyboardShortcuts.exportCommand();
+    }
+
+    @FXML
+    private void undoMenuBtnClick() {
+        KeyboardShortcuts.undoCommand();
+    }
+
+    @FXML
+    private void showGridMenuBtnClick() {
+        KeyboardShortcuts.gridCommand();
     }
 
 
-    private void changeActiveButton(String btnType){
+    private void changeActiveButton(String btnType) {
         penToolBtn.getStyleClass().remove("headerBtnActive");
         lineToolBtn.getStyleClass().remove("headerBtnActive");
         rectangleToolBtn.getStyleClass().remove("headerBtnActive");
         ellipseToolBtn.getStyleClass().remove("headerBtnActive");
         polygonToolBtn.getStyleClass().remove("headerBtnActive");
 
-        switch(btnType){
+        switch (btnType) {
             case "pen":
                 penToolBtn.getStyleClass().add("headerBtnActive");
                 break;
@@ -168,7 +183,7 @@ public class Controller_BMPExport implements Initializable{
     }
 
 
-    private void setupLine(Double x, Double y){
+    private void setupLine(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -180,7 +195,7 @@ public class Controller_BMPExport implements Initializable{
     }
 
 
-    private void renderLinePreview(Double x, Double y){
+    private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -196,15 +211,16 @@ public class Controller_BMPExport implements Initializable{
         tempDrawingLayerGC.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
     }
 
-    private void plotPoint(Double x, Double y){
+    private void plotPoint(Double x, Double y) {
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
 
         brush.strokeLine(x, y, x, y);
     }
 
-    private void endLine(){
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+    private void endLine() {
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
@@ -213,7 +229,7 @@ public class Controller_BMPExport implements Initializable{
         line = new Line();
     }
 
-    private void setupRectangle(Double x, Double y){
+    private void setupRectangle(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -221,7 +237,7 @@ public class Controller_BMPExport implements Initializable{
         rectangle.setY(y);
     }
 
-    private void renderRectanglePreview(Double x, Double y){
+    private void renderRectanglePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -246,7 +262,7 @@ public class Controller_BMPExport implements Initializable{
         rectangle.setY(startY);
     }
 
-    private void endRectangle(Double x, Double y){
+    private void endRectangle(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         double startX = rectangle.getX();
@@ -267,7 +283,7 @@ public class Controller_BMPExport implements Initializable{
         rectangle = new Rectangle();
     }
 
-    private void setupEllipse(Double x, Double y){
+    private void setupEllipse(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
@@ -279,7 +295,7 @@ public class Controller_BMPExport implements Initializable{
         ellipse.setRadiusY(0);
     }
 
-    private void renderEllipsePreview(Double x, Double y){
+    private void renderEllipsePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -301,7 +317,7 @@ public class Controller_BMPExport implements Initializable{
         tempDrawingLayerGC.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
     }
 
-    private void endEllipse(Double x, Double y){
+    private void endEllipse(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         ellipseBounds.setWidth(Math.abs(x - ellipseBounds.getX()));
@@ -316,15 +332,15 @@ public class Controller_BMPExport implements Initializable{
 
     }
 
-    private void polygonClick(){
+    private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
-            if(selectedTool.equals("polygon")) {
+            if (selectedTool == "polygon") {
                 renderPolygonPreview(event.getX(), event.getY(), event.getButton());
             }
         });
     }
 
-    private void setupPolygon(Double x, Double y){
+    private void setupPolygon(Double x, Double y) {
         tempDrawingLayer = new Canvas(700, 500);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
@@ -336,8 +352,8 @@ public class Controller_BMPExport implements Initializable{
         polygonClick();
     }
 
-    private void renderPolygonPreview(Double x, Double y, MouseButton button){
-        if(button == MouseButton.SECONDARY){
+    private void renderPolygonPreview(Double x, Double y, MouseButton button) {
+        if (button == MouseButton.SECONDARY) {
             closePolygon();
             return;
         }
@@ -349,27 +365,27 @@ public class Controller_BMPExport implements Initializable{
         tempDrawingLayerGC.setLineWidth(1);
 
         tempDrawingLayerGC.setStroke(lineColorPicker.getValue());
-        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount-1], polygonPointsY[polygonPointsCount-1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
+        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount - 1], polygonPointsY[polygonPointsCount - 1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
         polygonPointsCount++;
     }
 
-    private void refreshColors(){
+    private void refreshColors() {
         lineColor = lineColorPicker.getValue();
         fillColor = fillColorPicker.getValue();
     }
 
-    private void handleMouseEvent(){
+    private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
 
             //canvasPane.setPrefWidth(Main.getScene().getWidth());
 
             refreshColors();
-            if(selectedTool.equals("plot")) {
+            if (selectedTool == "plot") {
                 plotPoint(event.getX(), event.getY());
             }
 
-            if(selectedTool.equals("polygon")) {
-                if(polygonPointsCount == 0){
+            if (selectedTool == "polygon") {
+                if (polygonPointsCount == 0) {
                     setupPolygon(event.getX(), event.getY());
                 } else {
                     renderPolygonPreview(event.getX(), event.getY(), event.getButton());
@@ -380,13 +396,15 @@ public class Controller_BMPExport implements Initializable{
         canvas.setOnMousePressed(event -> {
             refreshColors();
 
-            if(selectedTool.equals("line")) {    setupLine(event.getX(), event.getY());  }
+            if (selectedTool == "line") {
+                setupLine(event.getX(), event.getY());
+            }
 
-            if(selectedTool.equals("rectangle")) {
+            if (selectedTool == "rectangle") {
                 setupRectangle(event.getX(), event.getY());
             }
 
-            if(selectedTool.equals("ellipse")) {
+            if (selectedTool == "ellipse") {
                 setupEllipse(event.getX(), event.getY());
             }
         });
@@ -394,34 +412,38 @@ public class Controller_BMPExport implements Initializable{
         canvas.setOnMouseDragged(event -> {
             refreshColors();
 
-            if(selectedTool.equals("line")) {    renderLinePreview(event.getX(), event.getY());  }
+            if (selectedTool == "line") {
+                renderLinePreview(event.getX(), event.getY());
+            }
 
-            if(selectedTool.equals("rectangle")) {
+            if (selectedTool == "rectangle") {
                 renderRectanglePreview(event.getX(), event.getY());
             }
 
-            if(selectedTool.equals("ellipse")) {
+            if (selectedTool == "ellipse") {
                 renderEllipsePreview(event.getX(), event.getY());
             }
         });
 
-        canvas.setOnMouseReleased(event->{
+        canvas.setOnMouseReleased(event -> {
             refreshColors();
 
-            if(selectedTool.equals("line")) {    endLine();  }
+            if (selectedTool == "line") {
+                endLine();
+            }
 
-            if(selectedTool.equals("rectangle")) {
+            if (selectedTool == "rectangle") {
                 endRectangle(event.getX(), event.getY());
             }
 
-            if(selectedTool.equals("ellipse")) {
+            if (selectedTool == "ellipse") {
                 endEllipse(event.getX(), event.getY());
             }
         });
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
 
 
         Color transparent = Color.web("0xffffff00", 0);
@@ -436,71 +458,10 @@ public class Controller_BMPExport implements Initializable{
         brush.setLineWidth(1);
 
 
-
-
-
     }
 
     @FXML
-    public void toolSelected(ActionEvent e){
+    public void toolSelected(ActionEvent e) {
         toolSelected = true;
-    }
-
-    /**
-     * Exports the file which is currently being worked on as a BMP image, so that image files in a raster format
-     * can be created from within the application.
-     *
-     * @param path                   The path to the folder in which BMP is to be saved (e.g. "CAB-302_Assignment/")
-     * @param fileName               The file name for the BMP to be saved (e.g. "CanvasImage.bmp")
-     * @param resolution             The number of pixels across one edge of the BMP image
-     * @throws IOException           Thrown if the BMP data cannot be interpreted when saving
-     * @throws FileExistsException   Thrown if the BMP file to be saved already exists
-     * @throws InvalidPathException  Thrown if the path for the BMP file is invalid
-     */
-
-    // TODO: complete resolution scaling so that image is correctly scaled to output resolution
-
-    private void exportBMP(String path, String fileName, int resolution)
-            throws IOException, FileExistsException, InvalidPathException {
-
-        File exportFile = new File(path + fileName);
-
-        if (!Files.exists(new File(path).toPath()))
-            throw new InvalidPathException("Could not export BMP file, directory for exporting was invalid");
-
-        if (!exportFile.exists())
-            throw new FileExistsException("Could not export BMP file, file given by pathname already exists");
-
-        /*
-        final Bounds bounds = canvas.getLayoutBounds();
-
-        double scale = resolution / bounds.getWidth();
-
-        final WritableImage scaledImage = new WritableImage(
-                (int) (bounds.getWidth() * scale),
-                (int) (bounds.getHeight() * scale)
-        );
-
-        final SnapshotParameters snapParams = new SnapshotParameters();
-        snapParams.setTransform(javafx.scene.transform.Transform.scale(scale, scale));
-
-        final ImageView imView = new ImageView(canvas.snapshot(snapParams, scaledImage));
-        imView.setFitWidth(bounds.getWidth());
-        imView.setFitHeight(bounds.getHeight());
-        */
-
-
-        WritableImage writableImage = new WritableImage(resolution, resolution);
-        canvas.snapshot(null, writableImage);
-
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-        BufferedImage convertedImage = new BufferedImage(
-                bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB
-        );
-
-        convertedImage.createGraphics()
-                .drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
-
-        ImageIO.write(convertedImage, "bmp", exportFile);
     }
 }
