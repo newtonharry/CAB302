@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Parser implements Iterable<VecInstruction> {
+public class Parser {
     /*
      * A class which reads and writes to VEC files
      */
@@ -28,7 +28,7 @@ public class Parser implements Iterable<VecInstruction> {
     private Instruction instruction; // Used in switch case, to identify instruction types
     private Model model;
 
-    private PenInstruction pen  =  new PenInstruction("000000"); // black pen
+    private PenInstruction pen = new PenInstruction("000000"); // black pen
     private FillInstruction fill = new FillInstruction("OFF"); // no fill
 
     // Two patterns
@@ -66,7 +66,6 @@ public class Parser implements Iterable<VecInstruction> {
 
             if (shapeMatcher.find()) {
                 matchShape(shapeMatcher);
-
             } else if (colourMatcher.find()) {
                 matchColour(colourMatcher);
             } else {
@@ -104,11 +103,14 @@ public class Parser implements Iterable<VecInstruction> {
         return this.vecFile.getFileName().toString();
     }
 
+    /*
     @Override
     public Iterator<VecInstruction> iterator() {
+        // Filter out the PEN and FILL instructions - kind of a hacky way of doing this
         return this.instructions.stream().filter(instruction -> !(instruction.getType().equals(Instruction.PEN) ||
                 instruction.getType().equals(Instruction.FILL))).iterator();
     }
+    */
 
     private void matchShape(Matcher shapeMatcher) throws ShapeException {
         instruction = Instruction.valueOf(shapeMatcher.group("type"));

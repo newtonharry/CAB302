@@ -15,7 +15,7 @@ import sample.GUI.stage;
 import java.io.IOException;
 
 
-public class Main extends Application{
+public class Main extends Application {
 
     private static Scene scene;
     private Stage primaryStage;
@@ -62,27 +62,27 @@ public class Main extends Application{
 
     private void initKeyboardShortcuts() {
         KeyCombination kc = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
-        Runnable rn = ()-> sample.GUI.KeyboardShortcuts.newCommand();
+        Runnable rn = () -> sample.GUI.KeyboardShortcuts.newCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.openCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.openCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.saveCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.saveCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.exportCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.exportCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.undoCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.undoCommand();
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
-        rn = ()-> sample.GUI.KeyboardShortcuts.gridCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.gridCommand();
         scene.getAccelerators().put(kc, rn);
     }
 

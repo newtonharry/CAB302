@@ -18,12 +18,12 @@ public class ParserTest {
 
     @Before
     public void setUpParser() throws ParserException {
-        parser = new Parser("vec_files/test", new Model());
+        parser = new Parser("vec_files/test.vec", new Model());
     }
 
     @Test
     public void testConstruction() throws ParserException {
-        parser = new Parser("vec_files/test", new Model());
+        parser = new Parser("vec_files/test.vec", new Model());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class ParserTest {
     /*
     @Test
     public void testWrite() throws IOException, ShapeException {
-        parser = new Parser("vec_files/test_write");
+        parser = new Parser("vec_files/test_write.vec");
 
         ArrayList<VecInstruction> instructions = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class ParserTest {
 
     }
 
-
+    /*
     @Test
     public void testIterator() throws ShapeException, ParserException, IOException {
         parser.readInstructions();
@@ -71,4 +71,6 @@ public class ParserTest {
         }
     }
 
+     */
 }
+

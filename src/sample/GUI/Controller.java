@@ -35,17 +35,27 @@ import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
 
-    @FXML private Button penToolBtn;
-    @FXML private Button lineToolBtn;
-    @FXML private Button rectangleToolBtn;
-    @FXML private Button ellipseToolBtn;
-    @FXML private Button polygonToolBtn;
-    @FXML private ColorPicker lineColorPicker;
-    @FXML private ColorPicker fillColorPicker;
+    @FXML
+    private Button penToolBtn;
+    @FXML
+    private Button lineToolBtn;
+    @FXML
+    private Button rectangleToolBtn;
+    @FXML
+    private Button ellipseToolBtn;
+    @FXML
+    private Button polygonToolBtn;
+    @FXML
+    private ColorPicker lineColorPicker;
+    @FXML
+    private ColorPicker fillColorPicker;
 
-    @FXML private Canvas canvas;
-    @FXML public AnchorPane canvasPane;
-    @FXML private AnchorPane canvasAnchorPane;
+    @FXML
+    private Canvas canvas;
+    @FXML
+    public AnchorPane canvasPane;
+    @FXML
+    private AnchorPane canvasAnchorPane;
 
     private Color lineColor;
     private Color fillColor;
@@ -159,7 +169,7 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open vector file");
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Vector Files", "*.vec")
+                new FileChooser.ExtensionFilter("Vector Files", "*.vec")
         );
         fileChooser.setInitialDirectory(new File("resources"));
         fileChooser.setInitialFileName("myDesign.vec");
@@ -449,7 +459,7 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             refreshColors();
 
-             if (selectedTool.equals("line")) {
+            if (selectedTool.equals("line")) {
                 endLine();
             }
 
@@ -485,16 +495,15 @@ public class Controller implements Initializable {
      * Exports the file which is currently being worked on as a BMP image, so that image files in a raster format
      * can be created from within the application.
      *
-     * @param path                   The path to the folder in which BMP is to be saved (e.g. "CAB-302_Assignment/")
-     * @param fileName               The file name for the BMP to be saved (e.g. "CanvasImage.bmp")
-     * @param resolution             The number of pixels across one edge of the BMP image
-     * @throws IOException           Thrown if the BMP data cannot be interpreted when saving
-     * @throws FileExistsException   Thrown if the BMP file to be saved already exists
-     * @throws InvalidPathException  Thrown if the path for the BMP file is invalid
+     * @param path       The path to the folder in which BMP is to be saved (e.g. "CAB-302_Assignment/")
+     * @param fileName   The file name for the BMP to be saved (e.g. "CanvasImage.bmp")
+     * @param resolution The number of pixels across one edge of the BMP image
+     * @throws IOException          Thrown if the BMP data cannot be interpreted when saving
+     * @throws FileExistsException  Thrown if the BMP file to be saved already exists
+     * @throws InvalidPathException Thrown if the path for the BMP file is invalid
      */
 
     // TODO: complete resolution scaling so that image is correctly scaled to output resolution
-
     private void exportBMP(String path, String fileName, int resolution)
             throws IOException, FileExistsException, InvalidPathException {
 
@@ -543,7 +552,7 @@ public class Controller implements Initializable {
      * Initialises the listeners to adjust shapes on the canvas based on the
      * instructions listed in the model
      *
-     * @param model     the model containing the shape instructions
+     * @param model the model containing the shape instructions
      */
     public void initialiseModel(Model model) {
         if (this.model != null)
@@ -551,255 +560,43 @@ public class Controller implements Initializable {
         this.model = model;
 
         this.model.getEllipseList().addListener((
-            ListChangeListener.Change<? extends EllipseInstruction> ellipses) -> {
-                while (ellipses.next())
-                    if (ellipses.wasAdded())
-                        for (EllipseInstruction ellipse : ellipses.getAddedSubList())
-                            drawEllipse(
-                                    ellipse.getFill(), ellipse.getPen(),
-                                    ellipse.getCoordinates()
-                            );
+                ListChangeListener.Change<? extends EllipseInstruction> ellipses) -> {
+            while (ellipses.next())
+                if (ellipses.wasAdded())
+                    for (EllipseInstruction ellipse : ellipses.getAddedSubList())
+                        ellipse.draw(canvas,brush);
         });
 
         this.model.getLineList().addListener((
-            ListChangeListener.Change<? extends LineInstruction> lines) -> {
-                while (lines.next())
-                    if (lines.wasAdded())
-                        for (LineInstruction line : lines.getAddedSubList())
-                            drawLine(
-                                    line.getPen(),
-                                    line.getCoordinates()
-                            );
+                ListChangeListener.Change<? extends LineInstruction> lines) -> {
+            while (lines.next())
+                if (lines.wasAdded())
+                    for (LineInstruction line : lines.getAddedSubList())
+                        line.draw(canvas, brush);
         });
 
         this.model.getPlotList().addListener((
-            ListChangeListener.Change<? extends PlotInstruction> plots) -> {
-                while (plots.next())
-                    if (plots.wasAdded())
-                        for (PlotInstruction plot : plots.getAddedSubList())
-                            drawPlot(
-                                    plot.getPen(),
-                                    plot.getCoordinates()
-                            );
+                ListChangeListener.Change<? extends PlotInstruction> plots) -> {
+            while (plots.next())
+                if (plots.wasAdded())
+                    for (PlotInstruction plot : plots.getAddedSubList())
+                        plot.draw(canvas, brush);
         });
 
         this.model.getPolygonList().addListener((
-            ListChangeListener.Change<? extends PolygonInstruction> polygons) -> {
-                while (polygons.next())
-                    if (polygons.wasAdded())
-                        for (PolygonInstruction polygon : polygons.getAddedSubList())
-                            drawPolygon(
-                                    polygon.getFill(), polygon.getPen(),
-                                    polygon.getCoordinates()
-                            );
+                ListChangeListener.Change<? extends PolygonInstruction> polygons) -> {
+            while (polygons.next())
+                if (polygons.wasAdded())
+                    for (PolygonInstruction polygon : polygons.getAddedSubList())
+                        polygon.draw(canvas, brush);
         });
 
         this.model.getRectangleList().addListener((
-            ListChangeListener.Change<? extends RectangleInstruction> rectangles) -> {
-                while (rectangles.next())
-                    if (rectangles.wasAdded())
-                        for (RectangleInstruction rectangle : rectangles.getAddedSubList())
-                            drawRectangle(
-                                    rectangle.getFill(), rectangle.getPen(),
-                                    rectangle.getCoordinates()
-                            );
+                ListChangeListener.Change<? extends RectangleInstruction> rectangles) -> {
+            while (rectangles.next())
+                if (rectangles.wasAdded())
+                    for (RectangleInstruction rectangle : rectangles.getAddedSubList())
+                        rectangle.draw(canvas, brush);
         });
-    }
-
-    /**
-     * Draws an ellipse when editing, parsing .vec files, or exporting
-     *
-     * @param fill      the hexadecimal representation of the rectangle's
-     *                  fill colour
-     * @param pen       the hexadecimal representation of the rectangle's
-     *                  pen colour
-     * @param coords    a list of doubles representing the coordinates for
-     *                  the bounds of the ellipse
-     */
-    private void drawEllipse(String fill, String pen, List<Double> coords) {
-
-        int x = convertXCoord(coords.get(0)),
-            y = convertYCoord(coords.get(1)),
-            width  = convertWidth(coords.get(0), coords.get(2)),
-            height = convertHeight(coords.get(1), coords.get(3));
-
-        brush = canvas.getGraphicsContext2D();
-
-        if (fill.equals("OFF"))
-            brush.setFill(Color.web("000000", 0.0));
-        else
-            brush.setFill(Color.web(fill, 1.0));
-
-        brush.setStroke(Color.web(pen, 1.0));
-        brush.setLineWidth(3);
-        brush.strokeOval(x, y, width, height);
-        brush.fillOval(x, y, width, height);
-    }
-
-    /**
-     * Draws a line when editing, parsing .vec files, or exporting
-     *
-     * @param pen       the hexadecimal representation of the rectangle's
-     *                  pen colour
-     * @param coords    a list of doubles representing the coordinates of the
-     *                  two ends of the line
-     */
-    private void drawLine(String pen, List<Double> coords) {
-
-        int x1 = convertXCoord(coords.get(0)),
-            y1 = convertYCoord(coords.get(1)),
-            x2 = convertXCoord(coords.get(2)),
-            y2 = convertYCoord(coords.get(3));
-
-        brush = canvas.getGraphicsContext2D();
-        brush.setStroke(Color.web(pen, 1.0));
-
-        System.out.println(pen);
-        brush.setLineWidth(1);
-        brush.strokeLine(x1, y1, x2, y2);
-    }
-
-    /**
-     * Draws a plot when editing, parsing .vec files, or exporting
-     *
-     *
-     * @param pen       the hexadecimal representation of the rectangle's
-     *                  pen colour
-     * @param coords    a list of doubles representing the coordinates of
-     *                  the plot
-     */
-    private void drawPlot(String pen, List<Double> coords) {
-
-        int x = convertXCoord(coords.get(0)),
-            y = convertYCoord(coords.get(1));
-
-        brush = canvas.getGraphicsContext2D();
-        brush.setStroke(Color.web(pen, 1.0));
-
-        System.out.println(pen);
-        brush.setLineWidth(1);
-        brush.strokeLine(x, y, x, y);
-    }
-
-    /**
-     * Draws a polygon when editing, parsing .vec files, or exporting
-     *
-     * @param fill      the hexadecimal representation of the rectangle's
-     *                  fill colour
-     * @param pen       the hexadecimal representation of the rectangle's
-     *                  pen colour
-     *
-     * @param coords    a list of doubles representing the coordinates along
-     *                  the polygon's perimeter
-     */
-    private void drawPolygon(String fill, String pen, List<Double> coords) {
-
-        double[] xCoords = new double[coords.size() / 2],
-                 yCoords = new double[coords.size() / 2];
-
-        brush = canvas.getGraphicsContext2D();
-        if (fill.equals("OFF"))
-            brush.setFill(Color.web("000000", 0.0));
-        else
-            brush.setFill(Color.web(fill, 1.0));
-        brush.setStroke(Color.web(pen, 1.0));
-
-        for (int i = 0; i < coords.size(); i++)
-            if (i % 2 == 0)
-                xCoords[i / 2]       = convertXCoord(coords.get(i));
-            else
-                yCoords[(i - 1) / 2] = convertYCoord(coords.get(i));
-
-        System.out.println(pen);
-        System.out.println(fill);
-        brush.setLineWidth(1);
-        brush.strokePolygon(xCoords, yCoords, coords.size() / 2);
-        brush.fillPolygon(xCoords, yCoords, coords.size() / 2);
-    }
-
-    /**
-     * Draws a rectangle when editing, parsing .vec files, or exporting
-     *
-     * @param fill      the hexadecimal representation of the rectangle's
-     *                  fill colour
-     * @param pen       the hexadecimal representation of the rectangle's
-     *                  pen colour
-     * @param coords    a list of doubles representing the coordinates of the
-     *                  bounds of the rectangle
-     */
-    private void drawRectangle(String fill, String pen, List<Double> coords) {
-
-        double[] xCoords = {
-                    convertXCoord(coords.get(0)),
-                    convertXCoord(coords.get(2)),
-                    convertXCoord(coords.get(2)),
-                    convertXCoord(coords.get(0))
-        },
-                 yCoords = {
-                    convertYCoord(coords.get(1)),
-                    convertYCoord(coords.get(1)),
-                    convertYCoord(coords.get(3)),
-                    convertYCoord(coords.get(3))
-        };
-
-        brush = canvas.getGraphicsContext2D();
-
-        if (fill.equals("OFF"))
-            brush.setFill(Color.web("000000", 0.0));
-        else
-            brush.setFill(Color.web(fill, 1.0));
-
-        brush.setStroke(Color.web(pen, 1.0));
-
-        System.out.println(pen);
-        System.out.println(fill);
-        brush.strokePolygon(xCoords, yCoords, 4);
-        brush.fillPolygon(xCoords, yCoords, 4);
-    }
-
-    /**
-     * Converts a fractional x-coordinate into an integer based on the
-     * current width of the canvas
-     *
-     * @param coord     the x-coordinate to be converted as a double
-     * @return          the integer version of the coordinate
-     */
-    private int convertXCoord(double coord) {
-        return (int) Math.round(coord * canvas.getWidth());
-    }
-
-    /**
-     * Converts a fractional y-coordinate into an integer based on the
-     * current height of the canvas
-     *
-     * @param coord     the y-coordinate to be converted as a double
-     * @return          the integer version of the coordinate
-     */
-    private int convertYCoord(double coord) {
-        return (int) Math.round(coord * canvas.getHeight());
-    }
-
-    /**
-     * Converts a pair of fractional x-coordinates into an integer width
-     * based on the current width of the canvas
-     *
-     * @param coord1    the first x-coordinate as a double
-     * @param coord2    the second x-coordinate as a double
-     * @return          the width between them as an integer
-     */
-    private int convertWidth(double coord1, double coord2) {
-        return (int) Math.round(Math.abs(coord1 - coord2) * canvas.getWidth());
-    }
-
-    /**
-     * Converts a pair of fractional y-coordinates into an integer height
-     * based on the current height of the canvas
-     *
-     * @param coord1    the first y-coordinate as a double
-     * @param coord2    the second y-coordinate as a double
-     * @return          the height between them as an integer
-     */
-    private int convertHeight(double coord1, double coord2) {
-        return (int) Math.round(Math.abs(coord1 - coord2) * canvas.getHeight());
     }
 }
