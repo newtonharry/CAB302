@@ -62,7 +62,8 @@ public class Controller implements Initializable {
     private String selectedTool;
     private GraphicsContext brush;
 
-    private Model model;
+    //private Model model;
+    private InstructionList instructions;
 
     private Line line = new Line();
     private Rectangle rectangle = new Rectangle();
@@ -137,7 +138,20 @@ public class Controller implements Initializable {
 
     @FXML
     private void saveMenuBtnClick() {
-        sample.GUI.KeyboardShortcuts.saveCommand();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save vector file");
+        fileChooser.setInitialDirectory(new File("resources"));
+        fileChooser.setInitialFileName("untitled.vec");
+        File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
+        try {
+            Parser parser = new Parser(importVec.toString(), instructions);
+            parser.writeInstructions();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -176,7 +190,7 @@ public class Controller implements Initializable {
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
         try {
-            Parser parser = new Parser(importVec.toString(), model);
+            Parser parser = new Parser(importVec.toString(), instructions);
             parser.readInstructions();
         } catch (IOException e) {
             e.printStackTrace();
@@ -552,51 +566,24 @@ public class Controller implements Initializable {
      * Initialises the listeners to adjust shapes on the canvas based on the
      * instructions listed in the model
      *
-     * @param model the model containing the shape instructions
+     * @param instructions the model containing the shape instructions
      */
-    public void initialiseModel(Model model) {
-        if (this.model != null)
+    //public void initialiseModel(Model model) {
+    public void initialiseModel(InstructionList instructions) {
+        //if (this.model != null)
+        if (this.instructions != null)
             throw new IllegalStateException("Model is only initialisable once");
-        this.model = model;
+        //this.model = model;
+        this.instructions = instructions;
 
-        this.model.getEllipseList().addListener((
-                ListChangeListener.Change<? extends EllipseInstruction> ellipses) -> {
-            while (ellipses.next())
-                if (ellipses.wasAdded())
-                    for (EllipseInstruction ellipse : ellipses.getAddedSubList())
-                        ellipse.draw(canvas,brush);
-        });
 
-        this.model.getLineList().addListener((
-                ListChangeListener.Change<? extends LineInstruction> lines) -> {
-            while (lines.next())
-                if (lines.wasAdded())
-                    for (LineInstruction line : lines.getAddedSubList())
-                        line.draw(canvas, brush);
-        });
-
-        this.model.getPlotList().addListener((
-                ListChangeListener.Change<? extends PlotInstruction> plots) -> {
-            while (plots.next())
-                if (plots.wasAdded())
-                    for (PlotInstruction plot : plots.getAddedSubList())
-                        plot.draw(canvas, brush);
-        });
-
-        this.model.getPolygonList().addListener((
-                ListChangeListener.Change<? extends PolygonInstruction> polygons) -> {
-            while (polygons.next())
-                if (polygons.wasAdded())
-                    for (PolygonInstruction polygon : polygons.getAddedSubList())
-                        polygon.draw(canvas, brush);
-        });
-
-        this.model.getRectangleList().addListener((
-                ListChangeListener.Change<? extends RectangleInstruction> rectangles) -> {
-            while (rectangles.next())
-                if (rectangles.wasAdded())
-                    for (RectangleInstruction rectangle : rectangles.getAddedSubList())
-                        rectangle.draw(canvas, brush);
+        this.instructions.addListener((
+            ListChangeListener.Change<? extends VecInstruction> instruction) -> {
+                while (instruction.next())
+                    if (instruction.wasAdded())
+                        for (VecInstruction instr : instruction.getAddedSubList())
+                            if(instr instanceof Shape)
+                                ((Shape) instr).draw(canvas, brush);
         });
     }
 }

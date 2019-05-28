@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import sample.GUI.Controller;
 import sample.GUI.Model;
 import sample.GUI.stage;
+import sample.Instructions.InstructionList;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class Main extends Application {
     private static Scene scene;
     private Stage primaryStage;
     private Model model;
+    private InstructionList instructions;
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,10 +43,12 @@ public class Main extends Application {
         scene.getStylesheets()
                 .add(getClass().getResource("GUI/styles.css").toExternalForm());
 
-        Model model = new Model();
+        //Model model = new Model();
+        instructions = new InstructionList();
         Controller controller = loader.getController();
         stage test = new stage();
-        controller.initialiseModel(model);
+        //controller.initialiseModel(model);
+        controller.initialiseModel(instructions);
 
         test.setStageWidth(scene.getWidth());
         test.setStageHeight(scene.getHeight());

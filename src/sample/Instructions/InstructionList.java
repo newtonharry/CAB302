@@ -1,15 +1,11 @@
 package sample.Instructions;
 
-import javafx.collections.ObservableListBase;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 
-public class InstructionList extends ObservableListBase<VecInstruction> {
-    @Override
-    public VecInstruction get(int i) {
-        return null;
-    }
+public class InstructionList extends SimpleListProperty<VecInstruction> {
 
-    @Override
-    public int size() {
-        return 0;
+    public InstructionList(){
+        super(FXCollections.observableArrayList());
     }
 }

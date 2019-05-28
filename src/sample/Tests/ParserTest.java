@@ -18,12 +18,12 @@ public class ParserTest {
 
     @Before
     public void setUpParser() throws ParserException {
-        parser = new Parser("vec_files/test.vec", new Model());
+        parser = new Parser("vec_files/test.vec", new InstructionList());
     }
 
     @Test
     public void testConstruction() throws ParserException {
-        parser = new Parser("vec_files/test.vec", new Model());
+        parser = new Parser("vec_files/test.vec", new InstructionList());
     }
 
     @Test
@@ -59,7 +59,6 @@ public class ParserTest {
     public void testReadWrite() throws IOException, ParserException,ShapeException{
         parser.readInstructions();
         parser.writeInstructions();
-
     }
 
     /*

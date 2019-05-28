@@ -21,10 +21,10 @@ public class LineInstruction extends Shape {
     /**
      * Draws a line when editing, parsing .vec files, or exporting
      *
-     * @param pen    the hexadecimal representation of the rectangle's
-     *               pen colour
-     * @param coords a list of doubles representing the coordinates of the
-     *               two ends of the line
+     * @param canvas A reference to the current canvas
+     *
+     * @param brush A reference to the current brush
+     *
      */
     @Override
     public void draw(Canvas canvas, GraphicsContext brush) {
