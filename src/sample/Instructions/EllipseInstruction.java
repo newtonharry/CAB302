@@ -36,7 +36,7 @@ public class EllipseInstruction extends Shape {
                 width = convertWidth(canvas, this.getCoordinates().get(0), this.getCoordinates().get(2)),
                 height = convertHeight(canvas,this.getCoordinates().get(1), this.getCoordinates().get(3));
 
-        brush = canvas.getGraphicsContext2D();
+        //brush = canvas.getGraphicsContext2D();
 
         if (this.getFill().equals("OFF"))
             brush.setFill(Color.web("000000", 0.0));

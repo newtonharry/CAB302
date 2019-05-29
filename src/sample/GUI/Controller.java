@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -255,7 +254,7 @@ public class Controller implements Initializable {
 
     }
 
-    private void drawGrid(){
+    private void drawGrid() {
         GraphicsContext grid = gridCanvas.getGraphicsContext2D();
 
         Color gridColor = Color.web("#C3C3C3");
@@ -301,6 +300,8 @@ public class Controller implements Initializable {
         fileChooser.setInitialFileName("myDesign.vec");
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
+        brush.clearRect(0, 0, 700, 700);
+        instructions.clear();
         try {
             Parser parser = new Parser(importVec.toString(), instructions);
             parser.readInstructions();
@@ -340,20 +341,6 @@ public class Controller implements Initializable {
     }
 
 
-    private void setupLine(Double x, Double y) {
-        tempDrawingLayer = new Canvas(windowSize, windowSize);
-        canvasAnchorPane.getChildren().add(tempDrawingLayer);
-
-        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
-
-        brush.beginPath();
-        line.setStartX(x);
-        line.setStartY(y);
-
-        canvas.setOnMouseReleased(event -> {
-            endLine();
-        });
-    }
 
 
     private void renderLinePreview(Double x, Double y) {
@@ -438,14 +425,6 @@ public class Controller implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
     private void plotPoint(Double x, Double y) {
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
@@ -453,54 +432,71 @@ public class Controller implements Initializable {
         brush.strokeLine(x, y, x, y);
     }
 
-    private void endLine() {
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+    private void setupLine(Double x, Double y) {
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
+        canvasAnchorPane.getChildren().add(tempDrawingLayer);
+        List<Double> coordinates = new ArrayList<>();
 
-        brush.setStroke(lineColor);
-        brush.setLineWidth(1);
+        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
-        brush.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-        line = new Line();
+        brush.beginPath();
+        line.setStartX(x);
+        line.setStartY(y);
+
+
+        canvas.setOnMouseReleased(event -> {
+            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+
+            coordinates.add((x / canvas.getWidth()) * 1.0);
+            coordinates.add((y / canvas.getHeight()) * 1.0);
+            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
+            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+
+            LineInstruction LineInst = null;
+            try {
+                LineInst = new LineInstruction(lineColor.toString(), coordinates);
+            } catch (ShapeException e) {
+                e.printStackTrace();
+            }
+
+            instructions.add(LineInst);
+        });
     }
+
 
     private void setupRectangle(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
+        List<Double> coordinates = new ArrayList<>();
 
         rectangle.setX(x);
         rectangle.setY(y);
 
         canvas.setOnMouseReleased(event -> {
-            endRectangle(event.getX(), event.getY());
+            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+            coordinates.add((x / canvas.getWidth()) * 1.0);
+            coordinates.add((y / canvas.getHeight()) * 1.0);
+            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
+            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+
+            RectangleInstruction RectangleInst = null;
+            try {
+                RectangleInst = new RectangleInstruction(lineColor.toString(), fillColor.toString(), coordinates);
+            } catch (ShapeException e) {
+                e.printStackTrace();
+            }
+
+            instructions.add(RectangleInst);
         });
     }
 
 
 
-    private void endRectangle(Double x, Double y) {
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-
-        double startX = rectangle.getX();
-        double startY = rectangle.getY();
-        double endX = x;
-        double endY = y;
-
-        double[] xPoints = {startX, endX, endX, startX};
-        double[] yPoints = {startY, startY, endY, endY};
-
-        brush.setStroke(lineColor);
-        brush.setFill(fillColor);
-        brush.setLineWidth(3);
-
-        brush.strokePolygon(xPoints, yPoints, 4);
-        brush.fillPolygon(xPoints, yPoints, 4);
-
-        rectangle = new Rectangle();
-    }
 
     private void setupEllipse(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
+        List<Double> coordinates = new ArrayList<>();
 
         ellipseBounds.setX(x);
         ellipseBounds.setY(y);
@@ -509,13 +505,28 @@ public class Controller implements Initializable {
         ellipse.setRadiusX(0);
         ellipse.setRadiusY(0);
 
+
         canvas.setOnMouseReleased(event -> {
-            endEllipse(event.getX(), event.getY());
+            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+
+            coordinates.add((x / canvas.getWidth()) * 1.0);
+            coordinates.add((y / canvas.getHeight()) * 1.0);
+            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
+            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+
+
+            EllipseInstruction ellipseInst = null;
+            try {
+                ellipseInst = new EllipseInstruction(lineColor.toString(), fillColor.toString(), coordinates);
+            } catch (ShapeException e) {
+                e.printStackTrace();
+            }
+            instructions.add(ellipseInst); // NEED to translate coordinates to normal number
         });
     }
 
 
-
+    /*
     private void endEllipse(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
@@ -530,6 +541,7 @@ public class Controller implements Initializable {
         brush.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
 
     }
+     */
 
     private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
@@ -565,6 +577,7 @@ public class Controller implements Initializable {
             refreshColors();
             if (selectedTool.equals("plot")) {
                 plotPoint(event.getX(), event.getY());
+
             }
 
             if (selectedTool.equals("polygon")) {
@@ -689,21 +702,19 @@ public class Controller implements Initializable {
      *
      * @param instructions the model containing the shape instructions
      */
-    //public void initialiseModel(Model model) {
     public void initialiseModel(InstructionList instructions) {
-        //if (this.model != null)
         if (this.instructions != null)
             throw new IllegalStateException("Model is only initialisable once");
         //this.model = model;
         this.instructions = instructions;
 
         this.instructions.addListener((
-            ListChangeListener.Change<? extends VecInstruction> instruction) -> {
-                while (instruction.next())
-                    if (instruction.wasAdded())
-                        for (VecInstruction instr : instruction.getAddedSubList())
-                            if(instr instanceof Shape)
-                                ((Shape) instr).draw(canvas, brush);
+                ListChangeListener.Change<? extends VecInstruction> instruction) -> {
+            while (instruction.next())
+                if (instruction.wasAdded())
+                    for (VecInstruction instr : instruction.getList())
+                        if (instr instanceof Shape)
+                            ((Shape) instr).draw(canvas, brush);
         });
     }
 }

@@ -2,7 +2,6 @@ package sample.Parser;
 
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
-import sample.GUI.Model;
 import sample.Instructions.*;
 
 import java.io.*;
@@ -10,8 +9,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,10 +21,8 @@ public class Parser {
      */
     private Path vecFile; // Buffer for writing and reading data to/from VEC files, with default filename
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
-    //private List<VecInstruction> instructions = new ArrayList<>(); // ArrayList for storing Instructions and their co-ordinates
     private Instruction instruction; // Used in switch case, to identify instruction types
     private InstructionList instructions; // Used in switch case, to identify instruction types
-    private Model model;
 
     private PenInstruction pen = new PenInstruction("000000"); // black pen
     private FillInstruction fill = new FillInstruction("OFF"); // no fill
@@ -43,15 +38,12 @@ public class Parser {
     /*
     Parser to begin reading/writing from/to a file
      */
-    //public Parser(String file, Model model) throws ParserException {
     public Parser(String file, InstructionList instructions) throws ParserException {
         if (file.isEmpty() || file.isBlank())
             throw new ParserException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
-        //this.model = model;
         this.instructions = instructions;
-        instructions.add(pen);
     }
 
     public void readInstructions() throws IOException, ParserException, ShapeException {
@@ -100,31 +92,26 @@ public class Parser {
         switch (instruction) {
             case LINE:
                 LineInstruction lineInst = new LineInstruction(pen.getColour(), coordinates);
-                //model.addLineInstruction(lineInst);
                 instructions.add(lineInst);
                 break;
 
             case RECTANGLE:
                 RectangleInstruction rectInst = new RectangleInstruction(pen.getColour(), fill.getColour(), coordinates);
-                //model.addRectangleInstruction(rectInst);
                 instructions.add(rectInst);
                 break;
 
             case PLOT:
                 PlotInstruction plotInst = new PlotInstruction(pen.getColour(), coordinates);
-                //model.addPlotInstruction(plotInst);
                 instructions.add(plotInst);
                 break;
 
             case ELLIPSE:
                 EllipseInstruction ellipseInst = new EllipseInstruction(pen.getColour(), fill.getColour(), coordinates);
-                //model.addEllipseInstruction(ellipseInst);
                 instructions.add(ellipseInst);
                 break;
 
             case POLYGON:
                 PolygonInstruction polyInst = new PolygonInstruction(pen.getColour(), fill.getColour(), coordinates);
-                //model.addPolygonInstruction(polyInst);
                 instructions.add(polyInst);
                 break;
 
@@ -138,13 +125,11 @@ public class Parser {
         switch (instruction) {
             case PEN:
                 PenInstruction penInst = new PenInstruction(value);
-                //model.addPenInstruction(penInst);
                 instructions.add(penInst);
                 break;
 
             case FILL:
                 FillInstruction fillInst = new FillInstruction(value);
-                //model.addFillInstruction(fillInst);
                 instructions.add(fillInst);
                 break;
 
