@@ -167,6 +167,7 @@ public class Controller implements Initializable {
 
     @FXML
     private void showGridMenuBtnClick() {
+        System.out.println("Toggle Grid Called");
         sample.GUI.KeyboardShortcuts.gridCommand();
         toggleGrid();
 
@@ -276,6 +277,10 @@ public class Controller implements Initializable {
         brush.beginPath();
         line.setStartX(x);
         line.setStartY(y);
+
+        canvas.setOnMouseReleased(event -> {
+            endLine();
+        });
     }
 
 
@@ -378,7 +383,6 @@ public class Controller implements Initializable {
 
     private void endLine() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
@@ -393,6 +397,10 @@ public class Controller implements Initializable {
 
         rectangle.setX(x);
         rectangle.setY(y);
+
+        canvas.setOnMouseReleased(event -> {
+            endRectangle(event.getX(), event.getY());
+        });
     }
 
 
@@ -428,6 +436,10 @@ public class Controller implements Initializable {
         ellipse.setCenterY(ellipseBounds.getY());
         ellipse.setRadiusX(0);
         ellipse.setRadiusY(0);
+
+        canvas.setOnMouseReleased(event -> {
+            endEllipse(event.getX(), event.getY());
+        });
     }
 
 
@@ -523,22 +535,6 @@ public class Controller implements Initializable {
                 renderEllipsePreview(event.getX(), event.getY());
             }
         });
-
-        canvas.setOnMouseReleased(event -> {
-            refreshColors();
-
-            if (selectedTool.equals("line")) {
-                endLine();
-            }
-
-            if (selectedTool.equals("rectangle")) {
-                endRectangle(event.getX(), event.getY());
-            }
-
-            if (selectedTool.equals("ellipse")) {
-                endEllipse(event.getX(), event.getY());
-            }
-        });
     }
 
     @Override
@@ -556,8 +552,6 @@ public class Controller implements Initializable {
 
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
-
-
     }
 
     /**
@@ -630,7 +624,6 @@ public class Controller implements Initializable {
             throw new IllegalStateException("Model is only initialisable once");
         //this.model = model;
         this.instructions = instructions;
-
 
         this.instructions.addListener((
             ListChangeListener.Change<? extends VecInstruction> instruction) -> {
