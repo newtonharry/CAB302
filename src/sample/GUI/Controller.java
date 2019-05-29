@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -17,10 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -171,63 +169,56 @@ public class Controller implements Initializable {
 
     @FXML
     private void showGridMenuBtnClick() {
-        //sample.GUI.KeyboardShortcuts.gridCommand();
-        /*Label label = new Label();
-        TextInputDialog dialog = new TextInputDialog("Tran");
-        dialog.setTitle("o7planning");
-        dialog.setHeaderText("Enter your name:");
-        dialog.setContentText("Name:");
-        dialog.setHeaderText(null);
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(name -> {
-            label.setText(name);
-        });*/
-
-        //InvocationTargetException
-
-        //Boolean dataValid = false;
-        //while(!dataValid) {
-            String popupValue = showPopup("Grid Size", "0.05", "Grid Size:");
-            if(popupValue == null){
-               System.out.println("WE GOT A NULL ONE");
+        showGrid = !showGrid;
+        if (showGrid) {
+            String popupValue = showPopup("Grid Size", "0.05", "Please enter a grid size between 0.01 and 0.1", "Grid Size:");
+            if (popupValue == null || popupValue == "") {
+                showGrid = !showGrid; // Swap Back
+                System.out.println("No Value Entered");
             } else {
                 try {
                     Double gridValue = Double.parseDouble(popupValue);
-                    toggleGrid(gridValue);
-                    //dataValid = true;
-
+                    if (gridValue <= 0.1 && gridValue >= 0.01) {
+                        gridCanvas = new Canvas(windowSize, windowSize);
+                        gridAnchorPane.getChildren().add(gridCanvas);
+                        drawGrid(gridValue);
+                    } else{
+                        showGrid = !showGrid; //Swap Back
+                        alert(null, "Value out of bounds. Please try again and enter a value between 0.01 and 0.1");
+                        showGridMenuBtnClick();
+                    }
                 } catch (Exception e) {
-                    //showPopup("Grid Size", "0.05", "Grid Size:");
-                    System.out.println("Error in Value");
+                    showGrid = !showGrid; //Swap Back
+                    alert(null, "Value not valid. Please try again");
                     showGridMenuBtnClick();
-                    //System.out.println(e);
                 }
             }
-            /*if (popupValue != "" || popupValue != null) {
-                try {
-                    Double gridValue = Double.parseDouble(popupValue);
-                    toggleGrid();
-                    //dataValid = true;
-
-                } catch (Exception e) {
-                    //showPopup("Grid Size", "0.05", "Grid Size:");
-                    showGridMenuBtnClick();
-                    System.out.println(e);
-                }
-
-            } else {
-                // = true;
-            }*/
-        //}
-
+        } else{
+            gridAnchorPane.getChildren().remove(gridCanvas);
+        }
     }
 
-    private String showPopup(String title, String defaultValue, String contentText){
+    private void alert(String title, String contentText){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle(title);
+        alert.setContentText(contentText);
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        alert.showAndWait();
+        /*Alert dialog = new TextInputDialog(defaultValue);
+
+
+
+        Optional<String> result = dialog.showAndWait();*/
+    }
+
+    private String showPopup(String title, String defaultValue, String headerText, String contentText){
         TextInputDialog dialog = new TextInputDialog(defaultValue);
         dialog.setTitle(title);
         dialog.setContentText(contentText);
-        dialog.setHeaderText(null);
+        dialog.setHeaderText(headerText);
         dialog.setGraphic(null);
         Optional<String> result = dialog.showAndWait();
 
@@ -238,27 +229,11 @@ public class Controller implements Initializable {
         return null;
     }
 
-    public void toggleGrid(Double gridSize){
-        showGrid = !showGrid;
-        if(showGrid){
-            gridCanvas = new Canvas(windowSize, windowSize);
-            gridAnchorPane.getChildren().add(gridCanvas);
-            drawGrid();
-        } else{
-            gridAnchorPane.getChildren().remove(gridCanvas);
-
-        }
-
-
-
-
-    }
-
-    private void drawGrid() {
+    private void drawGrid(Double gridSize) {
         GraphicsContext grid = gridCanvas.getGraphicsContext2D();
 
         Color gridColor = Color.web("#C3C3C3");
-        double gridSize = 0.01;
+        //double gridSize = 0.01;
         double calculatedGridSize = gridSize * windowSize;
         double gridlinesRequired = 1 / gridSize;
 
@@ -435,7 +410,7 @@ public class Controller implements Initializable {
     private void setupLine(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
-        List<Double> coordinates = new ArrayList<>();
+        //List<Double> coordinates = new ArrayList<>();
 
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
@@ -447,7 +422,7 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
-            coordinates.add((x / canvas.getWidth()) * 1.0);
+            /*coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
             coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
             coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
@@ -459,7 +434,7 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
 
-            instructions.add(LineInst);
+            instructions.add(LineInst);*/
         });
     }
 
