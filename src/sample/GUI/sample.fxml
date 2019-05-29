@@ -92,10 +92,18 @@
         </HBox>
         <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
             <children>
-                <AnchorPane fx:id="canvasAnchorPane" prefHeight="720.0" prefWidth="720.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                <AnchorPane fx:id="abc" style="-fx-background-color: #FFFFFF;"  prefHeight="720.0" prefWidth="720.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Canvas fx:id="gridCanvas" height="720.0" visible="false" width="720" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <Canvas fx:id="canvas" height="720.0" width="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
+                        <AnchorPane fx:id="gridAnchorPane" prefHeight="720.0" prefWidth="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <Canvas fx:id="gridCanvas" height="720.0" width="720" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="canvasAnchorPane" prefHeight="720.0" prefWidth="720.0" style="" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <Canvas fx:id="canvas" height="720.0" width="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
+                            </children>
+                        </AnchorPane>
                     </children>
                 </AnchorPane>
             </children>

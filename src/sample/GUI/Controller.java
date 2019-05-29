@@ -63,6 +63,7 @@ public class Controller implements Initializable {
     @FXML
     private AnchorPane canvasAnchorPane;
 
+    @FXML private AnchorPane gridAnchorPane;
     @FXML private Canvas gridCanvas;
     private boolean showGrid;
 
@@ -183,38 +184,84 @@ public class Controller implements Initializable {
         result.ifPresent(name -> {
             label.setText(name);
         });*/
-        showPopup();
-        toggleGrid();
+
+        //InvocationTargetException
+
+        //Boolean dataValid = false;
+        //while(!dataValid) {
+            String popupValue = showPopup("Grid Size", "0.05", "Grid Size:");
+            if(popupValue == null){
+               System.out.println("WE GOT A NULL ONE");
+            } else {
+                try {
+                    Double gridValue = Double.parseDouble(popupValue);
+                    toggleGrid(gridValue);
+                    //dataValid = true;
+
+                } catch (Exception e) {
+                    //showPopup("Grid Size", "0.05", "Grid Size:");
+                    System.out.println("Error in Value");
+                    showGridMenuBtnClick();
+                    //System.out.println(e);
+                }
+            }
+            /*if (popupValue != "" || popupValue != null) {
+                try {
+                    Double gridValue = Double.parseDouble(popupValue);
+                    toggleGrid();
+                    //dataValid = true;
+
+                } catch (Exception e) {
+                    //showPopup("Grid Size", "0.05", "Grid Size:");
+                    showGridMenuBtnClick();
+                    System.out.println(e);
+                }
+
+            } else {
+                // = true;
+            }*/
+        //}
+
     }
 
-    private void showPopup(){
-        TextInputDialog dialog = new TextInputDialog("0.05");
-        dialog.setTitle("Grid Setup");
-        dialog.setContentText("Grid Size:");
+    private String showPopup(String title, String defaultValue, String contentText){
+        TextInputDialog dialog = new TextInputDialog(defaultValue);
+        dialog.setTitle(title);
+        dialog.setContentText(contentText);
         dialog.setHeaderText(null);
         dialog.setGraphic(null);
         Optional<String> result = dialog.showAndWait();
 
-        result.ifPresent(dialogValue -> {
-            System.out.println(dialogValue);
-        });
+        if (result.isPresent()) {
+            return result.get();
+        }
+
+        return null;
     }
 
-
-    public void toggleGrid(){
+    public void toggleGrid(Double gridSize){
         showGrid = !showGrid;
-        BooleanProperty showGridBP = new SimpleBooleanProperty(showGrid);
+        if(showGrid){
+            gridCanvas = new Canvas(windowSize, windowSize);
+            gridAnchorPane.getChildren().add(gridCanvas);
+            drawGrid();
+        } else{
+            gridAnchorPane.getChildren().remove(gridCanvas);
 
-        gridCanvas.visibleProperty().bind(showGridBP);
+        }
+
+
+
+
     }
 
     private void drawGrid(){
         GraphicsContext grid = gridCanvas.getGraphicsContext2D();
 
-        Color gridColor = Color.web("#787878");
-        double gridSize = 0.1;
+        Color gridColor = Color.web("#C3C3C3");
+        double gridSize = 0.01;
         double calculatedGridSize = gridSize * windowSize;
-        double gridlinesRequired = gridSize * 100;
+        double gridlinesRequired = 1 / gridSize;
 
         grid.setStroke(gridColor);
         grid.setLineWidth(0.5);
@@ -222,9 +269,6 @@ public class Controller implements Initializable {
 
         for(int i=0; i<gridlinesRequired; i++){
             grid.strokeLine(0, calculatedGridSize*i, windowSize, calculatedGridSize*i);
-        }
-
-        for(int i=0; i<gridlinesRequired; i++){
             grid.strokeLine(calculatedGridSize*i, 0, calculatedGridSize*i, windowSize);
         }
 
@@ -567,7 +611,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        drawGrid();
+        //drawGrid();
         showGrid = false;
 
         Color transparent = Color.web("0xffffff00", 0);
