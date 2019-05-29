@@ -101,4 +101,8 @@ public abstract class Shape implements VecInstruction {
 
     public abstract void draw(Canvas canvas, GraphicsContext brush);
 
+    public void translateCoordinates(){
+
+    }
+
 }
