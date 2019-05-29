@@ -61,6 +61,7 @@ public class Controller implements Initializable {
     private Color fillColor;
     private String selectedTool;
     private GraphicsContext brush;
+    private double windowSize = 720.0;
 
     //private Model model;
     private InstructionList instructions;
@@ -229,7 +230,7 @@ public class Controller implements Initializable {
 
 
     private void setupLine(Double x, Double y) {
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
@@ -242,7 +243,7 @@ public class Controller implements Initializable {
 
     private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
@@ -275,7 +276,7 @@ public class Controller implements Initializable {
     }
 
     private void setupRectangle(Double x, Double y) {
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
         rectangle.setX(x);
@@ -284,7 +285,7 @@ public class Controller implements Initializable {
 
     private void renderRectanglePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
@@ -329,7 +330,7 @@ public class Controller implements Initializable {
     }
 
     private void setupEllipse(Double x, Double y) {
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
 
         ellipseBounds.setX(x);
@@ -342,7 +343,7 @@ public class Controller implements Initializable {
 
     private void renderEllipsePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
@@ -386,7 +387,7 @@ public class Controller implements Initializable {
     }
 
     private void setupPolygon(Double x, Double y) {
-        tempDrawingLayer = new Canvas(700, 500);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 

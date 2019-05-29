@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane fx:id="containerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GUI.Controller">
+<AnchorPane fx:id="containerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="821.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GUI.Controller">
     <children>
-        <HBox prefHeight="25.0" prefWidth="1280.0" style="-fx-background-color: #727B87; -fx-padding: 0 0 0 65;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox prefHeight="25.0" prefWidth="730.0" style="-fx-background-color: #727B87; -fx-padding: 0 0 0 65;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label maxHeight="25.0" maxWidth="65.0" minHeight="25.0" minWidth="65.0" prefHeight="25.0" prefWidth="65.0" style="-fx-padding: 0 0 0 22;" text="Plot" textFill="WHITE" />
                 <Label maxHeight="25.0" maxWidth="65.0" minHeight="25.0" minWidth="65.0" prefHeight="25.0" prefWidth="65.0" style="-fx-padding: 0 0 0 22;" text="Line" textFill="WHITE" />
@@ -24,7 +24,7 @@
                 <Label maxHeight="25.0" maxWidth="65.0" minHeight="25.0" minWidth="65.0" prefHeight="25.0" prefWidth="65.0" style="-fx-padding: 0 0 0 7;" text="Fill Colour" textFill="WHITE" />
             </children>
         </HBox>
-        <HBox layoutY="24.0" minHeight="66.0" minWidth="1280.0" style="-fx-background-color: #3B4046;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox layoutY="24.0" minHeight="66.0" minWidth="730.0" style="-fx-background-color: #3B4046;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
                 <MenuButton maxHeight="65.0" maxWidth="65.0" minHeight="65.0" minWidth="65.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="65.0" style="-fx-background-color: #3B4046; -fx-mark-color: #3B4046; -fx-padding: 10;">
                     <items>
@@ -92,9 +92,9 @@
         </HBox>
         <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
             <children>
-                <AnchorPane fx:id="canvasAnchorPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"> <!--AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"-->
+                <AnchorPane fx:id="canvasAnchorPane" prefHeight="720.0" prefWidth="720.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <children>
-                        <Canvas fx:id="canvas" height="500.0" width="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
+                        <Canvas fx:id="canvas" height="720.0" width="720.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0"/> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
                     </children>
                 </AnchorPane>
             </children>

@@ -34,7 +34,7 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
-        scene = new Scene(root, 1280, 720);
+        scene = new Scene(root, 730, 821);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Paint Application");
         this.primaryStage.setScene(scene);
