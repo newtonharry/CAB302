@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.BooleanProperty;
@@ -18,6 +20,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -167,15 +171,39 @@ public class Controller implements Initializable {
 
     @FXML
     private void showGridMenuBtnClick() {
-        System.out.println("Toggle Grid Called");
-        sample.GUI.KeyboardShortcuts.gridCommand();
-        toggleGrid();
+        //sample.GUI.KeyboardShortcuts.gridCommand();
+        /*Label label = new Label();
+        TextInputDialog dialog = new TextInputDialog("Tran");
+        dialog.setTitle("o7planning");
+        dialog.setHeaderText("Enter your name:");
+        dialog.setContentText("Name:");
+        dialog.setHeaderText(null);
+        Optional<String> result = dialog.showAndWait();
 
+        result.ifPresent(name -> {
+            label.setText(name);
+        });*/
+        showPopup();
+        toggleGrid();
     }
+
+    private void showPopup(){
+        TextInputDialog dialog = new TextInputDialog("0.05");
+        dialog.setTitle("Grid Setup");
+        dialog.setContentText("Grid Size:");
+        dialog.setHeaderText(null);
+        dialog.setGraphic(null);
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(dialogValue -> {
+            System.out.println(dialogValue);
+        });
+    }
+
 
     public void toggleGrid(){
         showGrid = !showGrid;
-        BooleanProperty showGridBP = new SimpleBooleanProperty(!showGrid);
+        BooleanProperty showGridBP = new SimpleBooleanProperty(showGrid);
 
         gridCanvas.visibleProperty().bind(showGridBP);
     }

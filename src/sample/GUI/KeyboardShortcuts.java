@@ -22,6 +22,7 @@ public class KeyboardShortcuts {
 
     static public void gridCommand() {
         System.out.println("Grid");
+        //sample.GUI.Controller.toggleGrid();
     }
 
 }
