@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -56,6 +58,9 @@ public class Controller implements Initializable {
     public AnchorPane canvasPane;
     @FXML
     private AnchorPane canvasAnchorPane;
+
+    @FXML private Canvas gridCanvas;
+    private boolean showGrid;
 
     private Color lineColor;
     private Color fillColor;
@@ -163,6 +168,39 @@ public class Controller implements Initializable {
     @FXML
     private void showGridMenuBtnClick() {
         sample.GUI.KeyboardShortcuts.gridCommand();
+        toggleGrid();
+
+    }
+
+    public void toggleGrid(){
+        showGrid = !showGrid;
+        BooleanProperty showGridBP = new SimpleBooleanProperty(!showGrid);
+
+        gridCanvas.visibleProperty().bind(showGridBP);
+    }
+
+    private void drawGrid(){
+        GraphicsContext grid = gridCanvas.getGraphicsContext2D();
+
+        Color gridColor = Color.web("#787878");
+        double gridSize = 0.1;
+        double calculatedGridSize = gridSize * windowSize;
+        double gridlinesRequired = gridSize * 100;
+
+        grid.setStroke(gridColor);
+        grid.setLineWidth(0.5);
+
+
+        for(int i=0; i<gridlinesRequired; i++){
+            grid.strokeLine(0, calculatedGridSize*i, windowSize, calculatedGridSize*i);
+        }
+
+        for(int i=0; i<gridlinesRequired; i++){
+            grid.strokeLine(calculatedGridSize*i, 0, calculatedGridSize*i, windowSize);
+        }
+
+        //grid.strokeLine(10, 10, 50, 10);
+        //line = new Line();
     }
 
     @FXML
@@ -257,6 +295,80 @@ public class Controller implements Initializable {
         tempDrawingLayerGC.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
     }
 
+    private void renderRectanglePreview(Double x, Double y) {
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
+        canvasAnchorPane.getChildren().add(tempDrawingLayer);
+        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
+
+        double startX = rectangle.getX();
+        double startY = rectangle.getY();
+        double endX = x;
+        double endY = y;
+
+        double[] xPoints = {startX, endX, endX, startX};
+        double[] yPoints = {startY, startY, endY, endY};
+
+        tempDrawingLayerGC.setStroke(lineColor);
+        tempDrawingLayerGC.setFill(fillColor);
+        tempDrawingLayerGC.setLineWidth(3);
+
+        tempDrawingLayerGC.strokePolygon(xPoints, yPoints, 4);
+        tempDrawingLayerGC.fillPolygon(xPoints, yPoints, 4);
+
+        rectangle.setX(startX);
+        rectangle.setY(startY);
+    }
+
+    private void renderPolygonPreview(Double x, Double y, MouseButton button) {
+        if (button == MouseButton.SECONDARY) {
+            closePolygon();
+            return;
+        }
+
+        polygonPointsX[polygonPointsCount] = x;
+        polygonPointsY[polygonPointsCount] = y;
+
+        tempDrawingLayerGC.setStroke(lineColor);
+        tempDrawingLayerGC.setLineWidth(1);
+
+        tempDrawingLayerGC.setStroke(lineColorPicker.getValue());
+        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount - 1], polygonPointsY[polygonPointsCount - 1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
+        polygonPointsCount++;
+    }
+
+
+    private void renderEllipsePreview(Double x, Double y) {
+        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        tempDrawingLayer = new Canvas(windowSize, windowSize);
+        canvasAnchorPane.getChildren().add(tempDrawingLayer);
+        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
+
+        ellipse.setCenterX((x + ellipseBounds.getX()) / 2);
+        ellipse.setCenterY((y + ellipseBounds.getY()) / 2);
+        ellipse.setRadiusX(Math.abs((x - ellipseBounds.getX()) / 2));
+        ellipse.setRadiusY(Math.abs((y - ellipseBounds.getY()) / 2));
+
+        ellipseBounds.setWidth(Math.abs(x - ellipseBounds.getX()));
+        ellipseBounds.setHeight(Math.abs(y - ellipseBounds.getY()));
+
+        tempDrawingLayerGC.setStroke(lineColor);
+        tempDrawingLayerGC.setFill(fillColor);
+        tempDrawingLayerGC.setLineWidth(3);
+
+        tempDrawingLayerGC.strokeOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
+        tempDrawingLayerGC.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
+    }
+
+
+
+
+
+
+
+
+
+
     private void plotPoint(Double x, Double y) {
         brush.setStroke(lineColor);
         brush.setLineWidth(1);
@@ -283,30 +395,7 @@ public class Controller implements Initializable {
         rectangle.setY(y);
     }
 
-    private void renderRectanglePreview(Double x, Double y) {
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        tempDrawingLayer = new Canvas(windowSize, windowSize);
-        canvasAnchorPane.getChildren().add(tempDrawingLayer);
-        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
-        double startX = rectangle.getX();
-        double startY = rectangle.getY();
-        double endX = x;
-        double endY = y;
-
-        double[] xPoints = {startX, endX, endX, startX};
-        double[] yPoints = {startY, startY, endY, endY};
-
-        tempDrawingLayerGC.setStroke(lineColor);
-        tempDrawingLayerGC.setFill(fillColor);
-        tempDrawingLayerGC.setLineWidth(3);
-
-        tempDrawingLayerGC.strokePolygon(xPoints, yPoints, 4);
-        tempDrawingLayerGC.fillPolygon(xPoints, yPoints, 4);
-
-        rectangle.setX(startX);
-        rectangle.setY(startY);
-    }
 
     private void endRectangle(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
@@ -341,27 +430,7 @@ public class Controller implements Initializable {
         ellipse.setRadiusY(0);
     }
 
-    private void renderEllipsePreview(Double x, Double y) {
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-        tempDrawingLayer = new Canvas(windowSize, windowSize);
-        canvasAnchorPane.getChildren().add(tempDrawingLayer);
-        tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
-        ellipse.setCenterX((x + ellipseBounds.getX()) / 2);
-        ellipse.setCenterY((y + ellipseBounds.getY()) / 2);
-        ellipse.setRadiusX(Math.abs((x - ellipseBounds.getX()) / 2));
-        ellipse.setRadiusY(Math.abs((y - ellipseBounds.getY()) / 2));
-
-        ellipseBounds.setWidth(Math.abs(x - ellipseBounds.getX()));
-        ellipseBounds.setHeight(Math.abs(y - ellipseBounds.getY()));
-
-        tempDrawingLayerGC.setStroke(lineColor);
-        tempDrawingLayerGC.setFill(fillColor);
-        tempDrawingLayerGC.setLineWidth(3);
-
-        tempDrawingLayerGC.strokeOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
-        tempDrawingLayerGC.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
-    }
 
     private void endEllipse(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
@@ -398,22 +467,6 @@ public class Controller implements Initializable {
         polygonClick();
     }
 
-    private void renderPolygonPreview(Double x, Double y, MouseButton button) {
-        if (button == MouseButton.SECONDARY) {
-            closePolygon();
-            return;
-        }
-
-        polygonPointsX[polygonPointsCount] = x;
-        polygonPointsY[polygonPointsCount] = y;
-
-        tempDrawingLayerGC.setStroke(lineColor);
-        tempDrawingLayerGC.setLineWidth(1);
-
-        tempDrawingLayerGC.setStroke(lineColorPicker.getValue());
-        tempDrawingLayerGC.strokeLine(polygonPointsX[polygonPointsCount - 1], polygonPointsY[polygonPointsCount - 1], polygonPointsX[polygonPointsCount], polygonPointsY[polygonPointsCount]);
-        polygonPointsCount++;
-    }
 
     private void refreshColors() {
         lineColor = lineColorPicker.getValue();
@@ -490,7 +543,8 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        drawGrid();
+        showGrid = false;
 
         Color transparent = Color.web("0xffffff00", 0);
 

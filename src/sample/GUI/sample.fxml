@@ -33,7 +33,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#saveMenuBtnClick" text="Save                           ctrl+S" />
                         <MenuItem mnemonicParsing="false" onAction="#exportMenuBtnClick" text="Export                        ctrl+E" />
                         <MenuItem mnemonicParsing="false" onAction="#undoMenuBtnClick" text="Undo                          ctrl+Z" />
-                        <MenuItem mnemonicParsing="false" onAction="#showGridMenuBtnClick" text="Show Grid                  ctrl+G" />
+                        <MenuItem mnemonicParsing="false" onAction="#showGridMenuBtnClick" text="Toggle Grid                ctrl+G" />
                     </items>
                     <graphic>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -92,9 +92,10 @@
         </HBox>
         <AnchorPane fx:id="canvasPane" style="-fx-background-color: #BABCBD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
             <children>
-                <AnchorPane fx:id="canvasAnchorPane" prefHeight="720.0" prefWidth="720.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                <AnchorPane fx:id="canvasAnchorPane" prefHeight="720.0" prefWidth="720.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Canvas fx:id="canvas" height="720.0" width="720.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0"/> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
+                        <Canvas fx:id="gridCanvas" height="720.0" visible="false" width="720" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Canvas fx:id="canvas" height="720.0" width="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" /> <!--AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" -->
                     </children>
                 </AnchorPane>
             </children>
