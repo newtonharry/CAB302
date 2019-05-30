@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -40,30 +37,21 @@ import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
 
-    @FXML
-    private Button penToolBtn;
-    @FXML
-    private Button lineToolBtn;
-    @FXML
-    private Button rectangleToolBtn;
-    @FXML
-    private Button ellipseToolBtn;
-    @FXML
-    private Button polygonToolBtn;
-    @FXML
-    private ColorPicker lineColorPicker;
-    @FXML
-    private ColorPicker fillColorPicker;
+    @FXML private Button penToolBtn;
+    @FXML private Button lineToolBtn;
+    @FXML private Button rectangleToolBtn;
+    @FXML private Button ellipseToolBtn;
+    @FXML private Button polygonToolBtn;
+    @FXML private ColorPicker lineColorPicker;
+    @FXML private ColorPicker fillColorPicker;
 
-    @FXML
-    private Canvas canvas;
-    @FXML
-    public AnchorPane canvasPane;
-    @FXML
-    private AnchorPane canvasAnchorPane;
+    @FXML public Canvas canvas;
+    @FXML public AnchorPane canvasPane;
+    @FXML private AnchorPane canvasAnchorPane;
+    private static double windowSize = 720.0;
 
     @FXML private AnchorPane gridAnchorPane;
-    @FXML private Canvas gridCanvas;
+    @FXML private Canvas gridCanvas = new Canvas(windowSize, windowSize);
     private boolean showGrid;
     private double gridSize;
 
@@ -71,11 +59,8 @@ public class Controller implements Initializable {
     private Color fillColor;
     private String selectedTool;
     private GraphicsContext brush;
-    private double windowSize = 720.0;
 
-    //private Model model;
     private InstructionList instructions;
-
     private Line line = new Line();
     private Rectangle rectangle = new Rectangle();
     private Ellipse ellipse = new Ellipse();
@@ -84,7 +69,6 @@ public class Controller implements Initializable {
     private double[] polygonPointsY = new double[9999];
     private int polygonPointsCount = 0;
 
-    // Temp Drawing Layers
     private Canvas tempDrawingLayer;
     private GraphicsContext tempDrawingLayerGC;
 
@@ -142,8 +126,8 @@ public class Controller implements Initializable {
     }
 
 
-    @FXML
-    private void newCanvasMenuBtnClick() {
+
+    @FXML public void newCanvasMenuBtnClick() {
         sample.GUI.KeyboardShortcuts.newCommand();
         canvasAnchorPane.getChildren().remove(canvas);
         canvas = new Canvas(windowSize, windowSize);
@@ -153,9 +137,8 @@ public class Controller implements Initializable {
 
     }
 
-    @FXML
-    private void saveMenuBtnClick() {
 
+    @FXML public void saveMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save vector file");
         fileChooser.setInitialDirectory(new File("resources"));
@@ -171,14 +154,13 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML
-    private void undoMenuBtnClick() {
+
+    @FXML public void undoMenuBtnClick() {
         sample.GUI.KeyboardShortcuts.undoCommand();
         instructions.remove(instructions.size() - 1);
     }
 
-    @FXML
-    private void showGridMenuBtnClick() {
+    @FXML public void showGridMenuBtnClick() {
         showGrid = !showGrid;
         if (showGrid) {
             String popupValue = showPopup("Grid Size", "0.05", "Please enter a grid size between 0.01 and 0.1", "Grid Size:");
@@ -251,13 +233,9 @@ public class Controller implements Initializable {
             grid.strokeLine(0, calculatedGridSize*i, windowSize, calculatedGridSize*i);
             grid.strokeLine(calculatedGridSize*i, 0, calculatedGridSize*i, windowSize);
         }
-
-        //grid.strokeLine(10, 10, 50, 10);
-        //line = new Line();
     }
-
-    @FXML
-    private void exportMenuBtnClick() {
+    
+    @FXML public void exportMenuBtnClick() {
         String fileLocation = showSaveFileExplorer("BMP", "bmp").toString();
 
         try {
@@ -633,11 +611,6 @@ public class Controller implements Initializable {
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-            /*if(showGrid){
-                xPoint = calculateSnapToGrid(event.getX());
-                yPoint = calculateSnapToGrid(event.getY());
-            }*/
-
             if (selectedTool.equals("line")) {
                 setupLine(xPoint, yPoint);
             }
@@ -657,11 +630,6 @@ public class Controller implements Initializable {
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-            /*if(showGrid){
-                xPoint = calculateSnapToGrid(event.getX());
-                yPoint = calculateSnapToGrid(event.getY());
-            }*/
-
             if (selectedTool.equals("line")) {
                 renderLinePreview(xPoint, yPoint);
             }
@@ -678,7 +646,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //drawGrid();
         showGrid = false;
 
         Color transparent = Color.web("0xffffff00", 0);
@@ -772,8 +739,4 @@ public class Controller implements Initializable {
                             ((Shape) instr).draw(canvas, brush);
         });
     }
-
-
-    // Undo History
-
 }

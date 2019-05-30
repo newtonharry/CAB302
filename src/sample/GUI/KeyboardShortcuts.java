@@ -3,26 +3,29 @@ package sample.GUI;
 public class KeyboardShortcuts {
     static public void newCommand() {
         System.out.println("New");
+        sample.Main.getController().newCanvasMenuBtnClick();
     }
 
     static public void openCommand() {
+        sample.Main.getController().openMenuBtnClick();
     }
 
     static public void saveCommand() {
         System.out.println("Save");
+        sample.Main.getController().saveMenuBtnClick();
     }
 
     static public void exportCommand() {
         System.out.println("Export");
+        sample.Main.getController().exportMenuBtnClick();
     }
 
     static public void undoCommand() {
-        System.out.println("Undo");
+        sample.Main.getController().undoMenuBtnClick();
     }
 
     static public void gridCommand() {
-        System.out.println("Grid");
-        //sample.GUI.Controller.toggleGrid();
+        sample.Main.getController().showGridMenuBtnClick();
     }
 
 }

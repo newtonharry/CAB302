@@ -31,6 +31,7 @@ public class Main extends Application {
     private static Stage primaryStage;
     private Model model;
     private InstructionList instructions;
+    private static Controller controller;
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,7 +60,8 @@ public class Main extends Application {
 
         //Model model = new Model();
         instructions = new InstructionList();
-        Controller controller = loader.getController();
+        controller = loader.getController();
+
         //controller.initialiseModel(model);
         controller.initialiseModel(instructions);
 
@@ -102,14 +104,14 @@ public class Main extends Application {
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
-        rn = () -> testPopup();//sample.GUI.KeyboardShortcuts.gridCommand();
+        rn = () -> sample.GUI.KeyboardShortcuts.gridCommand(); //testPopup();
         scene.getAccelerators().put(kc, rn);
     }
 
     static public Stage getPrimaryStage() {
         return sample.Main.primaryStage;
     }
-
+    static public Controller getController() {return controller;}
 
     public static void main(String[] args) {
         launch(args);
