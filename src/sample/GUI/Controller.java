@@ -533,8 +533,12 @@ public class Controller implements Initializable {
 
     private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
+
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
+
             if (selectedTool.equals("polygon")) {
-                renderPolygonPreview(event.getX(), event.getY(), event.getButton());
+                renderPolygonPreview(xPoint, yPoint, event.getButton());
             }
         });
     }
