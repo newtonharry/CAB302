@@ -36,3 +36,12 @@
 
 .menu-item {
 }
+
+.darkButton{
+    -fx-background-color: #727B87;
+}
+
+.scroll-pane {
+    -fx-background: #727B87;
+    -fx-border-color: #727B87;
+}

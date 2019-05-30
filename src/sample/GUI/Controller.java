@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Exceptions.FileExistsException;
 import sample.Exceptions.InvalidPathException;
@@ -35,6 +36,7 @@ import sample.Instructions.*;
 import sample.Parser.Parser;
 
 import javax.imageio.ImageIO;
+
 
 public class Controller implements Initializable {
 
@@ -143,6 +145,12 @@ public class Controller implements Initializable {
     @FXML
     private void newCanvasMenuBtnClick() {
         sample.GUI.KeyboardShortcuts.newCommand();
+        canvasAnchorPane.getChildren().remove(canvas);
+        canvas = new Canvas(windowSize, windowSize);
+        canvasAnchorPane.getChildren().add(canvas);
+
+        //Need to clear the observer
+
     }
 
     @FXML
@@ -166,6 +174,7 @@ public class Controller implements Initializable {
     @FXML
     private void undoMenuBtnClick() {
         sample.GUI.KeyboardShortcuts.undoCommand();
+        instructions.remove(instructions.size() - 1);
     }
 
     @FXML
@@ -249,15 +258,27 @@ public class Controller implements Initializable {
 
     @FXML
     private void exportMenuBtnClick() {
+        String fileLocation = showSaveFileExplorer("BMP", "bmp").toString();
+
         try {
             exportBMP("", "CanvasImage.bmp", 4096);
         } catch (IOException e) {
 
-        } catch (FileExistsException e) {
+        } catch (FileExistsException e) { //Dont need these fileChooser handles existingFile and Invaild Path
 
         } catch (InvalidPathException e) {
 
         }
+    }
+
+    private File showSaveFileExplorer(String fileDescription, String fileExtension){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(fileDescription, "*." + fileExtension)
+        );
+        File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
+
+        return fileLocation;
     }
 
     @FXML
@@ -670,6 +691,8 @@ public class Controller implements Initializable {
 
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
+
+        //sample.Main.getPrimaryStage();
     }
 
     /**
@@ -687,7 +710,6 @@ public class Controller implements Initializable {
     // TODO: complete resolution scaling so that image is correctly scaled to output resolution
     private void exportBMP(String path, String fileName, int resolution)
             throws IOException, FileExistsException, InvalidPathException {
-
         File exportFile = new File(path + fileName);
 
         if (!Files.exists(new File(path).toPath()))
@@ -750,4 +772,8 @@ public class Controller implements Initializable {
                             ((Shape) instr).draw(canvas, brush);
         });
     }
+
+
+    // Undo History
+
 }

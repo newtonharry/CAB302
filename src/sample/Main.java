@@ -2,12 +2,19 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sample.GUI.Controller;
 import sample.GUI.Model;
 import sample.GUI.stage;
@@ -19,13 +26,12 @@ import java.io.IOException;
 public class Main extends Application {
 
     private static Scene scene;
-    private Stage primaryStage;
+    private static Stage primaryStage;
     private Model model;
     private InstructionList instructions;
 
     @Override
     public void start(Stage primaryStage) {
-
         BorderPane root = new BorderPane();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI/sample.fxml"));
         try {
@@ -36,19 +42,34 @@ public class Main extends Application {
 
         scene = new Scene(root, 730, 821);
         this.primaryStage = primaryStage;
+        this.primaryStage.setMinHeight(641.0);
+        this.primaryStage.setMinWidth(550.0);
         this.primaryStage.setTitle("Paint Application");
+        this.primaryStage.initStyle(StageStyle.UTILITY);
+
         this.primaryStage.setScene(scene);
+
         this.primaryStage.show();
 
         scene.getStylesheets()
                 .add(getClass().getResource("GUI/styles.css").toExternalForm());
 
+
+
+
+
+
+
+
+
         //Model model = new Model();
         instructions = new InstructionList();
         Controller controller = loader.getController();
-        stage test = new stage();
         //controller.initialiseModel(model);
         controller.initialiseModel(instructions);
+
+
+        /*stage test = new stage();
 
         test.setStageWidth(scene.getWidth());
         test.setStageHeight(scene.getHeight());
@@ -59,7 +80,7 @@ public class Main extends Application {
 
         this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
             test.setStageHeight(scene.getHeight());
-        });
+        });*/
 
         initKeyboardShortcuts();
     }
@@ -86,11 +107,70 @@ public class Main extends Application {
         scene.getAccelerators().put(kc, rn);
 
         kc = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
-        rn = () -> sample.GUI.KeyboardShortcuts.gridCommand();
+        rn = () -> testPopup();//sample.GUI.KeyboardShortcuts.gridCommand();
         scene.getAccelerators().put(kc, rn);
     }
 
+    static public Stage getPrimaryStage() {
+        return sample.Main.primaryStage;
+    }
+
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void testPopup(){
+        final Stage dialog = new Stage();
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setResizable(false);
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setBackground(new Background(new BackgroundFill(Color.web("#727B87"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setStyle("-fx-min-height: 250; -fx-max-width: 250; -fx-background: #3B4046; -fx-background-color: #3B4046;");
+
+
+
+
+
+        Button okayButton = new Button("Undo");
+        okayButton.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
+
+
+        okayButton.setOnAction((event) -> {
+
+            dialog.close();
+        });
+
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
+
+        cancelButton.setOnAction((event) -> {
+            dialog.close();
+        });
+
+        final Pane spacerLeft = new Pane();
+        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+        spacerLeft.setMinSize(10, 1);
+
+        final Pane spacerRight = new Pane();
+        spacerRight.setMinSize(10, 1);
+
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(spacerLeft, okayButton, cancelButton, spacerRight);
+
+        dialogVbox.getChildren().add(scrollPane);
+        dialogVbox.getChildren().add(hbox);
+
+        Scene dialogScene = new Scene(dialogVbox, 400, 325);
+        dialog.setTitle("Undo History");
+        dialog.setScene(dialogScene);
+        dialog.showAndWait();
     }
 }
