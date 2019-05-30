@@ -63,6 +63,7 @@ public class Controller implements Initializable {
     @FXML private AnchorPane gridAnchorPane;
     @FXML private Canvas gridCanvas;
     private boolean showGrid;
+    private double gridSize;
 
     private Color lineColor;
     private Color fillColor;
@@ -181,6 +182,7 @@ public class Controller implements Initializable {
                     if (gridValue <= 0.1 && gridValue >= 0.01) {
                         gridCanvas = new Canvas(windowSize, windowSize);
                         gridAnchorPane.getChildren().add(gridCanvas);
+                        gridSize = gridValue;
                         drawGrid(gridValue);
                     } else{
                         showGrid = !showGrid; //Swap Back
@@ -207,11 +209,6 @@ public class Controller implements Initializable {
         alert.setGraphic(null);
 
         alert.showAndWait();
-        /*Alert dialog = new TextInputDialog(defaultValue);
-
-
-
-        Optional<String> result = dialog.showAndWait();*/
     }
 
     private String showPopup(String title, String defaultValue, String headerText, String contentText){
@@ -448,11 +445,19 @@ public class Controller implements Initializable {
         rectangle.setY(y);
 
         canvas.setOnMouseReleased(event -> {
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
+
+            if(showGrid){
+                xPoint = calculateSnapToGrid(event.getX());
+                yPoint = calculateSnapToGrid(event.getY());
+            }
+
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
-            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
-            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
             RectangleInstruction RectangleInst = null;
             try {
@@ -484,10 +489,18 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
+
+            if(showGrid){
+                xPoint = calculateSnapToGrid(event.getX());
+                yPoint = calculateSnapToGrid(event.getY());
+            }
+
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
-            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
-            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
 
             EllipseInstruction ellipseInst = null;
@@ -544,22 +557,34 @@ public class Controller implements Initializable {
         fillColor = fillColorPicker.getValue();
     }
 
+    private Double calculateSnapToGrid(Double mouseLocation){
+        Double gridDimension = (windowSize / (1 / gridSize));
+        Double xGridPoint = mouseLocation / gridDimension;
+        int xGridPointRounded = (int)Math.round(xGridPoint);
+        return xGridPointRounded * gridDimension;
+    }
+
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
 
-            //canvasPane.setPrefWidth(Main.getScene().getWidth());
-
             refreshColors();
-            if (selectedTool.equals("plot")) {
-                plotPoint(event.getX(), event.getY());
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
 
+            if(showGrid){
+                xPoint = calculateSnapToGrid(event.getX());
+                yPoint = calculateSnapToGrid(event.getY());
+            }
+
+            if (selectedTool.equals("plot")) {
+                plotPoint(xPoint, yPoint);
             }
 
             if (selectedTool.equals("polygon")) {
                 if (polygonPointsCount == 0) {
-                    setupPolygon(event.getX(), event.getY());
+                    setupPolygon(xPoint, yPoint);
                 } else {
-                    renderPolygonPreview(event.getX(), event.getY(), event.getButton());
+                    renderPolygonPreview(xPoint, yPoint, event.getButton());
                 }
             }
         });
@@ -567,32 +592,48 @@ public class Controller implements Initializable {
         canvas.setOnMousePressed(event -> {
             refreshColors();
 
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
+
+            if(showGrid){
+                xPoint = calculateSnapToGrid(event.getX());
+                yPoint = calculateSnapToGrid(event.getY());
+            }
+
             if (selectedTool.equals("line")) {
-                setupLine(event.getX(), event.getY());
+                setupLine(xPoint, yPoint);
             }
 
             if (selectedTool.equals("rectangle")) {
-                setupRectangle(event.getX(), event.getY());
+                setupRectangle(xPoint, yPoint);
             }
 
             if (selectedTool.equals("ellipse")) {
-                setupEllipse(event.getX(), event.getY());
+                setupEllipse(xPoint, yPoint);
             }
         });
 
         canvas.setOnMouseDragged(event -> {
             refreshColors();
 
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
+
+            if(showGrid){
+                xPoint = calculateSnapToGrid(event.getX());
+                yPoint = calculateSnapToGrid(event.getY());
+            }
+
             if (selectedTool.equals("line")) {
-                renderLinePreview(event.getX(), event.getY());
+                renderLinePreview(xPoint, yPoint);
             }
 
             if (selectedTool.equals("rectangle")) {
-                renderRectanglePreview(event.getX(), event.getY());
+                renderRectanglePreview(xPoint, yPoint);
             }
 
             if (selectedTool.equals("ellipse")) {
-                renderEllipsePreview(event.getX(), event.getY());
+                renderEllipsePreview(xPoint, yPoint);
             }
         });
     }
