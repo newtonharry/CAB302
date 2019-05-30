@@ -69,15 +69,17 @@ public class Main extends Application {
         /*stage test = new stage();
 
         test.setStageWidth(scene.getWidth());
-        test.setStageHeight(scene.getHeight());
-
+        test.setStageHeight(scene.getHeight());*/
+        controller.resizeCanvas(scene.getWidth(), scene.getHeight());
         this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            test.setStageWidth(scene.getWidth());
+            //test.setStageWidth(scene.getWidth());
+            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
         });
 
         this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            test.setStageHeight(scene.getHeight());
-        });*/
+            //test.setStageHeight(scene.getHeight());
+           controller.resizeCanvas(scene.getWidth(), scene.getHeight());
+        });
 
         initKeyboardShortcuts();
     }

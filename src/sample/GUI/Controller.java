@@ -13,12 +13,16 @@ import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
@@ -37,6 +41,7 @@ import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
 
+    @FXML private AnchorPane containerPane;
     @FXML private Button penToolBtn;
     @FXML private Button lineToolBtn;
     @FXML private Button rectangleToolBtn;
@@ -48,6 +53,7 @@ public class Controller implements Initializable {
     @FXML public Canvas canvas;
     @FXML public AnchorPane canvasPane;
     @FXML private AnchorPane canvasAnchorPane;
+    @FXML private AnchorPane abc;
     private static double windowSize = 720.0;
 
     @FXML private AnchorPane gridAnchorPane;
@@ -234,7 +240,7 @@ public class Controller implements Initializable {
             grid.strokeLine(calculatedGridSize*i, 0, calculatedGridSize*i, windowSize);
         }
     }
-    
+
     @FXML public void exportMenuBtnClick() {
         String fileLocation = showSaveFileExplorer("BMP", "bmp").toString();
 
@@ -660,6 +666,50 @@ public class Controller implements Initializable {
         brush.setLineWidth(1);
 
         //sample.Main.getPrimaryStage();
+    }
+
+    public void resizeCanvas(Double stageWidth, Double stageHeight){
+        //canvasPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        Double currentCanvasHeight = stageHeight - 66 - 25 - 10;
+        Double currentCanvasWidth = stageWidth - 10;
+        Double smallestCanvasDimension;
+
+        if(currentCanvasWidth <= currentCanvasHeight){
+            smallestCanvasDimension = currentCanvasWidth;
+        } else {
+            smallestCanvasDimension = currentCanvasHeight;
+        }
+
+        windowSize = smallestCanvasDimension;
+
+        containerPane.setPrefWidth(smallestCanvasDimension + 10);
+        containerPane.setPrefHeight(smallestCanvasDimension + 101);
+
+        canvasPane.setPrefWidth(smallestCanvasDimension + 10);
+        canvasPane.setPrefHeight(smallestCanvasDimension + 10);
+
+        abc.setPrefWidth(smallestCanvasDimension);
+        abc.setPrefHeight(smallestCanvasDimension);
+
+        gridAnchorPane.setPrefWidth(smallestCanvasDimension);
+        gridAnchorPane.setPrefHeight(smallestCanvasDimension);
+
+        gridCanvas.setWidth(smallestCanvasDimension);
+        gridCanvas.setHeight(smallestCanvasDimension);
+
+        canvasAnchorPane.setPrefWidth(smallestCanvasDimension);
+        canvasAnchorPane.setPrefHeight(smallestCanvasDimension);
+
+        canvas.setWidth(smallestCanvasDimension);
+        canvas.setHeight(smallestCanvasDimension);
+
+        if(showGrid){
+            gridAnchorPane.getChildren().remove(gridCanvas);
+            gridCanvas = new Canvas(windowSize, windowSize);
+            gridAnchorPane.getChildren().add(gridCanvas);
+            drawGrid(gridSize);
+        }
     }
 
     /**
