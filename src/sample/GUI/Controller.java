@@ -445,13 +445,13 @@ public class Controller implements Initializable {
         rectangle.setY(y);
 
         canvas.setOnMouseReleased(event -> {
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
 
-            if(showGrid){
+            /*if(showGrid){
                 xPoint = calculateSnapToGrid(event.getX());
                 yPoint = calculateSnapToGrid(event.getY());
-            }
+            }*/
 
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
             coordinates.add((x / canvas.getWidth()) * 1.0);
@@ -489,13 +489,13 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
 
-            if(showGrid){
+            /*if(showGrid){
                 xPoint = calculateSnapToGrid(event.getX());
                 yPoint = calculateSnapToGrid(event.getY());
-            }
+            }*/
 
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
@@ -558,23 +558,36 @@ public class Controller implements Initializable {
     }
 
     private Double calculateSnapToGrid(Double mouseLocation){
+        if(showGrid){
         Double gridDimension = (windowSize / (1 / gridSize));
         Double xGridPoint = mouseLocation / gridDimension;
         int xGridPointRounded = (int)Math.round(xGridPoint);
         return xGridPointRounded * gridDimension;
+        }
+
+        return mouseLocation;
     }
+
+
+    /*Double xPoint = event.getX();
+    Double yPoint = event.getY();
+
+            if(showGrid){
+        xPoint = calculateSnapToGrid(event.getX());
+        yPoint = calculateSnapToGrid(event.getY());
+    }*/
 
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
 
             refreshColors();
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
 
-            if(showGrid){
+            /*if(showGrid){
                 xPoint = calculateSnapToGrid(event.getX());
                 yPoint = calculateSnapToGrid(event.getY());
-            }
+            }*/
 
             if (selectedTool.equals("plot")) {
                 plotPoint(xPoint, yPoint);
@@ -592,13 +605,13 @@ public class Controller implements Initializable {
         canvas.setOnMousePressed(event -> {
             refreshColors();
 
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
 
-            if(showGrid){
+            /*if(showGrid){
                 xPoint = calculateSnapToGrid(event.getX());
                 yPoint = calculateSnapToGrid(event.getY());
-            }
+            }*/
 
             if (selectedTool.equals("line")) {
                 setupLine(xPoint, yPoint);
@@ -616,13 +629,13 @@ public class Controller implements Initializable {
         canvas.setOnMouseDragged(event -> {
             refreshColors();
 
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
 
-            if(showGrid){
+            /*if(showGrid){
                 xPoint = calculateSnapToGrid(event.getX());
                 yPoint = calculateSnapToGrid(event.getY());
-            }
+            }*/
 
             if (selectedTool.equals("line")) {
                 renderLinePreview(xPoint, yPoint);
