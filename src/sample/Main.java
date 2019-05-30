@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -53,13 +55,6 @@ public class Main extends Application {
 
         scene.getStylesheets()
                 .add(getClass().getResource("GUI/styles.css").toExternalForm());
-
-
-
-
-
-
-
 
 
         //Model model = new Model();
@@ -131,12 +126,6 @@ public class Main extends Application {
         dialogVbox.setBackground(new Background(new BackgroundFill(Color.web("#727B87"), CornerRadii.EMPTY, Insets.EMPTY)));
 
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setStyle("-fx-min-height: 250; -fx-max-width: 250; -fx-background: #3B4046; -fx-background-color: #3B4046;");
-
-
-
-
 
         Button okayButton = new Button("Undo");
         okayButton.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
@@ -161,14 +150,44 @@ public class Main extends Application {
 
         final Pane spacerRight = new Pane();
         spacerRight.setMinSize(10, 1);
+        final Pane spacerRight2 = new Pane();
+        spacerRight2.setMinSize(10, 1);
 
-        HBox hbox = new HBox();
-        hbox.getChildren().addAll(spacerLeft, okayButton, cancelButton, spacerRight);
+        HBox buttonContainer = new HBox();
+        buttonContainer.getChildren().addAll(spacerLeft, okayButton, cancelButton, spacerRight);
 
-        dialogVbox.getChildren().add(scrollPane);
-        dialogVbox.getChildren().add(hbox);
 
-        Scene dialogScene = new Scene(dialogVbox, 400, 325);
+        Label historyViewLabel = new Label("History");
+        ScrollPane historyView = new ScrollPane();
+        historyView.setStyle("-fx-min-height: 300; -fx-min-width: 150; -fx-background: #3B4046; -fx-background-color: #3B4046;");
+
+        VBox historyViewContainer = new VBox();
+        historyViewContainer.getChildren().addAll(historyViewLabel, historyView);
+
+        Label canvasPreviewLabel = new Label("Preview");
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setStyle(" -fx-background: #FFFFFF; -fx-background-color: #FFFFFF; -fx-min-width: 300; -fx-min-height: 300; ");
+
+        Canvas previewCanvas = new Canvas(300, 300);
+        anchorPane.getChildren().add(previewCanvas);
+
+        VBox canvasPreview = new VBox();
+        canvasPreview.getChildren().addAll(canvasPreviewLabel, anchorPane);
+
+        final Pane spacerMiddle = new Pane();
+        spacerMiddle.setMinSize(30, 1);
+
+        HBox mainContainer = new HBox();
+        mainContainer.getChildren().addAll(spacerRight, historyViewContainer, spacerMiddle, canvasPreview, spacerRight2);
+
+        final Pane spacerTop = new Pane();
+        spacerTop.setMinSize(1, 1);
+
+        dialogVbox.getChildren().add(spacerTop);
+        dialogVbox.getChildren().add(mainContainer);
+        dialogVbox.getChildren().add(buttonContainer);
+
+        Scene dialogScene = new Scene(dialogVbox, 500, 410);
         dialog.setTitle("Undo History");
         dialog.setScene(dialogScene);
         dialog.showAndWait();
