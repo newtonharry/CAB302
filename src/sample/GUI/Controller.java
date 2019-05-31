@@ -254,11 +254,11 @@ public class Controller implements Initializable {
         try {
             exportBMP("", "CanvasImage.bmp", 4096);
         } catch (IOException e) {
-
-        } catch (FileExistsException e) { //Dont need these fileChooser handles existingFile and Invaild Path
-
+            e.printStackTrace();
         } catch (InvalidPathException e) {
-
+            e.printStackTrace();
+        } catch (FileExistsException e) {
+            e.printStackTrace();
         }
     }
 
@@ -292,9 +292,9 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserException e) {
-            e.printStackTrace();
+            alert("Parsing Error",e.getMessage());
         } catch (ShapeException e) {
-            e.printStackTrace();
+            alert("Shape Error",e.getMessage());
         }
     }
 
