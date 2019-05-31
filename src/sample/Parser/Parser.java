@@ -22,7 +22,6 @@ public class Parser {
     private Path vecFile; // Buffer for writing and reading data to/from VEC files, with default filename
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
     private Instruction instruction; // Used in switch case, to identify instruction types
-    private InstructionList instructions; // Used in switch case, to identify instruction types
 
     private PenInstruction pen = new PenInstruction("000000"); // black pen
     private FillInstruction fill = new FillInstruction("OFF"); // no fill
@@ -38,12 +37,11 @@ public class Parser {
     /*
     Parser to begin reading/writing from/to a file
      */
-    public Parser(String file, InstructionList instructions) throws ParserException {
+    public Parser(String file) throws ParserException {
         if (file.isEmpty() || file.isBlank())
             throw new ParserException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
-        this.instructions = instructions;
     }
 
     public void readInstructions() throws IOException, ParserException, ShapeException {
@@ -71,7 +69,7 @@ public class Parser {
     }
 
     public void writeInstructions() throws IOException {
-        String instructions = this.instructions
+        String instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions()
                 .stream()
                 .map(VecInstruction::toString)
                 .collect(Collectors.joining("\n")); // Convert instructions to strings
@@ -92,27 +90,27 @@ public class Parser {
         switch (instruction) {
             case LINE:
                 LineInstruction lineInst = new LineInstruction(pen.getColour(), coordinates);
-                instructions.add(lineInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(lineInst);
                 break;
 
             case RECTANGLE:
                 RectangleInstruction rectInst = new RectangleInstruction(pen.getColour(), fill.getColour(), coordinates);
-                instructions.add(rectInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(rectInst);
                 break;
 
             case PLOT:
                 PlotInstruction plotInst = new PlotInstruction(pen.getColour(), coordinates);
-                instructions.add(plotInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(plotInst);
                 break;
 
             case ELLIPSE:
                 EllipseInstruction ellipseInst = new EllipseInstruction(pen.getColour(), fill.getColour(), coordinates);
-                instructions.add(ellipseInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst);
                 break;
 
             case POLYGON:
                 PolygonInstruction polyInst = new PolygonInstruction(pen.getColour(), fill.getColour(), coordinates);
-                instructions.add(polyInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(polyInst);
                 break;
 
             default:
@@ -125,12 +123,12 @@ public class Parser {
         switch (instruction) {
             case PEN:
                 PenInstruction penInst = new PenInstruction(value);
-                instructions.add(penInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(penInst);
                 break;
 
             case FILL:
                 FillInstruction fillInst = new FillInstruction(value);
-                instructions.add(fillInst);
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(fillInst);
                 break;
 
             default:

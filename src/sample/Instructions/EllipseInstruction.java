@@ -1,10 +1,9 @@
 package sample.Instructions;
 
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
+import sample.GUI.Controller;
 
 import java.util.List;
 
@@ -20,32 +19,23 @@ public class EllipseInstruction extends Shape {
 
     /**
      * Draws an ellipse when editing, parsing .vec files, or exporting
-     *
-     * @param fill   the hexadecimal representation of the rectangle's
-     *               fill colour
-     * @param pen    the hexadecimal representation of the rectangle's
-     *               pen colour
-     * @param coords a list of doubles representing the coordinates for
-     *               the bounds of the ellipse
      */
     @Override
-    public void draw(Canvas canvas, GraphicsContext brush) {
+    public void draw() {
 
-        int x = convertXCoord(canvas, this.getCoordinates().get(0)),
-                y = convertYCoord(canvas,this.getCoordinates().get(1)),
-                width = convertWidth(canvas, this.getCoordinates().get(0), this.getCoordinates().get(2)),
-                height = convertHeight(canvas,this.getCoordinates().get(1), this.getCoordinates().get(3));
-
-        //brush = canvas.getGraphicsContext2D();
+        int x = convertXCoord(this.getCoordinates().get(0)),
+                y = convertYCoord(this.getCoordinates().get(1)),
+                width = convertWidth(this.getCoordinates().get(0), this.getCoordinates().get(2)),
+                height = convertHeight(this.getCoordinates().get(1), this.getCoordinates().get(3));
 
         if (this.getFill().equals("OFF"))
-            brush.setFill(Color.web("000000", 0.0));
+            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web("000000", 0.0));
         else
-            brush.setFill(Color.web(this.getFill(), 1.0));
+            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web(this.getFill(), 1.0));
 
-        brush.setStroke(Color.web(this.getPen(), 1.0));
-        brush.setLineWidth(3);
-        brush.strokeOval(x, y, width, height);
-        brush.fillOval(x, y, width, height);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(3);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
     }
 }

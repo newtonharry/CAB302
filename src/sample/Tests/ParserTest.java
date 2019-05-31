@@ -4,12 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
-import sample.GUI.Model;
-import sample.Instructions.*;
 import sample.Parser.Parser;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class ParserTest {
@@ -18,12 +15,12 @@ public class ParserTest {
 
     @Before
     public void setUpParser() throws ParserException {
-        parser = new Parser("vec_files/test.vec", new InstructionList());
+        parser = new Parser("vec_files/test.vec");
     }
 
     @Test
     public void testConstruction() throws ParserException {
-        parser = new Parser("vec_files/test.vec", new InstructionList());
+        parser = new Parser("vec_files/test.vec");
     }
 
     @Test
@@ -60,16 +57,5 @@ public class ParserTest {
         parser.readInstructions();
         parser.writeInstructions();
     }
-
-    /*
-    @Test
-    public void testIterator() throws ShapeException, ParserException, IOException {
-        parser.readInstructions();
-        for(VecInstruction shape: parser){
-            System.out.println(shape.toString());
-        }
-    }
-
-     */
 }
 

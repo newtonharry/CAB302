@@ -13,14 +13,12 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.GUI.Controller;
-import sample.GUI.Model;
-import sample.GUI.stage;
-import sample.Instructions.InstructionList;
+import sample.Instructions.Instruction;
+import sample.Instructions.InstructionBufferProcessor;
 
 import java.io.IOException;
 
@@ -29,8 +27,6 @@ public class Main extends Application {
 
     private static Scene scene;
     private static Stage primaryStage;
-    private Model model;
-    private InstructionList instructions;
     private static Controller controller;
 
     @Override
@@ -42,7 +38,6 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         scene = new Scene(root, 730, 821);
         this.primaryStage = primaryStage;
         this.primaryStage.setMinHeight(641.0);
@@ -57,19 +52,12 @@ public class Main extends Application {
         scene.getStylesheets()
                 .add(getClass().getResource("GUI/styles.css").toExternalForm());
 
-
-        //Model model = new Model();
-        instructions = new InstructionList();
         controller = loader.getController();
 
-        //controller.initialiseModel(model);
-        controller.initialiseModel(instructions);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.canvas = controller.canvas;
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush = controller.brush;
+        InstructionBufferProcessor.BUFFER_PROCESSOR.listen();
 
-
-        /*stage test = new stage();
-
-        test.setStageWidth(scene.getWidth());
-        test.setStageHeight(scene.getHeight());*/
         controller.resizeCanvas(scene.getWidth(), scene.getHeight());
         this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
             //test.setStageWidth(scene.getWidth());

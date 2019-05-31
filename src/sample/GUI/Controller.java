@@ -64,9 +64,8 @@ public class Controller implements Initializable {
     private Color lineColor;
     private Color fillColor;
     private String selectedTool;
-    private GraphicsContext brush;
+    public GraphicsContext brush;
 
-    private InstructionList instructions;
     private Line line = new Line();
     private Rectangle rectangle = new Rectangle();
     private Ellipse ellipse = new Ellipse();
@@ -151,7 +150,7 @@ public class Controller implements Initializable {
         fileChooser.setInitialFileName("untitled.vec");
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         try {
-            Parser parser = new Parser(importVec.toString(), instructions);
+            Parser parser = new Parser(importVec.toString());
             parser.writeInstructions();
         } catch (IOException e) {
             e.printStackTrace();
@@ -162,8 +161,8 @@ public class Controller implements Initializable {
 
 
     @FXML public void undoMenuBtnClick() {
-        sample.GUI.KeyboardShortcuts.undoCommand();
-        instructions.remove(instructions.size() - 1);
+        //sample.GUI.KeyboardShortcuts.undoCommand();
+        InstructionBufferProcessor.BUFFER_PROCESSOR.undoInstruction();
     }
 
     @FXML public void showGridMenuBtnClick() {
@@ -278,9 +277,9 @@ public class Controller implements Initializable {
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
         brush.clearRect(0, 0, 700, 700);
-        instructions.clear();
+        InstructionBufferProcessor.BUFFER_PROCESSOR.clearInstructions();
         try {
-            Parser parser = new Parser(importVec.toString(), instructions);
+            Parser parser = new Parser(importVec.toString());
             parser.readInstructions();
         } catch (IOException e) {
             e.printStackTrace();
@@ -403,16 +402,24 @@ public class Controller implements Initializable {
 
 
     private void plotPoint(Double x, Double y) {
-        brush.setStroke(lineColor);
-        brush.setLineWidth(1);
+        List<Double> coordinates = new ArrayList<>();
+        coordinates.add(x);
+        coordinates.add(y);
 
-        brush.strokeLine(x, y, x, y);
+        PlotInstruction PlotInst = null;
+        try {
+            PlotInst = new PlotInstruction(lineColor.toString(), coordinates);
+        } catch (ShapeException e) {
+            e.printStackTrace();
+        }
+
+        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(PlotInst);
     }
 
     private void setupLine(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
-        //List<Double> coordinates = new ArrayList<>();
+        List<Double> coordinates = new ArrayList<>();
 
         tempDrawingLayerGC = tempDrawingLayer.getGraphicsContext2D();
 
@@ -424,7 +431,7 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
-            /*coordinates.add((x / canvas.getWidth()) * 1.0);
+            coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
             coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
             coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
@@ -436,7 +443,7 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
 
-            instructions.add(LineInst);*/
+            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
         });
     }
 
@@ -453,11 +460,6 @@ public class Controller implements Initializable {
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-            /*if(showGrid){
-                xPoint = calculateSnapToGrid(event.getX());
-                yPoint = calculateSnapToGrid(event.getY());
-            }*/
-
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
@@ -471,7 +473,7 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
 
-            instructions.add(RectangleInst);
+            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
         });
     }
 
@@ -494,13 +496,13 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
+            /*
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-            /*if(showGrid){
-                xPoint = calculateSnapToGrid(event.getX());
-                yPoint = calculateSnapToGrid(event.getY());
-            }*/
+             */
+            Double xPoint = event.getX();
+            Double yPoint = event.getY();
 
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
@@ -514,27 +516,11 @@ public class Controller implements Initializable {
             } catch (ShapeException e) {
                 e.printStackTrace();
             }
-            instructions.add(ellipseInst); // NEED to translate coordinates to normal number
+            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number
         });
     }
 
 
-    /*
-    private void endEllipse(Double x, Double y) {
-        canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-
-        ellipseBounds.setWidth(Math.abs(x - ellipseBounds.getX()));
-        ellipseBounds.setHeight(Math.abs(y - ellipseBounds.getY()));
-
-        brush.setStroke(lineColor);
-        brush.setFill(fillColor);
-        brush.setLineWidth(3);
-
-        brush.strokeOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
-        brush.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
-
-    }
-     */
 
     private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
@@ -578,13 +564,6 @@ public class Controller implements Initializable {
     }
 
 
-    /*Double xPoint = event.getX();
-    Double yPoint = event.getY();
-
-            if(showGrid){
-        xPoint = calculateSnapToGrid(event.getX());
-        yPoint = calculateSnapToGrid(event.getY());
-    }*/
 
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
@@ -593,10 +572,6 @@ public class Controller implements Initializable {
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-            /*if(showGrid){
-                xPoint = calculateSnapToGrid(event.getX());
-                yPoint = calculateSnapToGrid(event.getY());
-            }*/
 
             if (selectedTool.equals("plot")) {
                 plotPoint(xPoint, yPoint);
@@ -665,7 +640,6 @@ public class Controller implements Initializable {
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
 
-        //sample.Main.getPrimaryStage();
     }
 
     public void resizeCanvas(Double stageWidth, Double stageHeight){
@@ -766,27 +740,5 @@ public class Controller implements Initializable {
                 .drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
 
         ImageIO.write(convertedImage, "bmp", exportFile);
-    }
-
-    /**
-     * Initialises the listeners to adjust shapes on the canvas based on the
-     * instructions listed in the model
-     *
-     * @param instructions the model containing the shape instructions
-     */
-    public void initialiseModel(InstructionList instructions) {
-        if (this.instructions != null)
-            throw new IllegalStateException("Model is only initialisable once");
-        //this.model = model;
-        this.instructions = instructions;
-
-        this.instructions.addListener((
-                ListChangeListener.Change<? extends VecInstruction> instruction) -> {
-            while (instruction.next())
-                if (instruction.wasAdded())
-                    for (VecInstruction instr : instruction.getList())
-                        if (instr instanceof Shape)
-                            ((Shape) instr).draw(canvas, brush);
-        });
     }
 }

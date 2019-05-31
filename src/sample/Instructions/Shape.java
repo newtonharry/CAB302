@@ -5,13 +5,15 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Control;
+import sample.GUI.Controller;
 
 public abstract class Shape implements VecInstruction {
 
-    private Instruction type;
+    private Instruction type; // Instruction type
     private String pen;  // pen colour
     private String fill; // fill colour
-    private List<Double> coordinates;
+    private List<Double> coordinates; // Instruction coordinates
 
     // Constructor to change pen and fill values
     Shape(Instruction type, String pen, String fill, List<Double> coordinates) {
@@ -22,9 +24,7 @@ public abstract class Shape implements VecInstruction {
     }
 
     Shape(Instruction type, String pen, List<Double> coordinates) {
-        this.type = type;
-        this.pen = pen;
-        this.coordinates = coordinates;
+        this(type,pen,"",coordinates);
     }
 
     public List<Double> getCoordinates(){
@@ -59,8 +59,8 @@ public abstract class Shape implements VecInstruction {
      * @param coord the x-coordinate to be converted as a double
      * @return the integer version of the coordinate
      */
-    public int convertXCoord(Canvas canvas, double coord) {
-        return (int) Math.round(coord * canvas.getWidth());
+    public int convertXCoord(double coord) {
+        return (int) Math.round(coord * InstructionBufferProcessor.BUFFER_PROCESSOR.canvas.getWidth());
     }
 
     /**
@@ -70,8 +70,8 @@ public abstract class Shape implements VecInstruction {
      * @param coord the y-coordinate to be converted as a double
      * @return the integer version of the coordinate
      */
-    public int convertYCoord(Canvas canvas,double coord) {
-        return (int) Math.round(coord * canvas.getHeight());
+    public int convertYCoord(double coord) {
+        return (int) Math.round(coord * InstructionBufferProcessor.BUFFER_PROCESSOR.canvas.getHeight());
     }
 
     /**
@@ -82,8 +82,8 @@ public abstract class Shape implements VecInstruction {
      * @param coord2 the second x-coordinate as a double
      * @return the width between them as an integer
      */
-    public int convertWidth(Canvas canvas, double coord1, double coord2) {
-        return (int) Math.round(Math.abs(coord1 - coord2) * canvas.getWidth());
+    public int convertWidth(double coord1, double coord2) {
+        return (int) Math.round(Math.abs(coord1 - coord2) * InstructionBufferProcessor.BUFFER_PROCESSOR.canvas.getWidth());
     }
 
     /**
@@ -94,15 +94,11 @@ public abstract class Shape implements VecInstruction {
      * @param coord2 the second y-coordinate as a double
      * @return the height between them as an integer
      */
-    public int convertHeight(Canvas canvas,double coord1, double coord2) {
-        return (int) Math.round(Math.abs(coord1 - coord2) * canvas.getHeight());
+    public int convertHeight(double coord1, double coord2) {
+        return (int) Math.round(Math.abs(coord1 - coord2) * InstructionBufferProcessor.BUFFER_PROCESSOR.canvas.getHeight());
     }
 
 
-    public abstract void draw(Canvas canvas, GraphicsContext brush);
-
-    public void translateCoordinates(){
-
-    }
+    public abstract void draw();
 
 }
