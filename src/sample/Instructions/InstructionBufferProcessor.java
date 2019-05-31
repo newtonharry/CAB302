@@ -18,21 +18,67 @@ public class InstructionBufferProcessor {
     public Canvas canvas;
     public GraphicsContext brush;
 
+    /**
+     * Adds a new VecInstruction to the quedInstructions list
+     *
+     *
+     * @param instruction the x-coordinate to be converted as a double
+     * @return void
+     */
     public void queNewInstruction(VecInstruction instruction) {
         quedInsturctions.add(instruction);
     }
 
-    public void undoInstruction(){
-        if(quedInsturctions.size() >= 1) {
+    /**
+     * Removes a VecInstruction of the quedInstructions list
+     * if the size is greater than or equal to 1
+     *
+     * @return void
+     */
+    public void undoInstruction() {
+        if (quedInsturctions.size() >= 1) {
             quedInsturctions.remove(quedInsturctions.size() - 1);
         }
     }
 
-    public void revertTo(int time){
-        quedInsturctions = (InstructionList) quedInsturctions.subList(0,time);
+    /**
+     * Given an index time, the quedInstruction list is assigned
+     * to a subList of itself from index 0 up to and including the index
+     * time
+     *
+     * @param time
+     * @return void
+     */
+    public void revertTo(int time) {
+        quedInsturctions = (InstructionList) quedInsturctions.subList(0, time);
     }
 
-    public void drawShapes(){
+    /**
+     * Clears the quedInstructions list, removing all VecInstructions
+     *
+     * @return void
+     */
+    public void clearInstructions() {
+        quedInsturctions.clear();
+    }
+
+    /**
+     * Returns the current quedInstructions list
+     *
+     * @return List<VecInstruction>
+     */
+    public List<VecInstruction> getInstructions() {
+        return quedInsturctions;
+    }
+
+
+    /**
+     * Clears the current canvas of all drawings and then loops through
+     * the quedInstructions list drawing out all of the shapes within the list
+     *
+     * @return void
+     */
+    public void drawShapes() {
         brush.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (VecInstruction instr : quedInsturctions) {
             if (instr instanceof Shape)
@@ -40,19 +86,18 @@ public class InstructionBufferProcessor {
         }
     }
 
-    public void clearInstructions(){
-        quedInsturctions.clear();
-    }
-
-    public List<VecInstruction> getInstructions(){
-       return quedInsturctions;
-    }
-
-    public void listen(){
+    /**
+     *  Attatches a listener to the quedInstructions list checking if
+     *  a VecInstruction was add or removed. If so, then it draws out all
+     *  of the shapes.
+     *
+     * @return void
+     */
+    public void listen() {
         this.quedInsturctions.addListener((
                 ListChangeListener.Change<? extends VecInstruction> instructions) -> {
             while (instructions.next())
-                if(instructions.wasAdded() || instructions.wasRemoved())
+                if (instructions.wasAdded() || instructions.wasRemoved())
                     drawShapes();
         });
     }

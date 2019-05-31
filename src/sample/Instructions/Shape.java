@@ -41,6 +41,13 @@ public abstract class Shape implements VecInstruction {
         return this.type;
     }
 
+    /**
+     * Converts a fractional x-coordinate into an integer based on the
+     * current width of the canvas
+     *
+     * @return A string representation of the object, in order for it
+     * to be written in a VEC file format
+     */
     @Override
     public String toString() {
         return String.format(
@@ -48,6 +55,7 @@ public abstract class Shape implements VecInstruction {
                 this.type.toString(),
                 this.coordinates
                 .stream()
+                .map(num -> Math.round(num * 100.0 ) / 100.0)
                 .map(Object::toString)
                 .collect(Collectors.joining(" ")));
     }
@@ -99,6 +107,11 @@ public abstract class Shape implements VecInstruction {
     }
 
 
+    /**
+     * This function is inherited from all child shapes and must be implemented.
+     *
+     * @return void
+     */
     public abstract void draw();
 
 }

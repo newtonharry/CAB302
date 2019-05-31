@@ -76,6 +76,7 @@ public class Controller implements Initializable {
 
     private Canvas tempDrawingLayer;
     private GraphicsContext tempDrawingLayerGC;
+    private Parser parser;
 
     @FXML
     private void penToolClick() {
@@ -147,21 +148,28 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save vector file");
         fileChooser.setInitialDirectory(new File("resources"));
-        fileChooser.setInitialFileName("untitled.vec");
-        File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
-        try {
-            Parser parser = new Parser(importVec.toString());
-            parser.writeInstructions();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserException e) {
-            e.printStackTrace();
+
+        if(parser != null){
+            fileChooser.setInitialFileName(parser.getFileName());
+        }else{
+            fileChooser.setInitialFileName("untitled.vec");
+        }
+        File importVec = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+
+        if (importVec != null) {
+            try {
+                Parser parser = new Parser(importVec.toString());
+                parser.writeInstructions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     @FXML public void undoMenuBtnClick() {
-        //sample.GUI.KeyboardShortcuts.undoCommand();
         InstructionBufferProcessor.BUFFER_PROCESSOR.undoInstruction();
     }
 
@@ -279,7 +287,7 @@ public class Controller implements Initializable {
         brush.clearRect(0, 0, 700, 700);
         InstructionBufferProcessor.BUFFER_PROCESSOR.clearInstructions();
         try {
-            Parser parser = new Parser(importVec.toString());
+            parser = new Parser(importVec.toString());
             parser.readInstructions();
         } catch (IOException e) {
             e.printStackTrace();

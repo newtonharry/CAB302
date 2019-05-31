@@ -28,7 +28,7 @@ public class Parser {
 
     // Two patterns
     // One to match a shape
-    // One to match a colour fill
+    // One to match a colour pen/fill
     private Pattern shapeInstruction = Pattern
             .compile("(?<type>RECTANGLE|PLOT|LINE|ELLIPSE|POLYGON) (?<coordinates>(\\d+\\.?\\d+ ?){2,})");
     private Pattern colourInstruction = Pattern
@@ -134,4 +134,9 @@ public class Parser {
             default:
         }
     }
+
+    public String getFileName(){
+        return this.vecFile.getFileName().toString();
+    }
 }
+
