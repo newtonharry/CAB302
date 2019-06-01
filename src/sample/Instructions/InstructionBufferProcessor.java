@@ -13,7 +13,7 @@ public class InstructionBufferProcessor {
     public static final InstructionBufferProcessor BUFFER_PROCESSOR = new InstructionBufferProcessor();
 
 
-    private InstructionList quedInsturctions = new InstructionList();
+    private ObservableList<VecInstruction> quedInsturctions = new InstructionList();
 
     public Canvas canvas;
     public GraphicsContext brush;
@@ -50,7 +50,10 @@ public class InstructionBufferProcessor {
      * @return void
      */
     public void revertTo(int time) {
-        quedInsturctions = (InstructionList) FXCollections.observableArrayList(quedInsturctions.subList(0, time));
+        int timesToUndo = quedInsturctions.size() - time;
+        for (int i = 0; i < timesToUndo ; i++) {
+            undoInstruction();
+        }
     }
 
     /**
