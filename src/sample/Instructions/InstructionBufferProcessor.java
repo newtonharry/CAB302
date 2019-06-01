@@ -50,11 +50,7 @@ public class InstructionBufferProcessor {
      * @return void
      */
     public void revertTo(int time) {
-        quedInsturctions = (InstructionList) quedInsturctions.subList(0, time);
-    }
-
-    public List<VecInstruction> lookAt(int time){
-        return quedInsturctions.subList(0, time);
+        quedInsturctions = (InstructionList) FXCollections.observableArrayList(quedInsturctions.subList(0, time));
     }
 
     /**
