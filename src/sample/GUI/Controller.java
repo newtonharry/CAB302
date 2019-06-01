@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javafx.collections.ListChangeListener;
@@ -121,7 +118,22 @@ public class Controller implements Initializable {
     @FXML
     private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+        List<Double> coordinates = new ArrayList<>();
+        // WHATTTT IS GOING ON HERE ????
+        for(Double num: polygonPointsX){
+            coordinates.add((num / canvas.getWidth()) * 1.0);
+        }
+        for(Double num: polygonPointsY){
+            coordinates.add((num / canvas.getHeight()) * 1.0);
+        }
 
+        try {
+            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new PolygonInstruction(coordinates));
+        } catch (ShapeException e) {
+            e.printStackTrace();
+        }
+
+        /*
         brush.setStroke(lineColor);
         brush.setFill(fillColor);
 
@@ -129,6 +141,8 @@ public class Controller implements Initializable {
 
         brush.strokePolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
         brush.fillPolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
+
+         */
 
         polygonPointsX = new double[9999];
         polygonPointsY = new double[9999];

@@ -15,7 +15,11 @@ public class FillInstruction implements VecInstruction {
 
     @Override
     public String toString() {
-        return String.format("%s %s", this.type.toString(), colour);
+        if(colour.equals("OFF")){
+            return String.format("%s %s", this.type.toString(), colour);
+        }else{
+            return String.format("%s #%s", this.type.toString(), colour);
+        }
     }
 
     @Override
