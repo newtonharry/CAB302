@@ -160,12 +160,20 @@ public class Controller implements Initializable {
 
 
     @FXML public void newCanvasMenuBtnClick() {
-        sample.GUI.KeyboardShortcuts.newCommand();
-        canvasAnchorPane.getChildren().remove(canvas);
-        canvas = new Canvas(windowSize, windowSize);
-        canvasAnchorPane.getChildren().add(canvas);
 
-        //Need to clear the observer
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setContentText("Are you sure you want to make a new canvas? This cannot be undone.");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(0);
+            }
+        });
+
     }
 
     @FXML public void showUndoHistoryMenuBtnClick(){
@@ -236,12 +244,12 @@ public class Controller implements Initializable {
                         drawGrid(gridValue);
                     } else{
                         showGrid = !showGrid; //Swap Back
-                        alert(null, "Value out of bounds. Please try again and enter a value between 0.01 and 0.1");
+                        alert(null, "Value out of bounds. Please try again and enter a value between 0.01 and 0.1", Alert.AlertType.INFORMATION);
                         showGridMenuBtnClick();
                     }
                 } catch (Exception e) {
                     showGrid = !showGrid; //Swap Back
-                    alert(null, "Value not valid. Please try again");
+                    alert(null, "Value not valid. Please try again", Alert.AlertType.INFORMATION);
                     showGridMenuBtnClick();
                 }
             }
@@ -250,8 +258,8 @@ public class Controller implements Initializable {
         }
     }
 
-    private void alert(String title, String contentText){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void alert(String title, String contentText, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
 
         alert.setTitle(title);
         alert.setContentText(contentText);
@@ -259,6 +267,7 @@ public class Controller implements Initializable {
         alert.setGraphic(null);
 
         alert.showAndWait();
+
     }
 
     private String showPopup(String title, String defaultValue, String headerText, String contentText){
@@ -369,9 +378,9 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserException e) {
-            alert("Parsing Error",e.getMessage());
+            alert("Parsing Error",e.getMessage(), Alert.AlertType.INFORMATION);
         } catch (ShapeException e) {
-            alert("Shape Error",e.getMessage());
+            alert("Shape Error",e.getMessage(), Alert.AlertType.INFORMATION);
         }
     }
 
