@@ -1,6 +1,7 @@
 package sample.Instructions;
 
 
+import javafx.scene.shape.Ellipse;
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
 
@@ -27,6 +28,7 @@ public class EllipseInstruction extends Shape {
                 width = convertWidth(this.getCoordinates().get(0), this.getCoordinates().get(2)),
                 height = convertHeight(this.getCoordinates().get(1), this.getCoordinates().get(3));
 
+
         if (this.getFill().equals("OFF"))
             InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web("000000", 0.0));
         else
@@ -34,7 +36,9 @@ public class EllipseInstruction extends Shape {
 
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(3);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
+        //InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeOval(x, y, width, height);
+        //InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillOval(Math.min(x,getCoordinates().get(2)), Math.min(y,getCoordinates().get(3)), width, height);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillOval(x, y, width, height);
     }
 }

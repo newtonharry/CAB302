@@ -557,11 +557,27 @@ public class Controller implements Initializable {
             Double yPoint = calculateSnapToGrid(event.getY());
 
              */
-            Double xPoint = event.getX();
-            Double yPoint = event.getY();
 
-            coordinates.add((x / canvas.getWidth()) * 1.0);
-            coordinates.add((y / canvas.getHeight()) * 1.0);
+
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
+            Double startX = x;
+            Double startY = y;
+
+            if(x > xPoint){
+                Double temp = startX;
+                startX = xPoint;
+                xPoint = temp;
+            }
+
+            if(y > yPoint){
+                Double temp = startY;
+                startY = yPoint;
+                yPoint = temp;
+            }
+
+            coordinates.add((startX / canvas.getWidth()) * 1.0);
+            coordinates.add((startY / canvas.getHeight()) * 1.0);
             coordinates.add((xPoint / canvas.getWidth()) * 1.0);
             coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
