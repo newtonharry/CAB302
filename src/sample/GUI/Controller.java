@@ -120,14 +120,10 @@ public class Controller implements Initializable {
     private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
-        System.out.println(polygonPointsX);
-        // WHATTTT IS GOING ON HERE ????
-        //System.out.println(polygonPointsX.length);
 
         for(Double num: polygonPointsX){
             if(num != 0.0) {
                 coordinates.add((num / canvas.getWidth()) * 1.0);
-                System.out.print((num / canvas.getWidth()) * 1.0);
             }
         }
 

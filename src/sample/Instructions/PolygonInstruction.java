@@ -27,15 +27,26 @@ public class PolygonInstruction extends Shape {
                 yCoords = new double[this.getCoordinates().size() / 2];
 
 
+        int startingPoint = 0;
+        for(int x=0; x<Math.ceil(this.getCoordinates().size()); x++){
+            if(x == Math.ceil(this.getCoordinates().size()/2)) {startingPoint = x;}
+            if(x < Math.ceil(this.getCoordinates().size()/2)){
+                xCoords[x] = convertXCoord(this.getCoordinates().get(x));
+            } else {
+                yCoords[x-startingPoint] = convertYCoord(this.getCoordinates().get(x));
+            }
+        }
+
         brush.setFill(InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
         brush.setStroke(InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
 
-        for (int i = 0; i < this.getCoordinates().size(); i++) {
+
+        /*for (int i = 0; i < this.getCoordinates().size(); i++) {
             if (i % 2 == 0)
                 xCoords[i / 2] = convertXCoord(this.getCoordinates().get(i));
             else
                 yCoords[(i - 1) / 2] = convertYCoord(this.getCoordinates().get(i));
-        }
+        }*/
 
 
         //System.out.println();
