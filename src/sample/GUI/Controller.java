@@ -782,7 +782,7 @@ public class Controller implements Initializable {
     }*/
 
     public void scaleShapes(){
-        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
         //InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
         /*canvasAnchorPane.getChildren().remove(canvas);
         canvas = new Canvas(windowSize, windowSize);

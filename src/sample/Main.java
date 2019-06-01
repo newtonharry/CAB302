@@ -6,9 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -24,6 +22,7 @@ import sample.Instructions.VecInstruction;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
 public class Main extends Application {
@@ -33,6 +32,7 @@ public class Main extends Application {
     private static Controller controller;
     public static Canvas previewCanvas;
     public static GraphicsContext previewGC;
+    private static int undoHistoryCurrent;
 
     @Override
     public void start(Stage primaryStage) {
@@ -131,6 +131,7 @@ public class Main extends Application {
 
 
         okayButton.setOnAction((event) -> {
+            undoHistoryConfirm(undoHistoryCurrent);
             dialog.close();
         });
 
@@ -213,7 +214,24 @@ public class Main extends Application {
     }
 
     private static void drawToCanvas(int index) {
-        System.out.println(index);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(10, 10, 200, 10);
+        System.out.println(index);//revertto
+        //InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(10, 10, 200, 10);
+        undoHistoryCurrent = index+1;
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(index+1);
+    }
+
+    private static void undoHistoryConfirm(int index){
+        //System.out.println(index);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setTitle("Confirmation");
+        alert.setContentText("Are you sure you want to revert to this version. This cannot be undone.");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
+        }
     }
 }
