@@ -21,7 +21,7 @@ public class Parser {
      */
     private Path vecFile; // Buffer for writing and reading data to/from VEC files, with default filename
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
-    private Instruction instruction; // Used in switch case, to identify instruction types
+    private InstructionType instruction; // Used in switch case, to identify instruction types
 
     private PenInstruction pen = new PenInstruction("000000"); // black pen
     private FillInstruction fill = new FillInstruction("OFF"); // no fill
@@ -78,7 +78,7 @@ public class Parser {
     }
 
     private void matchShape(Matcher shapeMatcher) throws ShapeException {
-        instruction = Instruction.valueOf(shapeMatcher.group("type"));
+        instruction = InstructionType.valueOf(shapeMatcher.group("type"));
         List<Double> coordinates; // Used to generate coordinates from instructions
 
         // Generate coordinates
@@ -118,7 +118,7 @@ public class Parser {
     }
 
     private void matchColour(Matcher colourMatcher) {
-        instruction = Instruction.valueOf(colourMatcher.group("type"));
+        instruction = InstructionType.valueOf(colourMatcher.group("type"));
         String value = colourMatcher.group("value");
         switch (instruction) {
             case PEN:

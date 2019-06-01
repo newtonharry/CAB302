@@ -1,18 +1,15 @@
 package sample.Instructions;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
 import java.util.List;
 import javafx.scene.paint.Color;
-import sample.GUI.Controller;
 
 public class PolygonInstruction extends Shape {
 
     public PolygonInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
-        super(Instruction.POLYGON, pen, fill, coordinates);
+        super(InstructionType.POLYGON, pen, fill, coordinates);
         if (coordinates.size() < 4) {
-            throw new ShapeException(Instruction.POLYGON + ": Incorrect number of coordinates");
+            throw new ShapeException(InstructionType.POLYGON + ": Incorrect number of coordinates");
         }
     }
 

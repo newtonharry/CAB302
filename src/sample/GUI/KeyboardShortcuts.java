@@ -2,7 +2,6 @@ package sample.GUI;
 
 public class KeyboardShortcuts {
     static public void newCommand() {
-        System.out.println("New");
         sample.Main.getController().newCanvasMenuBtnClick();
     }
 

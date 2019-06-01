@@ -1,19 +1,16 @@
 package sample.Instructions;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
-import sample.GUI.Controller;
 
 import java.util.List;
 
 public class RectangleInstruction extends Shape {
 
     public RectangleInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
-        super(Instruction.RECTANGLE, pen, fill, coordinates);
+        super(InstructionType.RECTANGLE, pen, fill, coordinates);
         if (coordinates.size() < 4) {
-            throw new ShapeException(Instruction.RECTANGLE + ": Incorrect number of co-ordinates");
+            throw new ShapeException(InstructionType.RECTANGLE + ": Incorrect number of co-ordinates");
         }
     }
 

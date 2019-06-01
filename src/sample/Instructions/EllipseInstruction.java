@@ -3,7 +3,6 @@ package sample.Instructions;
 
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
-import sample.GUI.Controller;
 
 import java.util.List;
 
@@ -11,9 +10,9 @@ public class EllipseInstruction extends Shape {
 
 
     public EllipseInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
-        super(Instruction.ELLIPSE, pen, fill, coordinates);
+        super(InstructionType.ELLIPSE, pen, fill, coordinates);
         if(coordinates.size() < 4){
-            throw new ShapeException(Instruction.ELLIPSE + ": Incorrect number of co-ordinates");
+            throw new ShapeException(InstructionType.ELLIPSE + ": Incorrect number of co-ordinates");
         }
     }
 

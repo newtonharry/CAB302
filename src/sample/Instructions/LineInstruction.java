@@ -2,7 +2,6 @@ package sample.Instructions;
 
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
-import sample.GUI.Controller;
 
 import java.util.List;
 
@@ -10,9 +9,9 @@ public class LineInstruction extends Shape {
 
 
     public LineInstruction(String pen, List<Double> coordinates) throws ShapeException {
-        super(Instruction.LINE, pen, coordinates);
+        super(InstructionType.LINE, pen, coordinates);
         if (coordinates.size() < 4) {
-            throw new ShapeException(Instruction.LINE + "Incorrect number of co-ordinates");
+            throw new ShapeException(InstructionType.LINE + "Incorrect number of co-ordinates");
         }
     }
 

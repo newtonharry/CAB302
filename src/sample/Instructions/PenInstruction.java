@@ -3,7 +3,7 @@ package sample.Instructions;
 public class PenInstruction implements VecInstruction {
 
     private String colour;
-    private Instruction type = Instruction.PEN;
+    private InstructionType type = InstructionType.PEN;
 
     public PenInstruction(String colour) { this.colour = colour; }
 
@@ -17,7 +17,7 @@ public class PenInstruction implements VecInstruction {
     }
 
     @Override
-    public Instruction getType() {
+    public InstructionType getType() {
         return this.type;
     }
 }

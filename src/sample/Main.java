@@ -18,15 +18,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.GUI.Controller;
-import sample.Instructions.Instruction;
 import sample.Instructions.InstructionBufferProcessor;
 import sample.Instructions.InstructionList;
 import sample.Instructions.VecInstruction;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class Main extends Application {
@@ -74,7 +71,7 @@ public class Main extends Application {
 
         this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
             //test.setStageHeight(scene.getHeight());
-           controller.resizeCanvas(scene.getWidth(), scene.getHeight());
+            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
         });
 
         initKeyboardShortcuts();
@@ -109,13 +106,16 @@ public class Main extends Application {
     static public Stage getPrimaryStage() {
         return sample.Main.primaryStage;
     }
-    static public Controller getController() {return controller;}
+
+    static public Controller getController() {
+        return controller;
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public static void showUndoHistoryGUI(List<VecInstruction> instructions){
+    public static void showUndoHistoryGUI(List<VecInstruction> instructions) {
         final Stage dialog = new Stage();
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setResizable(false);
@@ -124,7 +124,6 @@ public class Main extends Application {
         dialog.initOwner(primaryStage);
         VBox dialogVbox = new VBox(20);
         dialogVbox.setBackground(new Background(new BackgroundFill(Color.web("#727B87"), CornerRadii.EMPTY, Insets.EMPTY)));
-
 
 
         Button okayButton = new Button("Undo");
@@ -154,7 +153,6 @@ public class Main extends Application {
 
         HBox buttonContainer = new HBox();
         buttonContainer.getChildren().addAll(spacerLeft, okayButton, cancelButton, spacerRight);
-
 
 
         Label historyViewLabel = new Label("History");
@@ -214,7 +212,7 @@ public class Main extends Application {
         dialog.showAndWait();
     }
 
-    private static void drawToCanvas(int index){
+    private static void drawToCanvas(int index) {
         System.out.println(index);
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(10, 10, 200, 10);
     }

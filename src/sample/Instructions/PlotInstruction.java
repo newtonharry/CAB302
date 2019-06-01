@@ -1,10 +1,7 @@
 package sample.Instructions;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
 import javafx.scene.paint.Color;
-import sample.GUI.Controller;
 
 import java.util.List;
 
@@ -12,7 +9,7 @@ public class PlotInstruction extends Shape {
 
 
     public PlotInstruction(String pen, List<Double> coordinates) throws ShapeException {
-        super(Instruction.PLOT,pen,coordinates);
+        super(InstructionType.PLOT,pen,coordinates);
 
         if(coordinates.size() > 2){
             throw new ShapeException(this.getType() + ": Incorrect number of coordinates");

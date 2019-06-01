@@ -2,7 +2,7 @@ package sample.Instructions;
 
 public class FillInstruction implements VecInstruction {
     private String colour;
-    private Instruction type = Instruction.FILL;
+    private InstructionType type = InstructionType.FILL;
 
 
     public FillInstruction(String colour) {
@@ -17,7 +17,7 @@ public class FillInstruction implements VecInstruction {
     }
 
     @Override
-    public Instruction getType() {
+    public InstructionType getType() {
         return this.type;
     }
 }

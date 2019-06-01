@@ -53,6 +53,10 @@ public class InstructionBufferProcessor {
         quedInsturctions = (InstructionList) quedInsturctions.subList(0, time);
     }
 
+    public List<VecInstruction> lookAt(int time){
+        return quedInsturctions.subList(0, time);
+    }
+
     /**
      * Clears the quedInstructions list, removing all VecInstructions
      *

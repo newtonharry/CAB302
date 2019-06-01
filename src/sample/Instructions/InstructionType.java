@@ -1,6 +1,6 @@
 package sample.Instructions;
 
-public enum Instruction {
+public enum InstructionType {
     LINE,
     PLOT,
     RECTANGLE,

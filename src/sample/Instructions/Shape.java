@@ -1,29 +1,24 @@
 package sample.Instructions;
 
-import javafx.scene.canvas.GraphicsContext;
-
 import java.util.List;
 import java.util.stream.Collectors;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Control;
-import sample.GUI.Controller;
 
 public abstract class Shape implements VecInstruction {
 
-    private Instruction type; // Instruction type
+    private InstructionType type; // InstructionType type
     private String pen;  // pen colour
     private String fill; // fill colour
-    private List<Double> coordinates; // Instruction coordinates
+    private List<Double> coordinates; // InstructionType coordinates
 
     // Constructor to change pen and fill values
-    Shape(Instruction type, String pen, String fill, List<Double> coordinates) {
+    Shape(InstructionType type, String pen, String fill, List<Double> coordinates) {
         this.type = type;
         this.pen = pen;
         this.fill = fill;
         this.coordinates = coordinates;
     }
 
-    Shape(Instruction type, String pen, List<Double> coordinates) {
+    Shape(InstructionType type, String pen, List<Double> coordinates) {
         this(type,pen,"",coordinates);
     }
 
@@ -37,7 +32,7 @@ public abstract class Shape implements VecInstruction {
 
     public String getFill() { return this.fill; }
 
-    public Instruction getType(){
+    public InstructionType getType(){
         return this.type;
     }
 
