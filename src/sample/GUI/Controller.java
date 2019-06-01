@@ -181,6 +181,15 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML public void lineColorPickerChange(){
+        lineColor = lineColorPicker.getValue();
+
+    }
+
+    @FXML public void fillColorPickerChange(){
+        fillColor = fillColorPicker.getValue();
+    }
+
 
     @FXML public void undoMenuBtnClick() {
         InstructionBufferProcessor.BUFFER_PROCESSOR.undoInstruction();
@@ -589,7 +598,7 @@ public class Controller implements Initializable {
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
 
-            refreshColors();
+            //refreshColors();
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
@@ -608,7 +617,7 @@ public class Controller implements Initializable {
         });
 
         canvas.setOnMousePressed(event -> {
-            refreshColors();
+            //refreshColors();
 
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
@@ -627,7 +636,7 @@ public class Controller implements Initializable {
         });
 
         canvas.setOnMouseDragged(event -> {
-            refreshColors();
+            //refreshColors();
 
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
@@ -660,6 +669,7 @@ public class Controller implements Initializable {
 
         brush = canvas.getGraphicsContext2D();
         brush.setLineWidth(1);
+        refreshColors();
 
     }
 
