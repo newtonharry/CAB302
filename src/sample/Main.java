@@ -208,7 +208,18 @@ public class Main extends Application {
 
     private static void undoHistoryConfirm(int index){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
+        alert.setTitle("Confirmation");
+        alert.setContentText("Are you sure you want to revert? This cannot be undone.");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        alert.showAndWait().ifPresent(response -> {
+        if (response == ButtonType.OK) {
+            InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
+        } else {
+            InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
+        }
+        });
     }
 
     static public Stage getPrimaryStage() {
