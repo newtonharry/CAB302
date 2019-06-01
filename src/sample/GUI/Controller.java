@@ -270,18 +270,44 @@ public class Controller implements Initializable {
         }
     }
 
+    private int getResolution(){
+        String resolutionString = showPopup("Export Resolution", "720", null, "Resolution:");
+
+        if(resolutionString == null || resolutionString == ""){ return -1;  }
+
+        int resolution = 720;
+
+        try {
+            resolution = Integer.parseInt(resolutionString);
+
+            if(resolution < 0){
+                System.out.println("Less Than 0");
+                getResolution();
+            }
+        } catch(Exception e){
+            System.out.println("Illegal Characters");
+            getResolution();
+        }
+
+        return resolution;
+    }
+
     @FXML public void exportMenuBtnClick() {
+        int resolution = getResolution();
+        if(resolution == -1){return;}
+
         String fileLocation = showSaveFileExplorer("BMP", "bmp").toString();
 
         try {
-            exportBMP("", "CanvasImage.bmp", 4096);
+            exportBMP(fileLocation, resolution);
+            //exportBMP("", "CanvasImage.bmp", 4096);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InvalidPathException e) {
+        } /*catch (InvalidPathException e) {
             e.printStackTrace();
         } catch (FileExistsException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private File showSaveFileExplorer(String fileDescription, String fileExtension){
@@ -728,7 +754,6 @@ public class Controller implements Initializable {
      * Exports the file which is currently being worked on as a BMP image, so that image files in a raster format
      * can be created from within the application.
      *
-     * @param path       The path to the folder in which BMP is to be saved (e.g. "CAB-302_Assignment/")
      * @param fileName   The file name for the BMP to be saved (e.g. "CanvasImage.bmp")
      * @param resolution The number of pixels across one edge of the BMP image
      * @throws IOException          Thrown if the BMP data cannot be interpreted when saving
@@ -737,16 +762,16 @@ public class Controller implements Initializable {
      */
 
     // TODO: complete resolution scaling so that image is correctly scaled to output resolution
-    private void exportBMP(String path, String fileName, int resolution)
-            throws IOException, FileExistsException, InvalidPathException {
-        File exportFile = new File(path + fileName);
+    private void exportBMP(String fileName, int resolution) throws IOException{
+            //throws IOException, FileExistsException, InvalidPathException {
+        File exportFile = new File(fileName);
 
-        if (!Files.exists(new File(path).toPath()))
+        /*if (!Files.exists(new File(path).toPath()))
             throw new InvalidPathException("Could not export BMP file, directory for exporting was invalid");
 
         if (!exportFile.exists())
             throw new FileExistsException("Could not export BMP file, file given by pathname already exists");
-
+*/
         /*
         final Bounds bounds = canvas.getLayoutBounds();
 
@@ -767,7 +792,18 @@ public class Controller implements Initializable {
 
 
         WritableImage writableImage = new WritableImage(resolution, resolution);
+
+        canvas.setWidth(resolution);
+        canvas.setHeight(resolution);
+
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
+
         canvas.snapshot(null, writableImage);
+
+        canvas.setWidth(windowSize);
+        canvas.setHeight(windowSize);
+
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
 
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
         BufferedImage convertedImage = new BufferedImage(
