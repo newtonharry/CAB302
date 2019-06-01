@@ -458,8 +458,13 @@ public class Controller implements Initializable {
 
     private void plotPoint(Double x, Double y) {
         List<Double> coordinates = new ArrayList<>();
-        coordinates.add(x);
-        coordinates.add(y);
+
+        Double xPoint = calculateSnapToGrid(x);
+        Double yPoint = calculateSnapToGrid(y);
+
+        coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+        coordinates.add((yPoint / canvas.getHeight()) * 1.0);
+
 
         PlotInstruction PlotInst = null;
         try {
