@@ -1,14 +1,14 @@
 package sample.Instructions;
 
+import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
-import javafx.scene.paint.Color;
 
 import java.util.List;
 
 public class RectangleInstruction extends Shape {
 
-    public RectangleInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
-        super(InstructionType.RECTANGLE, pen, fill, coordinates);
+    public RectangleInstruction(List<Double> coordinates) throws ShapeException {
+        super(InstructionType.RECTANGLE, coordinates);
         if (coordinates.size() < 4) {
             throw new ShapeException(InstructionType.RECTANGLE + ": Incorrect number of co-ordinates");
         }
@@ -19,6 +19,8 @@ public class RectangleInstruction extends Shape {
      */
     @Override
     public void draw() {
+
+        GraphicsContext brush = InstructionBufferProcessor.BUFFER_PROCESSOR.brush;
 
         double[] xCoords = {
                 this.convertXCoord(this.getCoordinates().get(0)),
@@ -33,16 +35,13 @@ public class RectangleInstruction extends Shape {
                         this.convertYCoord(this.getCoordinates().get(3))
                 };
 
-        //brush = canvas.getGraphicsContext2D();
 
-        if (this.getFill().equals("OFF"))
-            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web("000000", 0.0));
-        else
-            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web(this.getFill(), 1.0));
+        brush.setFill( InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokePolygon(xCoords, yCoords, 4);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillPolygon(xCoords, yCoords, 4);
+        brush.setStroke( InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
+
+        brush.strokePolygon(xCoords, yCoords, 4);
+        brush.fillPolygon(xCoords, yCoords, 4);
     }
 }
 

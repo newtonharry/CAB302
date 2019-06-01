@@ -1,15 +1,19 @@
 package sample.Instructions;
 
+import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
-import javafx.scene.paint.Color;
 
 import java.util.List;
 
 public class PlotInstruction extends Shape {
 
-
-    public PlotInstruction(String pen, List<Double> coordinates) throws ShapeException {
-        super(InstructionType.PLOT,pen,coordinates);
+    /**
+    * A Child object of the Shape class. Take coordinates which must
+    * have a size greater than 2.
+    * @param coordinates
+    */
+    public PlotInstruction(List<Double> coordinates) throws ShapeException {
+        super(InstructionType.PLOT,coordinates);
 
         if(coordinates.size() > 2){
             throw new ShapeException(this.getType() + ": Incorrect number of coordinates");
@@ -17,18 +21,17 @@ public class PlotInstruction extends Shape {
     }
 
     /**
-     * Draws a plot when editing, parsing .vec files, or exporting
+     * Inherited draw function which draws a plot to the canvas.
      */
     @Override
     public void draw() {
+        GraphicsContext brush = InstructionBufferProcessor.BUFFER_PROCESSOR.brush;
         int x = this.convertXCoord(this.getCoordinates().get(0)),
                 y = this.convertYCoord(this.getCoordinates().get(1));
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
-
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(3);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(x, y, x + 100, y + 100);
-        System.out.println("Drawn a plot");
+        brush.setStroke(InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
+        brush.setLineWidth(3);
+        brush.strokeLine(x, y, x, y);
 
     }
 }

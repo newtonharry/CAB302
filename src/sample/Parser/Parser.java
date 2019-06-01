@@ -23,8 +23,11 @@ public class Parser {
     private Charset charset = Charset.forName("ISO-8859-1"); // Charset to identify file
     private InstructionType instruction; // Used in switch case, to identify instruction types
 
+    /*
     private PenInstruction pen = new PenInstruction("000000"); // black pen
     private FillInstruction fill = new FillInstruction("OFF"); // no fill
+
+     */
 
     // Two patterns
     // One to match a shape
@@ -89,27 +92,27 @@ public class Parser {
 
         switch (instruction) {
             case LINE:
-                LineInstruction lineInst = new LineInstruction(pen.getColour(), coordinates);
+                LineInstruction lineInst = new LineInstruction(coordinates);
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(lineInst);
                 break;
 
             case RECTANGLE:
-                RectangleInstruction rectInst = new RectangleInstruction(pen.getColour(), fill.getColour(), coordinates);
+                RectangleInstruction rectInst = new RectangleInstruction( coordinates);
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(rectInst);
                 break;
 
             case PLOT:
-                PlotInstruction plotInst = new PlotInstruction(pen.getColour(), coordinates);
+                PlotInstruction plotInst = new PlotInstruction(coordinates);
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(plotInst);
                 break;
 
             case ELLIPSE:
-                EllipseInstruction ellipseInst = new EllipseInstruction(pen.getColour(), fill.getColour(), coordinates);
+                EllipseInstruction ellipseInst = new EllipseInstruction(coordinates);
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst);
                 break;
 
             case POLYGON:
-                PolygonInstruction polyInst = new PolygonInstruction(pen.getColour(), fill.getColour(), coordinates);
+                PolygonInstruction polyInst = new PolygonInstruction(coordinates);
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(polyInst);
                 break;
 
@@ -137,6 +140,9 @@ public class Parser {
 
     public String getFileName(){
         return this.vecFile.getFileName().toString();
+    }
+    public void setFileName(String fileName){
+        this.vecFile = Paths.get(fileName);
     }
 }
 

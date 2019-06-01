@@ -6,31 +6,25 @@ import java.util.stream.Collectors;
 public abstract class Shape implements VecInstruction {
 
     private InstructionType type; // InstructionType type
-    private String pen;  // pen colour
-    private String fill; // fill colour
-    private List<Double> coordinates; // InstructionType coordinates
+    private List<Double> coordinates; // coordinates
 
-    // Constructor to change pen and fill values
-    Shape(InstructionType type, String pen, String fill, List<Double> coordinates) {
+    /**
+     *  A base class for all the shapes which are drawn to the canvas.
+     * @param type
+     * @param coordinates
+     */
+    Shape(InstructionType type, List<Double> coordinates) {
         this.type = type;
-        this.pen = pen;
-        this.fill = fill;
         this.coordinates = coordinates;
     }
 
-    Shape(InstructionType type, String pen, List<Double> coordinates) {
-        this(type,pen,"",coordinates);
-    }
-
+    /**
+     *
+     * @return List<Double>
+     */
     public List<Double> getCoordinates(){
         return this.coordinates;
     }
-
-    public String getPen() {
-        return this.pen;
-    }
-
-    public String getFill() { return this.fill; }
 
     public InstructionType getType(){
         return this.type;
@@ -100,13 +94,4 @@ public abstract class Shape implements VecInstruction {
     public int convertHeight(double coord1, double coord2) {
         return (int) Math.round(Math.abs(coord1 - coord2) * InstructionBufferProcessor.BUFFER_PROCESSOR.canvas.getHeight());
     }
-
-
-    /**
-     * This function is inherited from all child shapes and must be implemented.
-     *
-     * @return void
-     */
-    public abstract void draw();
-
 }

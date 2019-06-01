@@ -1,13 +1,16 @@
 package sample.Instructions;
 
+import javafx.scene.canvas.GraphicsContext;
 import sample.Exceptions.ShapeException;
+
 import java.util.List;
+
 import javafx.scene.paint.Color;
 
 public class PolygonInstruction extends Shape {
 
-    public PolygonInstruction(String pen, String fill, List<Double> coordinates) throws ShapeException {
-        super(InstructionType.POLYGON, pen, fill, coordinates);
+    public PolygonInstruction(List<Double> coordinates) throws ShapeException {
+        super(InstructionType.POLYGON, coordinates);
         if (coordinates.size() < 4) {
             throw new ShapeException(InstructionType.POLYGON + ": Incorrect number of coordinates");
         }
@@ -18,14 +21,13 @@ public class PolygonInstruction extends Shape {
      */
     @Override
     public void draw() {
+        GraphicsContext brush = InstructionBufferProcessor.BUFFER_PROCESSOR.brush;
+
         double[] xCoords = new double[this.getCoordinates().size() / 2],
                 yCoords = new double[this.getCoordinates().size() / 2];
 
-        if (this.getFill().equals("OFF"))
-            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web("000000", 0.0));
-        else
-            InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setFill(Color.web(this.getFill(), 1.0));
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
+        brush.setFill(InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
+        brush.setStroke(InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
 
         for (int i = 0; i < this.getCoordinates().size(); i++)
             if (i % 2 == 0)
@@ -33,9 +35,9 @@ public class PolygonInstruction extends Shape {
             else
                 yCoords[(i - 1) / 2] = convertYCoord(this.getCoordinates().get(i));
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(1);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokePolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.fillPolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
+        brush.setLineWidth(1);
+        brush.strokePolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
+        brush.fillPolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
 
     }
 }

@@ -1,5 +1,7 @@
 package sample.Instructions;
 
+import javafx.scene.paint.Color;
+
 public class PenInstruction implements VecInstruction {
 
     private String colour;
@@ -19,5 +21,9 @@ public class PenInstruction implements VecInstruction {
     @Override
     public InstructionType getType() {
         return this.type;
+    }
+
+    public void draw(){
+       InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor = Color.web(colour);
     }
 }

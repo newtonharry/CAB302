@@ -1,5 +1,7 @@
 package sample.Instructions;
 
+import javafx.scene.paint.Color;
+
 public class FillInstruction implements VecInstruction {
     private String colour;
     private InstructionType type = InstructionType.FILL;
@@ -19,5 +21,13 @@ public class FillInstruction implements VecInstruction {
     @Override
     public InstructionType getType() {
         return this.type;
+    }
+
+    public void draw(){
+        if(colour.equals("OFF")){
+            InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor = Color.web("0x00000000");
+        }else{
+            InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor = Color.web(colour);
+        }
     }
 }

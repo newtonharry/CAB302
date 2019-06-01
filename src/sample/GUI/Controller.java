@@ -64,8 +64,8 @@ public class Controller implements Initializable {
     private boolean showGrid;
     private double gridSize;
 
-    private Color lineColor;
-    private Color fillColor;
+    public Color lineColor;
+    public Color fillColor;
     private String selectedTool;
     public GraphicsContext brush;
 
@@ -182,12 +182,14 @@ public class Controller implements Initializable {
     }
 
     @FXML public void lineColorPickerChange(){
-        lineColor = lineColorPicker.getValue();
+//        lineColor = lineColorPicker.getValue();
+        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new PenInstruction(lineColorPicker.getValue().toString()));
 
     }
 
     @FXML public void fillColorPickerChange(){
-        fillColor = fillColorPicker.getValue();
+ //       fillColor = fillColorPicker.getValue();
+        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new FillInstruction(fillColorPicker.getValue().toString()));
     }
 
 
@@ -461,7 +463,7 @@ public class Controller implements Initializable {
 
         PlotInstruction PlotInst = null;
         try {
-            PlotInst = new PlotInstruction(lineColor.toString(), coordinates);
+            PlotInst = new PlotInstruction(coordinates);
         } catch (ShapeException e) {
             e.printStackTrace();
         }
@@ -494,7 +496,7 @@ public class Controller implements Initializable {
 
             LineInstruction LineInst = null;
             try {
-                LineInst = new LineInstruction(lineColor.toString(), coordinates);
+                LineInst = new LineInstruction(coordinates);
             } catch (ShapeException e) {
                 e.printStackTrace();
             }
@@ -524,7 +526,7 @@ public class Controller implements Initializable {
 
             RectangleInstruction RectangleInst = null;
             try {
-                RectangleInst = new RectangleInstruction(lineColor.toString(), fillColor.toString(), coordinates);
+                RectangleInst = new RectangleInstruction(coordinates);
             } catch (ShapeException e) {
                 e.printStackTrace();
             }
@@ -584,7 +586,7 @@ public class Controller implements Initializable {
 
             EllipseInstruction ellipseInst = null;
             try {
-                ellipseInst = new EllipseInstruction(lineColor.toString(), fillColor.toString(), coordinates);
+                ellipseInst = new EllipseInstruction(coordinates);
             } catch (ShapeException e) {
                 e.printStackTrace();
             }
@@ -844,7 +846,6 @@ public class Controller implements Initializable {
     }*/
 
     public void scaleShapes(){
-        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
         //InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
         /*canvasAnchorPane.getChildren().remove(canvas);
         canvas = new Canvas(windowSize, windowSize);

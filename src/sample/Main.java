@@ -34,6 +34,10 @@ public class Main extends Application {
     public static GraphicsContext previewGC;
     private static int undoHistoryCurrent;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
@@ -57,23 +61,17 @@ public class Main extends Application {
         scene.getStylesheets()
                 .add(getClass().getResource("GUI/styles.css").toExternalForm());
 
+        // Load the controller to access methods
         controller = loader.getController();
 
+        // Initalize InstructionBufferProcessor variables and methods
         InstructionBufferProcessor.BUFFER_PROCESSOR.canvas = controller.canvas;
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush = controller.brush;
+        InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor = controller.lineColor;
+        InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor = controller.fillColor;
         InstructionBufferProcessor.BUFFER_PROCESSOR.listen();
 
-        //controller.resizeCanvas(scene.getWidth(), scene.getHeight());
-        this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            //test.setStageWidth(scene.getWidth());
-            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
-        });
-
-        this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            //test.setStageHeight(scene.getHeight());
-            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
-        });
-
+        changeCanvasSize();
         initKeyboardShortcuts();
     }
 
@@ -103,17 +101,18 @@ public class Main extends Application {
         scene.getAccelerators().put(kc, rn);
     }
 
-    static public Stage getPrimaryStage() {
-        return sample.Main.primaryStage;
+    public void changeCanvasSize(){
+        this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            //test.setStageWidth(scene.getWidth());
+            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
+        });
+
+        this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            //test.setStageHeight(scene.getHeight());
+            controller.resizeCanvas(scene.getWidth(), scene.getHeight());
+        });
     }
 
-    static public Controller getController() {
-        return controller;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     public static void showUndoHistoryGUI(List<VecInstruction> instructions) {
         final Stage dialog = new Stage();
@@ -164,10 +163,7 @@ public class Main extends Application {
         VBox instructionContainer = new VBox();
 
         int index = 0;
-        InstructionList tempInstuctions = new InstructionList();
-        System.out.println(tempInstuctions);
         for (VecInstruction instruction : instructions) {
-            tempInstuctions.add(instruction);
             Button button = new Button(instruction.getType().toString());
             button.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
             instructionContainer.getChildren().add(button);
@@ -176,7 +172,6 @@ public class Main extends Application {
             button.setOnAction((event) -> {
                 drawToCanvas(tempIndex);
             });
-
             index++;
         }
 
@@ -203,24 +198,21 @@ public class Main extends Application {
     }
 
     private static void drawToCanvas(int index) {
-        System.out.println(index);//revertto
-        //InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(10, 10, 200, 10);
         undoHistoryCurrent = index+1;
         InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(index+1);
     }
 
     private static void undoHistoryConfirm(int index){
-        //System.out.println(index);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-
-        /*alert.setTitle("Confirmation");
-        alert.setContentText("Are you sure you want to revert to this version. This cannot be undone.");
-        alert.setHeaderText(null);
-        alert.setGraphic(null);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){*/
-            InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
-        /*}*/
+        InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
     }
+
+    static public Stage getPrimaryStage() {
+        return sample.Main.primaryStage;
+    }
+
+    static public Controller getController() {
+        return controller;
+    }
+
 }
