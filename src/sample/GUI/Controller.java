@@ -37,6 +37,7 @@ import sample.Instructions.*;
 import sample.Parser.Parser;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 
 public class Controller implements Initializable {
@@ -319,8 +320,11 @@ public class Controller implements Initializable {
         int resolution = getResolution();
         if(resolution == -1){return;}
 
-        String fileLocation = showSaveFileExplorer("BMP", "bmp").toString();
+        File path = showSaveFileExplorer("BMP", "bmp");
+        if(path == null){return;}
+        String fileLocation = path.toString();
 
+        System.out.println("File: " + fileLocation);
         try {
             exportBMP(fileLocation, resolution);
             //exportBMP("", "CanvasImage.bmp", 4096);
@@ -340,7 +344,9 @@ public class Controller implements Initializable {
         );
 
         File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
-
+        /*if(fileLocation == null){
+            return null;
+        }*/
         return fileLocation;
     }
 
@@ -805,7 +811,6 @@ public class Controller implements Initializable {
      * @throws InvalidPathException Thrown if the path for the BMP file is invalid
      */
 
-    // TODO: complete resolution scaling so that image is correctly scaled to output resolution
     private void exportBMP(String fileName, int resolution) throws IOException{
             //throws IOException, FileExistsException, InvalidPathException {
         File exportFile = new File(fileName);
