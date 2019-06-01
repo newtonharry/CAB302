@@ -224,14 +224,14 @@ public class Main extends Application {
         //System.out.println(index);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
-        alert.setTitle("Confirmation");
+        /*alert.setTitle("Confirmation");
         alert.setContentText("Are you sure you want to revert to this version. This cannot be undone.");
         alert.setHeaderText(null);
         alert.setGraphic(null);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK){*/
             InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(index);
-        }
+        /*}*/
     }
 }
