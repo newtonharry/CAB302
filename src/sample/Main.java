@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -34,6 +35,7 @@ public class Main extends Application {
     private static Stage primaryStage;
     private static Controller controller;
     public static Canvas previewCanvas;
+    public static GraphicsContext previewGC;
 
     @Override
     public void start(Stage primaryStage) {
@@ -169,25 +171,17 @@ public class Main extends Application {
         System.out.println(tempInstuctions);
         for (VecInstruction instruction : instructions) {
             tempInstuctions.add(instruction);
-            Button button = new Button(instruction.toString());
+            Button button = new Button(instruction.getType().toString());
             button.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
             instructionContainer.getChildren().add(button);
+
             int tempIndex = index;
             button.setOnAction((event) -> {
-                String line = ((Button)event.getSource()).getText();
-                drawToCanvas(instructions, tempIndex);
-                //Pattern shapeInstruction = Pattern
-                //        .compile("(?<type>RECTANGLE|PLOT|LINE|ELLIPSE|POLYGON) (?<coordinates>(\\d+\\.?\\d+ ?){2,})");
-
-
-
-                //Matcher shapeMatcher = shapeInstruction.matcher(line);
+                drawToCanvas(tempIndex);
             });
 
             index++;
         }
-
-
 
         historyView.setContent(instructionContainer);
 
@@ -197,9 +191,6 @@ public class Main extends Application {
         Label canvasPreviewLabel = new Label("Preview");
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setStyle(" -fx-background: #FFFFFF; -fx-background-color: #FFFFFF; -fx-min-width: 300; -fx-min-height: 300; ");
-
-        previewCanvas = new Canvas(300, 300);
-        anchorPane.getChildren().add(previewCanvas);
 
         VBox canvasPreview = new VBox();
         canvasPreview.getChildren().addAll(canvasPreviewLabel, anchorPane);
@@ -223,13 +214,8 @@ public class Main extends Application {
         dialog.showAndWait();
     }
 
-    private static void drawToCanvas(List<VecInstruction> instructions, int index){
-        int counter = 0;
-        for (VecInstruction instruction : instructions) {
-            if(counter > index){break;}
-            System.out.print(instruction.toString());
-
-            counter++;
-        }
+    private static void drawToCanvas(int index){
+        System.out.println(index);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(10, 10, 200, 10);
     }
 }
