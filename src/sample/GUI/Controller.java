@@ -286,8 +286,6 @@ public class Controller implements Initializable {
         return fileLocation;
     }
 
-
-
     @FXML
     public void openMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
@@ -338,9 +336,6 @@ public class Controller implements Initializable {
                 break;
         }
     }
-
-
-
 
     private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
@@ -454,10 +449,13 @@ public class Controller implements Initializable {
         canvas.setOnMouseReleased(event -> {
             canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
+
             coordinates.add((x / canvas.getWidth()) * 1.0);
             coordinates.add((y / canvas.getHeight()) * 1.0);
-            coordinates.add((event.getX() / canvas.getWidth()) * 1.0);
-            coordinates.add((event.getY() / canvas.getHeight()) * 1.0);
+            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
             LineInstruction LineInst = null;
             try {
