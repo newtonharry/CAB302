@@ -71,7 +71,6 @@ public class InstructionBufferProcessor {
         return quedInsturctions;
     }
 
-
     /**
      * Clears the current canvas of all drawings and then loops through
      * the quedInstructions list drawing out all of the shapes within the list

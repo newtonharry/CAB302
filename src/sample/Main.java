@@ -19,8 +19,13 @@ import javafx.stage.StageStyle;
 import sample.GUI.Controller;
 import sample.Instructions.Instruction;
 import sample.Instructions.InstructionBufferProcessor;
+import sample.Instructions.InstructionList;
+import sample.Instructions.VecInstruction;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Main extends Application {
@@ -28,6 +33,7 @@ public class Main extends Application {
     private static Scene scene;
     private static Stage primaryStage;
     private static Controller controller;
+    public static Canvas previewCanvas;
 
     @Override
     public void start(Stage primaryStage) {
@@ -58,7 +64,7 @@ public class Main extends Application {
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush = controller.brush;
         InstructionBufferProcessor.BUFFER_PROCESSOR.listen();
 
-        controller.resizeCanvas(scene.getWidth(), scene.getHeight());
+        //controller.resizeCanvas(scene.getWidth(), scene.getHeight());
         this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
             //test.setStageWidth(scene.getWidth());
             controller.resizeCanvas(scene.getWidth(), scene.getHeight());
@@ -107,7 +113,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    private void testPopup(){
+    public static void showUndoHistoryGUI(List<VecInstruction> instructions){
         final Stage dialog = new Stage();
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setResizable(false);
@@ -124,7 +130,6 @@ public class Main extends Application {
 
 
         okayButton.setOnAction((event) -> {
-
             dialog.close();
         });
 
@@ -149,9 +154,42 @@ public class Main extends Application {
         buttonContainer.getChildren().addAll(spacerLeft, okayButton, cancelButton, spacerRight);
 
 
+
         Label historyViewLabel = new Label("History");
         ScrollPane historyView = new ScrollPane();
         historyView.setStyle("-fx-min-height: 300; -fx-min-width: 150; -fx-background: #3B4046; -fx-background-color: #3B4046;");
+        historyView.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+
+        final FlowPane container = new FlowPane();
+        VBox instructionContainer = new VBox();
+
+        int index = 0;
+        InstructionList tempInstuctions = new InstructionList();
+        System.out.println(tempInstuctions);
+        for (VecInstruction instruction : instructions) {
+            tempInstuctions.add(instruction);
+            Button button = new Button(instruction.toString());
+            button.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
+            instructionContainer.getChildren().add(button);
+            int tempIndex = index;
+            button.setOnAction((event) -> {
+                String line = ((Button)event.getSource()).getText();
+                drawToCanvas(instructions, tempIndex);
+                //Pattern shapeInstruction = Pattern
+                //        .compile("(?<type>RECTANGLE|PLOT|LINE|ELLIPSE|POLYGON) (?<coordinates>(\\d+\\.?\\d+ ?){2,})");
+
+
+
+                //Matcher shapeMatcher = shapeInstruction.matcher(line);
+            });
+
+            index++;
+        }
+
+
+
+        historyView.setContent(instructionContainer);
 
         VBox historyViewContainer = new VBox();
         historyViewContainer.getChildren().addAll(historyViewLabel, historyView);
@@ -160,7 +198,7 @@ public class Main extends Application {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setStyle(" -fx-background: #FFFFFF; -fx-background-color: #FFFFFF; -fx-min-width: 300; -fx-min-height: 300; ");
 
-        Canvas previewCanvas = new Canvas(300, 300);
+        previewCanvas = new Canvas(300, 300);
         anchorPane.getChildren().add(previewCanvas);
 
         VBox canvasPreview = new VBox();
@@ -183,5 +221,15 @@ public class Main extends Application {
         dialog.setTitle("Undo History");
         dialog.setScene(dialogScene);
         dialog.showAndWait();
+    }
+
+    private static void drawToCanvas(List<VecInstruction> instructions, int index){
+        int counter = 0;
+        for (VecInstruction instruction : instructions) {
+            if(counter > index){break;}
+            System.out.print(instruction.toString());
+
+            counter++;
+        }
     }
 }

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -77,6 +79,7 @@ public class Controller implements Initializable {
     private Canvas tempDrawingLayer;
     private GraphicsContext tempDrawingLayerGC;
     private Parser parser;
+    private Double canvasScale;
 
     @FXML
     private void penToolClick() {
@@ -140,7 +143,17 @@ public class Controller implements Initializable {
         canvasAnchorPane.getChildren().add(canvas);
 
         //Need to clear the observer
+    }
 
+    @FXML public void showUndoHistoryMenuBtnClick(){
+        List<VecInstruction> instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions();
+
+        /*for (VecInstruction instruction : instructions) {
+            System.out.println(instruction);
+        }*/
+
+
+        sample.Main.showUndoHistoryGUI(instructions);
     }
 
 
@@ -692,6 +705,13 @@ public class Controller implements Initializable {
             gridAnchorPane.getChildren().add(gridCanvas);
             drawGrid(gridSize);
         }
+
+        Double originalDim = 720.0;
+        Double newDim = smallestCanvasDimension;
+        //System.out.println(originalDim + " " + smallestCanvasDimension);
+        //System.out.println((smallestCanvasDimension/originalDim));
+        canvasScale = newDim/originalDim;
+        scaleShapes();
     }
 
     /**
@@ -748,5 +768,33 @@ public class Controller implements Initializable {
                 .drawImage(bufferedImage, 0, 0, java.awt.Color.WHITE, null);
 
         ImageIO.write(convertedImage, "bmp", exportFile);
+    }
+
+
+
+    /*Double testSX = 10.0;
+    Double testSY = 10.0;
+    Double testEX = 100.0;
+    Double testEY = 100.0;
+
+    public void testLine(){
+        brush.strokeLine(testSX, testSY, testEX, testEY);
+    }*/
+
+    public void scaleShapes(){
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
+        //InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
+        /*canvasAnchorPane.getChildren().remove(canvas);
+        canvas = new Canvas(windowSize, windowSize);
+        canvasAnchorPane.getChildren().add(canvas);
+
+        brush = canvas.getGraphicsContext2D();*/
+
+        /*testSX = 10.0 * canvasScale;
+        testSY = 10.0 * canvasScale;
+        testEX = 100.0 * canvasScale;
+        testEY = 100.0 * canvasScale;
+
+        testLine();*/
     }
 }

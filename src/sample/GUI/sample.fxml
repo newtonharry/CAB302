@@ -33,6 +33,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#saveMenuBtnClick" text="Save                           ctrl+S" />
                         <MenuItem mnemonicParsing="false" onAction="#exportMenuBtnClick" text="Export                        ctrl+E" />
                         <MenuItem mnemonicParsing="false" onAction="#undoMenuBtnClick" text="Undo                          ctrl+Z" />
+                        <MenuItem mnemonicParsing="false" onAction="#showUndoHistoryMenuBtnClick" text="Undo History" />
                         <MenuItem mnemonicParsing="false" onAction="#showGridMenuBtnClick" text="Snap To Grid               ctrl+G" />
                     </items>
                     <graphic>
