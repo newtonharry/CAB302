@@ -119,12 +119,21 @@ public class Controller implements Initializable {
     private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
+        System.out.println(polygonPointsX);
         // WHATTTT IS GOING ON HERE ????
+        //System.out.println(polygonPointsX.length);
+
         for(Double num: polygonPointsX){
-            coordinates.add((num / canvas.getWidth()) * 1.0);
+            if(num != 0.0) {
+                coordinates.add((num / canvas.getWidth()) * 1.0);
+                System.out.print((num / canvas.getWidth()) * 1.0);
+            }
         }
+
         for(Double num: polygonPointsY){
-            coordinates.add((num / canvas.getHeight()) * 1.0);
+            if(num != 0.0) {
+                coordinates.add((num / canvas.getHeight()) * 1.0);
+            }
         }
 
         try {
@@ -141,14 +150,12 @@ public class Controller implements Initializable {
 
         brush.strokePolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
         brush.fillPolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
-
          */
 
         polygonPointsX = new double[9999];
         polygonPointsY = new double[9999];
         polygonPointsCount = 0;
     }
-
 
 
     @FXML public void newCanvasMenuBtnClick() {
@@ -479,7 +486,6 @@ public class Controller implements Initializable {
         coordinates.add((xPoint / canvas.getWidth()) * 1.0);
         coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
-
         PlotInstruction PlotInst = null;
         try {
             PlotInst = new PlotInstruction(coordinates);
@@ -503,24 +509,26 @@ public class Controller implements Initializable {
 
 
         canvas.setOnMouseReleased(event -> {
-            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+            if(event.getButton() == MouseButton.PRIMARY) {
+                canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
 
-            coordinates.add((x / canvas.getWidth()) * 1.0);
-            coordinates.add((y / canvas.getHeight()) * 1.0);
-            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
-            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
+                coordinates.add((x / canvas.getWidth()) * 1.0);
+                coordinates.add((y / canvas.getHeight()) * 1.0);
+                coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+                coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
-            LineInstruction LineInst = null;
-            try {
-                LineInst = new LineInstruction(coordinates);
-            } catch (ShapeException e) {
-                e.printStackTrace();
+                LineInstruction LineInst = null;
+                try {
+                    LineInst = new LineInstruction(coordinates);
+                } catch (ShapeException e) {
+                    e.printStackTrace();
+                }
+
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
             }
-
-            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
         });
     }
 
@@ -534,23 +542,25 @@ public class Controller implements Initializable {
         rectangle.setY(y);
 
         canvas.setOnMouseReleased(event -> {
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
+            if(event.getButton() == MouseButton.PRIMARY) {
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
 
-            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
-            coordinates.add((x / canvas.getWidth()) * 1.0);
-            coordinates.add((y / canvas.getHeight()) * 1.0);
-            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
-            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
+                canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+                coordinates.add((x / canvas.getWidth()) * 1.0);
+                coordinates.add((y / canvas.getHeight()) * 1.0);
+                coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+                coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
-            RectangleInstruction RectangleInst = null;
-            try {
-                RectangleInst = new RectangleInstruction(coordinates);
-            } catch (ShapeException e) {
-                e.printStackTrace();
+                RectangleInstruction RectangleInst = null;
+                try {
+                    RectangleInst = new RectangleInstruction(coordinates);
+                } catch (ShapeException e) {
+                    e.printStackTrace();
+                }
+
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
             }
-
-            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
         });
     }
 
@@ -571,45 +581,40 @@ public class Controller implements Initializable {
 
 
         canvas.setOnMouseReleased(event -> {
-            canvasAnchorPane.getChildren().remove(tempDrawingLayer);
+            if(event.getButton() == MouseButton.PRIMARY) {
+                canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
-            /*
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
+                Double startX = x;
+                Double startY = y;
 
-             */
+                if (x > xPoint) {
+                    Double temp = startX;
+                    startX = xPoint;
+                    xPoint = temp;
+                }
+
+                if (y > yPoint) {
+                    Double temp = startY;
+                    startY = yPoint;
+                    yPoint = temp;
+                }
+
+                coordinates.add((startX / canvas.getWidth()) * 1.0);
+                coordinates.add((startY / canvas.getHeight()) * 1.0);
+                coordinates.add((xPoint / canvas.getWidth()) * 1.0);
+                coordinates.add((yPoint / canvas.getHeight()) * 1.0);
 
 
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
-            Double startX = x;
-            Double startY = y;
-
-            if(x > xPoint){
-                Double temp = startX;
-                startX = xPoint;
-                xPoint = temp;
+                EllipseInstruction ellipseInst = null;
+                try {
+                    ellipseInst = new EllipseInstruction(coordinates);
+                } catch (ShapeException e) {
+                    e.printStackTrace();
+                }
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number
             }
-
-            if(y > yPoint){
-                Double temp = startY;
-                startY = yPoint;
-                yPoint = temp;
-            }
-
-            coordinates.add((startX / canvas.getWidth()) * 1.0);
-            coordinates.add((startY / canvas.getHeight()) * 1.0);
-            coordinates.add((xPoint / canvas.getWidth()) * 1.0);
-            coordinates.add((yPoint / canvas.getHeight()) * 1.0);
-
-
-            EllipseInstruction ellipseInst = null;
-            try {
-                ellipseInst = new EllipseInstruction(coordinates);
-            } catch (ShapeException e) {
-                e.printStackTrace();
-            }
-            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number
         });
     }
 
@@ -660,13 +665,11 @@ public class Controller implements Initializable {
 
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
-
             //refreshColors();
             Double xPoint = calculateSnapToGrid(event.getX());
             Double yPoint = calculateSnapToGrid(event.getY());
 
-
-            if (selectedTool.equals("plot")) {
+            if (selectedTool.equals("plot") && event.getButton() == MouseButton.PRIMARY) {
                 plotPoint(xPoint, yPoint);
             }
 
@@ -682,38 +685,42 @@ public class Controller implements Initializable {
         canvas.setOnMousePressed(event -> {
             //refreshColors();
 
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
+            if(event.getButton() == MouseButton.PRIMARY){
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
 
-            if (selectedTool.equals("line")) {
-                setupLine(xPoint, yPoint);
-            }
+                if (selectedTool.equals("line")) {
+                    setupLine(xPoint, yPoint);
+                }
 
-            if (selectedTool.equals("rectangle")) {
-                setupRectangle(xPoint, yPoint);
-            }
+                if (selectedTool.equals("rectangle")) {
+                    setupRectangle(xPoint, yPoint);
+                }
 
-            if (selectedTool.equals("ellipse")) {
-                setupEllipse(xPoint, yPoint);
+                if (selectedTool.equals("ellipse")) {
+                    setupEllipse(xPoint, yPoint);
+                }
             }
         });
 
         canvas.setOnMouseDragged(event -> {
             //refreshColors();
 
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
+            if(event.getButton() == MouseButton.PRIMARY) {
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
 
-            if (selectedTool.equals("line")) {
-                renderLinePreview(xPoint, yPoint);
-            }
+                if (selectedTool.equals("line")) {
+                    renderLinePreview(xPoint, yPoint);
+                }
 
-            if (selectedTool.equals("rectangle")) {
-                renderRectanglePreview(xPoint, yPoint);
-            }
+                if (selectedTool.equals("rectangle")) {
+                    renderRectanglePreview(xPoint, yPoint);
+                }
 
-            if (selectedTool.equals("ellipse")) {
-                renderEllipsePreview(xPoint, yPoint);
+                if (selectedTool.equals("ellipse")) {
+                    renderEllipsePreview(xPoint, yPoint);
+                }
             }
         });
     }

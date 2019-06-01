@@ -26,15 +26,19 @@ public class PolygonInstruction extends Shape {
         double[] xCoords = new double[this.getCoordinates().size() / 2],
                 yCoords = new double[this.getCoordinates().size() / 2];
 
+
         brush.setFill(InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
         brush.setStroke(InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
 
-        for (int i = 0; i < this.getCoordinates().size(); i++)
+        for (int i = 0; i < this.getCoordinates().size(); i++) {
             if (i % 2 == 0)
                 xCoords[i / 2] = convertXCoord(this.getCoordinates().get(i));
             else
                 yCoords[(i - 1) / 2] = convertYCoord(this.getCoordinates().get(i));
+        }
 
+
+        //System.out.println();
         brush.setLineWidth(1);
         brush.strokePolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
         brush.fillPolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
