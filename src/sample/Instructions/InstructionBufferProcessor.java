@@ -81,9 +81,9 @@ public class InstructionBufferProcessor {
      *
      * @return void
      */
-    public void drawShapes() {
+    public void drawShapes(int upto) {
         brush.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (VecInstruction instr : quedInsturctions) {
+        for (VecInstruction instr : quedInsturctions.subList(0,upto)) {
             if (instr instanceof Shape)
                 ((Shape) instr).draw();
         }
@@ -101,7 +101,7 @@ public class InstructionBufferProcessor {
                 ListChangeListener.Change<? extends VecInstruction> instructions) -> {
             while (instructions.next())
                 if (instructions.wasAdded() || instructions.wasRemoved())
-                    drawShapes();
+                    drawShapes(quedInsturctions.size());
         });
     }
 }

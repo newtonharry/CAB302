@@ -26,8 +26,9 @@ public class PlotInstruction extends Shape {
 
         InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setStroke(Color.web(this.getPen(), 1.0));
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(1);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(x, y, x, y);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.setLineWidth(3);
+        InstructionBufferProcessor.BUFFER_PROCESSOR.brush.strokeLine(x, y, x + 100, y + 100);
+        System.out.println("Drawn a plot");
 
     }
 }
