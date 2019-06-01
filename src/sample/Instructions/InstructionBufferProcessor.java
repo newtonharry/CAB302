@@ -78,6 +78,7 @@ public class InstructionBufferProcessor {
      *
      */
     public void drawShapes(int upto) {
+        if(upto == -1){upto = quedInsturctions.size();}
         resetCanvas();
         for (VecInstruction instr : quedInsturctions.subList(0, upto)) {
             instr.draw();

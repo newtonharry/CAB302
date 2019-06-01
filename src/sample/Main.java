@@ -139,6 +139,7 @@ public class Main extends Application {
         cancelButton.setStyle("-fx-background-color: #3B4046; -fx-text-fill: white; -fx-min-width: 75; -fx-min-height: 35; -fx-border-insets: 5px; -fx-padding: 5px; -fx-background-insets: 5px;");
 
         cancelButton.setOnAction((event) -> {
+            InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
             dialog.close();
         });
 
