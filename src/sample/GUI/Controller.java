@@ -31,6 +31,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import sample.Exceptions.FileExistsException;
 import sample.Exceptions.InvalidPathException;
 import sample.Exceptions.ParserException;
@@ -160,7 +161,6 @@ public class Controller implements Initializable {
     @FXML public void saveMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save vector file");
-        fileChooser.setInitialDirectory(new File("resources"));
 
         if(parser != null){
             fileChooser.setInitialFileName(parser.getFileName());
@@ -280,21 +280,23 @@ public class Controller implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(fileDescription, "*." + fileExtension)
         );
+
         File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
 
         return fileLocation;
     }
 
+
+
     @FXML
     public void openMenuBtnClick() {
-        // sample.GUI.KeyboardShortcuts.openCommand(stage);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open vector file");
-        fileChooser.getExtensionFilters().add(
+        fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Vector Files", "*.vec")
         );
-        fileChooser.setInitialDirectory(new File("resources"));
         fileChooser.setInitialFileName("myDesign.vec");
+        //fileChooser.setInitialDirectory(new File("../resources"));
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
         brush.clearRect(0, 0, 700, 700);

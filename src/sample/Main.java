@@ -144,7 +144,6 @@ public class Main extends Application {
         });
 
         final Pane spacerLeft = new Pane();
-        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
         spacerLeft.setMinSize(10, 1);
 
         final Pane spacerRight = new Pane();
@@ -162,7 +161,6 @@ public class Main extends Application {
         historyView.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 
-        final FlowPane container = new FlowPane();
         VBox instructionContainer = new VBox();
 
         int index = 0;
@@ -187,18 +185,9 @@ public class Main extends Application {
         VBox historyViewContainer = new VBox();
         historyViewContainer.getChildren().addAll(historyViewLabel, historyView);
 
-        Label canvasPreviewLabel = new Label("Preview");
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setStyle(" -fx-background: #FFFFFF; -fx-background-color: #FFFFFF; -fx-min-width: 300; -fx-min-height: 300; ");
-
-        VBox canvasPreview = new VBox();
-        canvasPreview.getChildren().addAll(canvasPreviewLabel, anchorPane);
-
-        final Pane spacerMiddle = new Pane();
-        spacerMiddle.setMinSize(30, 1);
 
         HBox mainContainer = new HBox();
-        mainContainer.getChildren().addAll(spacerRight, historyViewContainer, spacerMiddle, canvasPreview, spacerRight2);
+        mainContainer.getChildren().addAll(spacerRight, historyViewContainer, spacerRight2);
 
         final Pane spacerTop = new Pane();
         spacerTop.setMinSize(1, 1);
@@ -207,7 +196,7 @@ public class Main extends Application {
         dialogVbox.getChildren().add(mainContainer);
         dialogVbox.getChildren().add(buttonContainer);
 
-        Scene dialogScene = new Scene(dialogVbox, 500, 410);
+        Scene dialogScene = new Scene(dialogVbox, 170, 410);
         dialog.setTitle("Undo History");
         dialog.setScene(dialogScene);
         dialog.showAndWait();
