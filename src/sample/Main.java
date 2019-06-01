@@ -17,12 +17,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.GUI.Controller;
 import sample.Instructions.InstructionBufferProcessor;
-import sample.Instructions.InstructionList;
 import sample.Instructions.VecInstruction;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 
 public class Main extends Application {

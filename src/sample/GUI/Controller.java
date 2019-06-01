@@ -4,40 +4,29 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import sample.Exceptions.FileExistsException;
 import sample.Exceptions.InvalidPathException;
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
 import sample.Instructions.*;
 import sample.Parser.Parser;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
 
 
 public class Controller implements Initializable {
@@ -54,7 +43,7 @@ public class Controller implements Initializable {
     @FXML public Canvas canvas;
     @FXML public AnchorPane canvasPane;
     @FXML private AnchorPane canvasAnchorPane;
-    @FXML private AnchorPane abc;
+    @FXML private AnchorPane canvasContainer;
     private static double windowSize = 720.0;
 
     @FXML private AnchorPane gridAnchorPane;
@@ -78,46 +67,40 @@ public class Controller implements Initializable {
     private Canvas tempDrawingLayer;
     private GraphicsContext tempDrawingLayerGC;
     private Parser parser;
-    private Double canvasScale;
 
-    @FXML
-    private void penToolClick() {
+    @FXML private void penToolClick() {
         changeActiveButton("pen");
         this.selectedTool = "plot";
         handleMouseEvent();
     }
 
 
-    @FXML
-    private void lineToolClick() {
+    @FXML private void lineToolClick() {
         changeActiveButton("line");
         this.selectedTool = "line";
         handleMouseEvent();
     }
 
-    @FXML
-    private void rectangleToolClick() {
+    @FXML private void rectangleToolClick() {
         changeActiveButton("rectangle");
         this.selectedTool = "rectangle";
         handleMouseEvent();
     }
 
-    @FXML
-    private void ellipseToolClick() {
+    @FXML private void ellipseToolClick() {
         changeActiveButton("ellipse");
         this.selectedTool = "ellipse";
         handleMouseEvent();
     }
 
-    @FXML
-    private void polygonToolClick() {
+    @FXML private void polygonToolClick() {
         changeActiveButton("polygon");
         this.selectedTool = "polygon";
         handleMouseEvent();
     }
 
-    @FXML
-    private void closePolygon() {
+
+    @FXML private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
 
@@ -139,16 +122,6 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
 
-        /*
-        brush.setStroke(lineColor);
-        brush.setFill(fillColor);
-
-        brush.setLineWidth(3);
-
-        brush.strokePolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
-        brush.fillPolygon(polygonPointsX, polygonPointsY, polygonPointsCount);
-         */
-
         polygonPointsX = new double[9999];
         polygonPointsY = new double[9999];
         polygonPointsCount = 0;
@@ -156,8 +129,6 @@ public class Controller implements Initializable {
 
 
     @FXML public void newCanvasMenuBtnClick() {
-
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Are you sure you want to make a new canvas? This cannot be undone.");
@@ -169,16 +140,10 @@ public class Controller implements Initializable {
                 InstructionBufferProcessor.BUFFER_PROCESSOR.revertTo(0);
             }
         });
-
     }
 
     @FXML public void showUndoHistoryMenuBtnClick(){
         List<VecInstruction> instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions();
-
-        /*for (VecInstruction instruction : instructions) {
-            System.out.println(instruction);
-        }*/
-
 
         sample.Main.showUndoHistoryGUI(instructions);
     }
@@ -208,13 +173,13 @@ public class Controller implements Initializable {
     }
 
     @FXML public void lineColorPickerChange(){
-//        lineColor = lineColorPicker.getValue();
+        lineColor = lineColorPicker.getValue(); //Needed for rendering
         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new PenInstruction(lineColorPicker.getValue().toString()));
 
     }
 
     @FXML public void fillColorPickerChange(){
- //       fillColor = fillColorPicker.getValue();
+        fillColor = fillColorPicker.getValue(); //Needed for rendering
         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new FillInstruction(fillColorPicker.getValue().toString()));
     }
 
@@ -332,14 +297,9 @@ public class Controller implements Initializable {
         System.out.println("File: " + fileLocation);
         try {
             exportBMP(fileLocation, resolution);
-            //exportBMP("", "CanvasImage.bmp", 4096);
         } catch (IOException e) {
             e.printStackTrace();
-        } /*catch (InvalidPathException e) {
-            e.printStackTrace();
-        } catch (FileExistsException e) {
-            e.printStackTrace();
-        }*/
+        }
     }
 
     private File showSaveFileExplorer(String fileDescription, String fileExtension){
@@ -349,9 +309,7 @@ public class Controller implements Initializable {
         );
 
         File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
-        /*if(fileLocation == null){
-            return null;
-        }*/
+
         return fileLocation;
     }
 
@@ -363,7 +321,6 @@ public class Controller implements Initializable {
                 new FileChooser.ExtensionFilter("Vector Files", "*.vec")
         );
         fileChooser.setInitialFileName("myDesign.vec");
-        //fileChooser.setInitialDirectory(new File("../resources"));
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
         brush.clearRect(0, 0, 700, 700);
@@ -694,8 +651,6 @@ public class Controller implements Initializable {
         });
 
         canvas.setOnMousePressed(event -> {
-            //refreshColors();
-
             if(event.getButton() == MouseButton.PRIMARY){
                 Double xPoint = calculateSnapToGrid(event.getX());
                 Double yPoint = calculateSnapToGrid(event.getY());
@@ -715,8 +670,6 @@ public class Controller implements Initializable {
         });
 
         canvas.setOnMouseDragged(event -> {
-            //refreshColors();
-
             if(event.getButton() == MouseButton.PRIMARY) {
                 Double xPoint = calculateSnapToGrid(event.getX());
                 Double yPoint = calculateSnapToGrid(event.getY());
@@ -736,27 +689,7 @@ public class Controller implements Initializable {
         });
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        showGrid = false;
-
-        Color transparent = Color.web("0xffffff00", 0);
-
-        lineColorPicker.setValue(Color.BLACK);
-        fillColorPicker.setValue(transparent);
-
-        lineColorPicker.getStyleClass().add("button");
-        fillColorPicker.getStyleClass().add("button");
-
-        brush = canvas.getGraphicsContext2D();
-        brush.setLineWidth(1);
-        refreshColors();
-
-    }
-
     public void resizeCanvas(Double stageWidth, Double stageHeight){
-        //canvasPane.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        
         Double currentCanvasHeight = stageHeight - 66 - 25 - 10;
         Double currentCanvasWidth = stageWidth - 10;
         Double smallestCanvasDimension;
@@ -775,8 +708,8 @@ public class Controller implements Initializable {
         canvasPane.setPrefWidth(smallestCanvasDimension + 10);
         canvasPane.setPrefHeight(smallestCanvasDimension + 10);
 
-        abc.setPrefWidth(smallestCanvasDimension);
-        abc.setPrefHeight(smallestCanvasDimension);
+        canvasContainer.setPrefWidth(smallestCanvasDimension);
+        canvasContainer.setPrefHeight(smallestCanvasDimension);
 
         gridAnchorPane.setPrefWidth(smallestCanvasDimension);
         gridAnchorPane.setPrefHeight(smallestCanvasDimension);
@@ -797,12 +730,7 @@ public class Controller implements Initializable {
             drawGrid(gridSize);
         }
 
-        Double originalDim = 720.0;
-        Double newDim = smallestCanvasDimension;
-        //System.out.println(originalDim + " " + smallestCanvasDimension);
-        //System.out.println((smallestCanvasDimension/originalDim));
-        canvasScale = newDim/originalDim;
-        scaleShapes();
+        drawAllShapes();
     }
 
     /**
@@ -817,47 +745,21 @@ public class Controller implements Initializable {
      */
 
     private void exportBMP(String fileName, int resolution) throws IOException{
-            //throws IOException, FileExistsException, InvalidPathException {
         File exportFile = new File(fileName);
-
-        /*if (!Files.exists(new File(path).toPath()))
-            throw new InvalidPathException("Could not export BMP file, directory for exporting was invalid");
-
-        if (!exportFile.exists())
-            throw new FileExistsException("Could not export BMP file, file given by pathname already exists");
-*/
-        /*
-        final Bounds bounds = canvas.getLayoutBounds();
-
-        double scale = resolution / bounds.getWidth();
-
-        final WritableImage scaledImage = new WritableImage(
-                (int) (bounds.getWidth() * scale),
-                (int) (bounds.getHeight() * scale)
-        );
-
-        final SnapshotParameters snapParams = new SnapshotParameters();
-        snapParams.setTransform(javafx.scene.transform.Transform.scale(scale, scale));
-
-        final ImageView imView = new ImageView(canvas.snapshot(snapParams, scaledImage));
-        imView.setFitWidth(bounds.getWidth());
-        imView.setFitHeight(bounds.getHeight());
-        */
-
 
         WritableImage writableImage = new WritableImage(resolution, resolution);
 
         canvas.setWidth(resolution);
         canvas.setHeight(resolution);
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
+        drawAllShapes();
 
         canvas.snapshot(null, writableImage);
 
         canvas.setWidth(windowSize);
         canvas.setHeight(windowSize);
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
+        drawAllShapes();
 
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
         BufferedImage convertedImage = new BufferedImage(
@@ -871,29 +773,25 @@ public class Controller implements Initializable {
     }
 
 
+    public void drawAllShapes(){
+        InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
+    }
 
-    /*Double testSX = 10.0;
-    Double testSY = 10.0;
-    Double testEX = 100.0;
-    Double testEY = 100.0;
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        showGrid = false;
 
-    public void testLine(){
-        brush.strokeLine(testSX, testSY, testEX, testEY);
-    }*/
+        Color transparent = Color.web("0xffffff00", 0);
 
-    public void scaleShapes(){
-        //InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes();
-        /*canvasAnchorPane.getChildren().remove(canvas);
-        canvas = new Canvas(windowSize, windowSize);
-        canvasAnchorPane.getChildren().add(canvas);
+        lineColorPicker.setValue(Color.BLACK);
+        fillColorPicker.setValue(transparent);
 
-        brush = canvas.getGraphicsContext2D();*/
+        lineColorPicker.getStyleClass().add("button");
+        fillColorPicker.getStyleClass().add("button");
 
-        /*testSX = 10.0 * canvasScale;
-        testSY = 10.0 * canvasScale;
-        testEX = 100.0 * canvasScale;
-        testEY = 100.0 * canvasScale;
+        brush = canvas.getGraphicsContext2D();
+        brush.setLineWidth(1);
+        refreshColors();
 
-        testLine();*/
     }
 }
