@@ -40,11 +40,15 @@ public class Parser {
     /*
     Parser to begin reading/writing from/to a file
      */
-    public Parser(String file) throws ParserException {
+    public Parser(String file) throws IOException{
         if (file.isEmpty() || file.isBlank())
-            throw new ParserException("Filename cannot be blank or empty");
+            throw new IOException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
+
+        if(Files.notExists(vecFile)){
+            throw new IOException("File does not exist");
+        }
     }
 
     public void readInstructions() throws IOException, ParserException, ShapeException {
@@ -55,7 +59,7 @@ public class Parser {
         Matcher shapeMatcher;
 
         for (String line : lines) {
-            if (line.isEmpty()) continue;
+            if (line.isEmpty() || line.isBlank()) continue;
 
             colourMatcher = colourInstruction.matcher(line);
             shapeMatcher = shapeInstruction.matcher(line);
@@ -90,7 +94,6 @@ public class Parser {
                 .group("coordinates")
                 .split(" ")).map(Double::parseDouble)
                 .collect(Collectors.toList());
-
         switch (instruction) {
             case LINE:
                 LineInstruction lineInst = new LineInstruction(coordinates);

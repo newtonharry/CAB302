@@ -32,6 +32,7 @@ import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
 
+    ///////////////// GUI elements of the window allowing for the user to interact /////////////////
     @FXML
     private AnchorPane containerPane;
     @FXML
@@ -63,6 +64,9 @@ public class Controller implements Initializable {
     private AnchorPane gridAnchorPane;
     @FXML
     private Canvas gridCanvas = new Canvas(windowSize, windowSize);
+    ///////////////// GUI elements of the window allowing for the user to interact /////////////////
+
+    // Variable to help generate a grid for the canvas
     private boolean showGrid;
     private double gridSize;
 
@@ -71,6 +75,7 @@ public class Controller implements Initializable {
     private String selectedTool;
     public GraphicsContext brush;
 
+    /////////////// JavaFX objects and arrays to draw shapes to the screen ///////////////
     private Line line = new Line();
     private Rectangle rectangle = new Rectangle();
     private Ellipse ellipse = new Ellipse();
@@ -78,11 +83,21 @@ public class Controller implements Initializable {
     private double[] polygonPointsX = new double[9999];
     private double[] polygonPointsY = new double[9999];
     private int polygonPointsCount = 0;
+    /////////////// JavaFX objects and arrays to draw shapes to the screen ///////////////
 
+    // Used as a temp drawing layer for shape previews
     private Canvas tempDrawingLayer;
+    // Used as a temp drawing tool lfor shape previews
     private GraphicsContext tempDrawingLayerGC;
+    // Used to parse VEC files
     private Parser parser;
 
+    /**
+     * Initializes the brush and line/fill colors
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         showGrid = false;
@@ -102,6 +117,10 @@ public class Controller implements Initializable {
     }
 
     ///////////  JavaFX GUI functions  ///////////
+
+    /**
+     * Detects if the pen tool as been selected
+     */
     @FXML
     private void penToolClick() {
         changeActiveButton("pen");
@@ -110,6 +129,9 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Detects if the line tool as been selected
+     */
     @FXML
     private void lineToolClick() {
         changeActiveButton("line");
@@ -117,6 +139,9 @@ public class Controller implements Initializable {
         handleMouseEvent();
     }
 
+    /**
+     * Detects if the rectangle tool as been selected
+     */
     @FXML
     private void rectangleToolClick() {
         changeActiveButton("rectangle");
@@ -124,6 +149,9 @@ public class Controller implements Initializable {
         handleMouseEvent();
     }
 
+    /**
+     * Detects if the ellipse tool as been selected
+     */
     @FXML
     private void ellipseToolClick() {
         changeActiveButton("ellipse");
@@ -131,6 +159,9 @@ public class Controller implements Initializable {
         handleMouseEvent();
     }
 
+    /**
+     * Detects if the polygon tool as been selected
+     */
     @FXML
     private void polygonToolClick() {
         changeActiveButton("polygon");
@@ -139,14 +170,17 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Closes the polygon and adds it to the quedInstructions list
+     */
     @FXML
     private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
 
         for (int i = 0; i < polygonPointsX.length; i++) {
-                coordinates.add((polygonPointsX[i] / canvas.getWidth()) * 1.0);
-                coordinates.add((polygonPointsY[i] / canvas.getHeight()) * 1.0);
+            coordinates.add((polygonPointsX[i] / canvas.getWidth()) * 1.0);
+            coordinates.add((polygonPointsY[i] / canvas.getHeight()) * 1.0);
         }
 
         PolygonInstruction PolyInstr;
@@ -163,6 +197,10 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Clears all shapes from the quedInstructions list,
+     * removing all shapes from the canvas.
+     */
     @FXML
     public void newCanvasMenuBtnClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -178,6 +216,9 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Detects if the undo history button has been clicked and brings up drawing history.
+     */
     @FXML
     public void showUndoHistoryMenuBtnClick() {
         List<VecInstruction> instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions();
@@ -186,10 +227,15 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Detects if the save button has been pressed and saves the current canvas
+     * to a VEC file.
+     */
     @FXML
     public void saveMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save vector file");
+
 
         if (parser != null) {
             fileChooser.setInitialFileName(parser.getFileName());
@@ -204,12 +250,14 @@ public class Controller implements Initializable {
                 parser.writeInstructions();
             } catch (IOException e) {
                 alert("IO Error", e.getMessage(), Alert.AlertType.INFORMATION);
-            } catch (ParserException e) {
-                alert("Parser Error", e.getMessage(), Alert.AlertType.INFORMATION);
             }
         }
     }
 
+    /**
+     * Detects if the lineColor is changed, if so it is added as a PenInstuction
+     * object to the queInstructions list.
+     */
     @FXML
     public void lineColorPickerChange() {
         lineColor = lineColorPicker.getValue(); //Needed for rendering
@@ -217,6 +265,10 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Detects if the filleColor is changed, if so it is added as a PenInstuction
+     * object to the queInstructions list.
+     */
     @FXML
     public void fillColorPickerChange() {
         fillColor = fillColorPicker.getValue(); //Needed for rendering
@@ -224,11 +276,19 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Detects if the undo button is clicked, if so, it removes an Instruction from
+     * queInstructions list.
+     */
     @FXML
     public void undoMenuBtnClick() {
         InstructionBufferProcessor.BUFFER_PROCESSOR.undoInstruction();
     }
 
+    /**
+     * Detects if the grid button is pressed, if so it show's the grid or not to
+     * the canvas. This also makes newly added shapes conform to the grid squares.
+     */
     @FXML
     public void showGridMenuBtnClick() {
         showGrid = !showGrid;
@@ -262,6 +322,9 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Detects if the export button is pressed, if so, it exports the canvas in the BMP format.
+     */
     @FXML
     public void exportMenuBtnClick() {
         int resolution = getResolution();
@@ -284,6 +347,10 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Detects if the open button is pressed, if so, the user can choose to open
+     * a VEC file, drawing the shapes in the file to the canvas.
+     */
     @FXML
     public void openMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
@@ -311,6 +378,10 @@ public class Controller implements Initializable {
 
 
     ///////////  Handling Button Features  ///////////
+
+    /**
+     * Detects which drawing tool is selected, and displays the selection on the GUI.
+     */
     private void changeActiveButton(String btnType) {
         penToolBtn.getStyleClass().remove("headerBtnActive");
         lineToolBtn.getStyleClass().remove("headerBtnActive");
@@ -337,6 +408,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Handles mouse events regarding drawing shapes to the canvas.
+     */
     private void handleMouseEvent() {
         canvas.setOnMouseClicked(event -> {
             //refreshColors();
@@ -399,6 +473,12 @@ public class Controller implements Initializable {
 
     /////////// Shape Preview Drawings ///////////
 
+    /**
+     * renders a preview of a line being drawn, before it is drawn to the canvas.
+     *
+     * @param x
+     * @param y
+     */
     private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(windowSize, windowSize);
@@ -416,6 +496,12 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * renders a preview of a rectangle being drawn, before it is drawn to the canvas.
+     *
+     * @param x
+     * @param y
+     */
     private void renderRectanglePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(windowSize, windowSize);
@@ -441,6 +527,12 @@ public class Controller implements Initializable {
         rectangle.setY(startY);
     }
 
+    /**
+     * renders a preview of a polygon being drawn, before it is drawn to the canvas.
+     *
+     * @param x
+     * @param y
+     */
     private void renderPolygonPreview(Double x, Double y, MouseButton button) {
         if (button == MouseButton.SECONDARY) {
             closePolygon();
@@ -459,6 +551,12 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * renders a preview of an ellipse being drawn, before it is drawn to the canvas.
+     *
+     * @param x
+     * @param y
+     */
     private void renderEllipsePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(windowSize, windowSize);
@@ -485,6 +583,13 @@ public class Controller implements Initializable {
 
 
     ///////////  Adding Shapes to quedInstructions List ///////////
+
+    /**
+     * Adds a Plot Instruction to the quedInstructions list given a list of coordinates.
+     *
+     * @param x
+     * @param y
+     */
     private void plotPoint(Double x, Double y) {
         List<Double> coordinates = new ArrayList<>();
 
@@ -507,6 +612,12 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Adds a Line Instruction to the quedInstructions list given a list of coordinates.
+     *
+     * @param x
+     * @param y
+     */
     private void setupLine(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -547,6 +658,12 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Adds a Rectangle Instruction to the quedInstructions list given a list of coordinates.
+     *
+     * @param x
+     * @param y
+     */
     private void setupRectangle(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -582,6 +699,12 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Adds an Ellipse Instruction to the quedInstructions list given a list of coordinates.
+     *
+     * @param x
+     * @param y
+     */
     private void setupEllipse(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -636,6 +759,12 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Adds an Polygon Instruction to the quedInstructions list given a list of coordinates.
+     *
+     * @param x
+     * @param y
+     */
     private void setupPolygon(Double x, Double y) {
         tempDrawingLayer = new Canvas(windowSize, windowSize);
         canvasAnchorPane.getChildren().add(tempDrawingLayer);
@@ -649,6 +778,9 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     *
+     */
     private void polygonClick() {
         canvasAnchorPane.setOnMouseClicked(event -> {
 
@@ -666,6 +798,10 @@ public class Controller implements Initializable {
 
     ///////////  Extra/Misc Functions ///////////
 
+    /**
+     * @param mouseLocation
+     * @return the location where the
+     */
     private Double calculateSnapToGrid(Double mouseLocation) {
         if (showGrid) {
             Double gridDimension = (windowSize / (1 / gridSize));
@@ -717,7 +853,13 @@ public class Controller implements Initializable {
         ImageIO.write(convertedImage, "bmp", exportFile);
     }
 
-
+    /**
+     * Opens up a new file chooser in order to save a file.
+     *
+     * @param fileDescription
+     * @param fileExtension
+     * @return A directory to save a file.
+     */
     private File showSaveFileExplorer(String fileDescription, String fileExtension) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
@@ -729,6 +871,13 @@ public class Controller implements Initializable {
         return fileLocation;
     }
 
+    /**
+     * Resizes the canvas and everything drawn within it,
+     * based upon the window size.
+     *
+     * @param stageWidth
+     * @param stageHeight
+     */
     public void resizeCanvas(Double stageWidth, Double stageHeight) {
         Double currentCanvasHeight = stageHeight - 66 - 25 - 10;
         Double currentCanvasWidth = stageWidth - 10;
@@ -773,6 +922,13 @@ public class Controller implements Initializable {
         drawAllShapes();
     }
 
+
+    /**
+     * Draws out a grid based upon how big each
+     * grid square is going to be.
+     *
+     * @param gridSize
+     */
     private void drawGrid(Double gridSize) {
         GraphicsContext grid = gridCanvas.getGraphicsContext2D();
 
@@ -792,6 +948,11 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Creates a popup for the user to choose a resolution for an exported BMP file.
+     *
+     * @return The current resolution chosen by the user
+     */
     private int getResolution() {
         String resolutionString = showPopup("Export Resolution", "720", null, "Resolution:");
 
@@ -816,6 +977,14 @@ public class Controller implements Initializable {
         return resolution;
     }
 
+    /**
+     * Creates an alert on the screen to notify the user
+     * of something informative.
+     *
+     * @param title
+     * @param contentText
+     * @param alertType
+     */
     private void alert(String title, String contentText, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
 
@@ -828,6 +997,15 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Creates a dialog for the user to enter information into
+     *
+     * @param title
+     * @param defaultValue
+     * @param headerText
+     * @param contentText
+     * @return The result of the information inputted into the dialog
+     */
     private String showPopup(String title, String defaultValue, String headerText, String contentText) {
         TextInputDialog dialog = new TextInputDialog(defaultValue);
         dialog.setTitle(title);
@@ -843,11 +1021,18 @@ public class Controller implements Initializable {
         return null;
     }
 
+    /**
+     * Sets teh current lineColor and fillColor to the chosen
+     * values in the color pickers.
+     */
     private void refreshColors() {
         lineColor = lineColorPicker.getValue();
         fillColor = fillColorPicker.getValue();
     }
 
+    /**
+     * Helper function which draws out all of the shapes.
+     */
     public void drawAllShapes() {
         InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
     }

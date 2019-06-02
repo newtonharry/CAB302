@@ -1,5 +1,7 @@
 package sample.Instructions;
 
+import sample.Exceptions.ShapeException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,14 @@ public abstract class Shape implements VecInstruction {
      * @param type
      * @param coordinates
      */
-    Shape(InstructionType type, List<Double> coordinates) {
+    Shape(InstructionType type, List<Double> coordinates) throws ShapeException {
+        for(Double coordinate: coordinates){
+            if(coordinate < 0){
+                throw new ShapeException("Coordinates cannot be negative");
+            }else if(coordinate > 1.0){
+                throw new ShapeException("Coordinates cannot be greater than 1");
+            }
+        }
         this.type = type;
         this.coordinates = coordinates;
     }
@@ -47,7 +56,7 @@ public abstract class Shape implements VecInstruction {
                 this.type.toString(),
                 this.coordinates
                 .stream()
-                .map(num -> Math.round(num * 100.0 ) / 100.0)
+                //.map(num -> Math.round(num * 10000.0 ) / 10000.0)
                 .map(Object::toString)
                 .collect(Collectors.joining(" ")));
     }

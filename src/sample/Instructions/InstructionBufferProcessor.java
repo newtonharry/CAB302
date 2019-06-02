@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 public class InstructionBufferProcessor {
+    // Allows for a global reference to this class without having to create an instance of it
     public static final InstructionBufferProcessor BUFFER_PROCESSOR = new InstructionBufferProcessor();
 
     // List which stores VecInstructions
