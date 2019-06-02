@@ -26,28 +26,43 @@ import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
 import sample.Instructions.*;
 import sample.Parser.Parser;
+
 import javax.imageio.ImageIO;
 
 
 public class Controller implements Initializable {
 
-    @FXML private AnchorPane containerPane;
-    @FXML private Button penToolBtn;
-    @FXML private Button lineToolBtn;
-    @FXML private Button rectangleToolBtn;
-    @FXML private Button ellipseToolBtn;
-    @FXML private Button polygonToolBtn;
-    @FXML private ColorPicker lineColorPicker;
-    @FXML private ColorPicker fillColorPicker;
+    @FXML
+    private AnchorPane containerPane;
+    @FXML
+    private Button penToolBtn;
+    @FXML
+    private Button lineToolBtn;
+    @FXML
+    private Button rectangleToolBtn;
+    @FXML
+    private Button ellipseToolBtn;
+    @FXML
+    private Button polygonToolBtn;
+    @FXML
+    private ColorPicker lineColorPicker;
+    @FXML
+    private ColorPicker fillColorPicker;
 
-    @FXML public Canvas canvas;
-    @FXML public AnchorPane canvasPane;
-    @FXML private AnchorPane canvasAnchorPane;
-    @FXML private AnchorPane canvasContainer;
+    @FXML
+    public Canvas canvas;
+    @FXML
+    public AnchorPane canvasPane;
+    @FXML
+    private AnchorPane canvasAnchorPane;
+    @FXML
+    private AnchorPane canvasContainer;
     private static double windowSize = 720.0;
 
-    @FXML private AnchorPane gridAnchorPane;
-    @FXML private Canvas gridCanvas = new Canvas(windowSize, windowSize);
+    @FXML
+    private AnchorPane gridAnchorPane;
+    @FXML
+    private Canvas gridCanvas = new Canvas(windowSize, windowSize);
     private boolean showGrid;
     private double gridSize;
 
@@ -68,58 +83,85 @@ public class Controller implements Initializable {
     private GraphicsContext tempDrawingLayerGC;
     private Parser parser;
 
-    @FXML private void penToolClick() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        showGrid = false;
+
+        Color transparent = Color.web("0xffffff00", 0);
+
+        lineColorPicker.setValue(Color.BLACK);
+        fillColorPicker.setValue(transparent);
+
+        lineColorPicker.getStyleClass().add("button");
+        fillColorPicker.getStyleClass().add("button");
+
+        brush = canvas.getGraphicsContext2D();
+        brush.setLineWidth(1);
+        refreshColors();
+
+    }
+
+    ///////////  JavaFX GUI functions  ///////////
+    @FXML
+    private void penToolClick() {
         changeActiveButton("pen");
         this.selectedTool = "plot";
         handleMouseEvent();
     }
 
 
-    @FXML private void lineToolClick() {
+    @FXML
+    private void lineToolClick() {
         changeActiveButton("line");
         this.selectedTool = "line";
         handleMouseEvent();
     }
 
-    @FXML private void rectangleToolClick() {
+    @FXML
+    private void rectangleToolClick() {
         changeActiveButton("rectangle");
         this.selectedTool = "rectangle";
         handleMouseEvent();
     }
 
-    @FXML private void ellipseToolClick() {
+    @FXML
+    private void ellipseToolClick() {
         changeActiveButton("ellipse");
         this.selectedTool = "ellipse";
         handleMouseEvent();
     }
 
-    @FXML private void polygonToolClick() {
+    @FXML
+    private void polygonToolClick() {
         changeActiveButton("polygon");
         this.selectedTool = "polygon";
         handleMouseEvent();
     }
 
 
-    @FXML private void closePolygon() {
+    @FXML
+    private void closePolygon() {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
 
-        for(Double num: polygonPointsX){
-            if(num != 0.0) {
+        for (Double num : polygonPointsX) {
+            if (num != 0.0) {
                 coordinates.add((num / canvas.getWidth()) * 1.0);
             }
         }
 
-        for(Double num: polygonPointsY){
-            if(num != 0.0) {
+        for (Double num : polygonPointsY) {
+            if (num != 0.0) {
                 coordinates.add((num / canvas.getHeight()) * 1.0);
             }
         }
 
+        PolygonInstruction PolyInstr;
         try {
-            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new PolygonInstruction(coordinates));
+            PolyInstr = new PolygonInstruction(coordinates);
+            InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(PolyInstr);
         } catch (ShapeException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         polygonPointsX = new double[9999];
@@ -128,7 +170,8 @@ public class Controller implements Initializable {
     }
 
 
-    @FXML public void newCanvasMenuBtnClick() {
+    @FXML
+    public void newCanvasMenuBtnClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Are you sure you want to make a new canvas? This cannot be undone.");
@@ -142,20 +185,22 @@ public class Controller implements Initializable {
         });
     }
 
-    @FXML public void showUndoHistoryMenuBtnClick(){
+    @FXML
+    public void showUndoHistoryMenuBtnClick() {
         List<VecInstruction> instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions();
 
         sample.Main.showUndoHistoryGUI(instructions);
     }
 
 
-    @FXML public void saveMenuBtnClick() {
+    @FXML
+    public void saveMenuBtnClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save vector file");
 
-        if(parser != null){
+        if (parser != null) {
             fileChooser.setInitialFileName(parser.getFileName());
-        }else{
+        } else {
             fileChooser.setInitialFileName("untitled.vec");
         }
         File importVec = fileChooser.showSaveDialog(canvas.getScene().getWindow());
@@ -165,30 +210,34 @@ public class Controller implements Initializable {
                 Parser parser = new Parser(importVec.toString());
                 parser.writeInstructions();
             } catch (IOException e) {
-                e.printStackTrace();
+                alert("IO Error", e.getMessage(), Alert.AlertType.INFORMATION);
             } catch (ParserException e) {
-                e.printStackTrace();
+                alert("Parser Error", e.getMessage(), Alert.AlertType.INFORMATION);
             }
         }
     }
 
-    @FXML public void lineColorPickerChange(){
+    @FXML
+    public void lineColorPickerChange() {
         lineColor = lineColorPicker.getValue(); //Needed for rendering
         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new PenInstruction(lineColorPicker.getValue().toString()));
 
     }
 
-    @FXML public void fillColorPickerChange(){
+    @FXML
+    public void fillColorPickerChange() {
         fillColor = fillColorPicker.getValue(); //Needed for rendering
         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(new FillInstruction(fillColorPicker.getValue().toString()));
     }
 
 
-    @FXML public void undoMenuBtnClick() {
+    @FXML
+    public void undoMenuBtnClick() {
         InstructionBufferProcessor.BUFFER_PROCESSOR.undoInstruction();
     }
 
-    @FXML public void showGridMenuBtnClick() {
+    @FXML
+    public void showGridMenuBtnClick() {
         showGrid = !showGrid;
         if (showGrid) {
             String popupValue = showPopup("Grid Size", "0.05", "Please enter a grid size between 0.01 and 0.1", "Grid Size:");
@@ -203,7 +252,7 @@ public class Controller implements Initializable {
                         gridAnchorPane.getChildren().add(gridCanvas);
                         gridSize = gridValue;
                         drawGrid(gridValue);
-                    } else{
+                    } else {
                         showGrid = !showGrid; //Swap Back
                         alert(null, "Value out of bounds. Please try again and enter a value between 0.01 and 0.1", Alert.AlertType.INFORMATION);
                         showGridMenuBtnClick();
@@ -214,84 +263,23 @@ public class Controller implements Initializable {
                     showGridMenuBtnClick();
                 }
             }
-        } else{
+        } else {
             gridAnchorPane.getChildren().remove(gridCanvas);
         }
     }
 
-    private void alert(String title, String contentText, Alert.AlertType alertType){
-        Alert alert = new Alert(alertType);
 
-        alert.setTitle(title);
-        alert.setContentText(contentText);
-        alert.setHeaderText(null);
-        alert.setGraphic(null);
-
-        alert.showAndWait();
-
-    }
-
-    private String showPopup(String title, String defaultValue, String headerText, String contentText){
-        TextInputDialog dialog = new TextInputDialog(defaultValue);
-        dialog.setTitle(title);
-        dialog.setContentText(contentText);
-        dialog.setHeaderText(headerText);
-        dialog.setGraphic(null);
-        Optional<String> result = dialog.showAndWait();
-
-        if (result.isPresent()) {
-            return result.get();
-        }
-
-        return null;
-    }
-
-    private void drawGrid(Double gridSize) {
-        GraphicsContext grid = gridCanvas.getGraphicsContext2D();
-
-        Color gridColor = Color.web("#C3C3C3");
-        //double gridSize = 0.01;
-        double calculatedGridSize = gridSize * windowSize;
-        double gridlinesRequired = 1 / gridSize;
-
-        grid.setStroke(gridColor);
-        grid.setLineWidth(0.5);
-
-
-        for(int i=0; i<gridlinesRequired; i++){
-            grid.strokeLine(0, calculatedGridSize*i, windowSize, calculatedGridSize*i);
-            grid.strokeLine(calculatedGridSize*i, 0, calculatedGridSize*i, windowSize);
-        }
-    }
-
-    private int getResolution(){
-        String resolutionString = showPopup("Export Resolution", "720", null, "Resolution:");
-
-        if(resolutionString == null || resolutionString == ""){ return -1;  }
-
-        int resolution = 720;
-
-        try {
-            resolution = Integer.parseInt(resolutionString);
-
-            if(resolution < 0){
-                System.out.println("Less Than 0");
-                getResolution();
-            }
-        } catch(Exception e){
-            System.out.println("Illegal Characters");
-            getResolution();
-        }
-
-        return resolution;
-    }
-
-    @FXML public void exportMenuBtnClick() {
+    @FXML
+    public void exportMenuBtnClick() {
         int resolution = getResolution();
-        if(resolution == -1){return;}
+        if (resolution == -1) {
+            return;
+        }
 
         File path = showSaveFileExplorer("BMP", "bmp");
-        if(path == null){return;}
+        if (path == null) {
+            return;
+        }
         String fileLocation = path.toString();
 
         System.out.println("File: " + fileLocation);
@@ -302,16 +290,6 @@ public class Controller implements Initializable {
         }
     }
 
-    private File showSaveFileExplorer(String fileDescription, String fileExtension){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(fileDescription, "*." + fileExtension)
-        );
-
-        File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
-
-        return fileLocation;
-    }
 
     @FXML
     public void openMenuBtnClick() {
@@ -331,12 +309,15 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserException e) {
-            alert("Parsing Error",e.getMessage(), Alert.AlertType.INFORMATION);
+            alert("Parsing Error", e.getMessage(), Alert.AlertType.INFORMATION);
         } catch (ShapeException e) {
-            alert("Shape Error",e.getMessage(), Alert.AlertType.INFORMATION);
+            alert("Shape Error", e.getMessage(), Alert.AlertType.INFORMATION);
         }
     }
+    ///////////  JavaFX GUI functions  ///////////
 
+
+    ///////////  Handling Button Features  ///////////
     private void changeActiveButton(String btnType) {
         penToolBtn.getStyleClass().remove("headerBtnActive");
         lineToolBtn.getStyleClass().remove("headerBtnActive");
@@ -363,6 +344,68 @@ public class Controller implements Initializable {
         }
     }
 
+    private void handleMouseEvent() {
+        canvas.setOnMouseClicked(event -> {
+            //refreshColors();
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
+
+            if (selectedTool.equals("plot") && event.getButton() == MouseButton.PRIMARY) {
+                plotPoint(xPoint, yPoint);
+            }
+
+            if (selectedTool.equals("polygon")) {
+                if (polygonPointsCount == 0) {
+                    setupPolygon(xPoint, yPoint);
+                } else {
+                    renderPolygonPreview(xPoint, yPoint, event.getButton());
+                }
+            }
+        });
+
+        canvas.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
+
+                if (selectedTool.equals("line")) {
+                    setupLine(xPoint, yPoint);
+                }
+
+                if (selectedTool.equals("rectangle")) {
+                    setupRectangle(xPoint, yPoint);
+                }
+
+                if (selectedTool.equals("ellipse")) {
+                    setupEllipse(xPoint, yPoint);
+                }
+            }
+        });
+
+        canvas.setOnMouseDragged(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                Double xPoint = calculateSnapToGrid(event.getX());
+                Double yPoint = calculateSnapToGrid(event.getY());
+
+                if (selectedTool.equals("line")) {
+                    renderLinePreview(xPoint, yPoint);
+                }
+
+                if (selectedTool.equals("rectangle")) {
+                    renderRectanglePreview(xPoint, yPoint);
+                }
+
+                if (selectedTool.equals("ellipse")) {
+                    renderEllipsePreview(xPoint, yPoint);
+                }
+            }
+        });
+    }
+    /////////// Handling Button Features ///////////
+
+
+    /////////// Shape Preview Drawings ///////////
+
     private void renderLinePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         tempDrawingLayer = new Canvas(windowSize, windowSize);
@@ -378,6 +421,7 @@ public class Controller implements Initializable {
         tempDrawingLayerGC.setStroke(lineColorPicker.getValue());
         tempDrawingLayerGC.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
     }
+
 
     private void renderRectanglePreview(Double x, Double y) {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
@@ -444,7 +488,10 @@ public class Controller implements Initializable {
         tempDrawingLayerGC.fillOval(Math.min(ellipseBounds.getX(), x), Math.min(ellipseBounds.getY(), y), ellipseBounds.getWidth(), ellipseBounds.getHeight());
     }
 
+    /////////// Shape Preview Drawings ///////////
 
+
+    ///////////  Adding Shapes to quedInstructions List ///////////
     private void plotPoint(Double x, Double y) {
         List<Double> coordinates = new ArrayList<>();
 
@@ -459,9 +506,12 @@ public class Controller implements Initializable {
             PlotInst = new PlotInstruction(coordinates);
         } catch (ShapeException e) {
             e.printStackTrace();
+        } finally {
+            if (PlotInst != null) {
+                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(PlotInst);
+            }
         }
 
-        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(PlotInst);
     }
 
     private void setupLine(Double x, Double y) {
@@ -477,7 +527,7 @@ public class Controller implements Initializable {
 
 
         canvas.setOnMouseReleased(event -> {
-            if(event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY) {
                 canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
                 Double xPoint = calculateSnapToGrid(event.getX());
@@ -493,9 +543,12 @@ public class Controller implements Initializable {
                     LineInst = new LineInstruction(coordinates);
                 } catch (ShapeException e) {
                     e.printStackTrace();
+                } finally {
+                    if (LineInst != null) {
+                        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
+                    }
                 }
 
-                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
             }
         });
     }
@@ -510,7 +563,7 @@ public class Controller implements Initializable {
         rectangle.setY(y);
 
         canvas.setOnMouseReleased(event -> {
-            if(event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY) {
                 Double xPoint = calculateSnapToGrid(event.getX());
                 Double yPoint = calculateSnapToGrid(event.getY());
 
@@ -525,14 +578,15 @@ public class Controller implements Initializable {
                     RectangleInst = new RectangleInstruction(coordinates);
                 } catch (ShapeException e) {
                     e.printStackTrace();
+                } finally {
+                    if (RectangleInst != null) {
+                        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
+                    }
                 }
 
-                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
             }
         });
     }
-
-
 
 
     private void setupEllipse(Double x, Double y) {
@@ -549,7 +603,7 @@ public class Controller implements Initializable {
 
 
         canvas.setOnMouseReleased(event -> {
-            if(event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY) {
                 canvasAnchorPane.getChildren().remove(tempDrawingLayer);
 
                 Double xPoint = calculateSnapToGrid(event.getX());
@@ -580,22 +634,11 @@ public class Controller implements Initializable {
                     ellipseInst = new EllipseInstruction(coordinates);
                 } catch (ShapeException e) {
                     e.printStackTrace();
+                } finally {
+                    if (ellipseInst != null) {
+                        InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number
+                    }
                 }
-                InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number
-            }
-        });
-    }
-
-
-
-    private void polygonClick() {
-        canvasAnchorPane.setOnMouseClicked(event -> {
-
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
-
-            if (selectedTool.equals("polygon")) {
-                renderPolygonPreview(xPoint, yPoint, event.getButton());
             }
         });
     }
@@ -613,125 +656,34 @@ public class Controller implements Initializable {
     }
 
 
-    private void refreshColors() {
-        lineColor = lineColorPicker.getValue();
-        fillColor = fillColorPicker.getValue();
+    private void polygonClick() {
+        canvasAnchorPane.setOnMouseClicked(event -> {
+
+            Double xPoint = calculateSnapToGrid(event.getX());
+            Double yPoint = calculateSnapToGrid(event.getY());
+
+            if (selectedTool.equals("polygon")) {
+                renderPolygonPreview(xPoint, yPoint, event.getButton());
+            }
+        });
     }
 
-    private Double calculateSnapToGrid(Double mouseLocation){
-        if(showGrid){
-        Double gridDimension = (windowSize / (1 / gridSize));
-        Double xGridPoint = mouseLocation / gridDimension;
-        int xGridPointRounded = (int)Math.round(xGridPoint);
-        return xGridPointRounded * gridDimension;
+    ///////////  Adding Shapes to quedInstructions List ///////////
+
+
+    ///////////  Extra/Misc Functions ///////////
+
+    private Double calculateSnapToGrid(Double mouseLocation) {
+        if (showGrid) {
+            Double gridDimension = (windowSize / (1 / gridSize));
+            Double xGridPoint = mouseLocation / gridDimension;
+            int xGridPointRounded = (int) Math.round(xGridPoint);
+            return xGridPointRounded * gridDimension;
         }
 
         return mouseLocation;
     }
 
-
-
-    private void handleMouseEvent() {
-        canvas.setOnMouseClicked(event -> {
-            //refreshColors();
-            Double xPoint = calculateSnapToGrid(event.getX());
-            Double yPoint = calculateSnapToGrid(event.getY());
-
-            if (selectedTool.equals("plot") && event.getButton() == MouseButton.PRIMARY) {
-                plotPoint(xPoint, yPoint);
-            }
-
-            if (selectedTool.equals("polygon")) {
-                if (polygonPointsCount == 0) {
-                    setupPolygon(xPoint, yPoint);
-                } else {
-                    renderPolygonPreview(xPoint, yPoint, event.getButton());
-                }
-            }
-        });
-
-        canvas.setOnMousePressed(event -> {
-            if(event.getButton() == MouseButton.PRIMARY){
-                Double xPoint = calculateSnapToGrid(event.getX());
-                Double yPoint = calculateSnapToGrid(event.getY());
-
-                if (selectedTool.equals("line")) {
-                    setupLine(xPoint, yPoint);
-                }
-
-                if (selectedTool.equals("rectangle")) {
-                    setupRectangle(xPoint, yPoint);
-                }
-
-                if (selectedTool.equals("ellipse")) {
-                    setupEllipse(xPoint, yPoint);
-                }
-            }
-        });
-
-        canvas.setOnMouseDragged(event -> {
-            if(event.getButton() == MouseButton.PRIMARY) {
-                Double xPoint = calculateSnapToGrid(event.getX());
-                Double yPoint = calculateSnapToGrid(event.getY());
-
-                if (selectedTool.equals("line")) {
-                    renderLinePreview(xPoint, yPoint);
-                }
-
-                if (selectedTool.equals("rectangle")) {
-                    renderRectanglePreview(xPoint, yPoint);
-                }
-
-                if (selectedTool.equals("ellipse")) {
-                    renderEllipsePreview(xPoint, yPoint);
-                }
-            }
-        });
-    }
-
-    public void resizeCanvas(Double stageWidth, Double stageHeight){
-        Double currentCanvasHeight = stageHeight - 66 - 25 - 10;
-        Double currentCanvasWidth = stageWidth - 10;
-        Double smallestCanvasDimension;
-
-        if(currentCanvasWidth <= currentCanvasHeight){
-            smallestCanvasDimension = currentCanvasWidth;
-        } else {
-            smallestCanvasDimension = currentCanvasHeight;
-        }
-
-        windowSize = smallestCanvasDimension;
-
-        containerPane.setPrefWidth(smallestCanvasDimension + 10);
-        containerPane.setPrefHeight(smallestCanvasDimension + 101);
-
-        canvasPane.setPrefWidth(smallestCanvasDimension + 10);
-        canvasPane.setPrefHeight(smallestCanvasDimension + 10);
-
-        canvasContainer.setPrefWidth(smallestCanvasDimension);
-        canvasContainer.setPrefHeight(smallestCanvasDimension);
-
-        gridAnchorPane.setPrefWidth(smallestCanvasDimension);
-        gridAnchorPane.setPrefHeight(smallestCanvasDimension);
-
-        gridCanvas.setWidth(smallestCanvasDimension);
-        gridCanvas.setHeight(smallestCanvasDimension);
-
-        canvasAnchorPane.setPrefWidth(smallestCanvasDimension);
-        canvasAnchorPane.setPrefHeight(smallestCanvasDimension);
-
-        canvas.setWidth(smallestCanvasDimension);
-        canvas.setHeight(smallestCanvasDimension);
-
-        if(showGrid){
-            gridAnchorPane.getChildren().remove(gridCanvas);
-            gridCanvas = new Canvas(windowSize, windowSize);
-            gridAnchorPane.getChildren().add(gridCanvas);
-            drawGrid(gridSize);
-        }
-
-        drawAllShapes();
-    }
 
     /**
      * Exports the file which is currently being worked on as a BMP image, so that image files in a raster format
@@ -744,7 +696,7 @@ public class Controller implements Initializable {
      * @throws InvalidPathException Thrown if the path for the BMP file is invalid
      */
 
-    private void exportBMP(String fileName, int resolution) throws IOException{
+    private void exportBMP(String fileName, int resolution) throws IOException {
         File exportFile = new File(fileName);
 
         WritableImage writableImage = new WritableImage(resolution, resolution);
@@ -773,25 +725,141 @@ public class Controller implements Initializable {
     }
 
 
-    public void drawAllShapes(){
+    private File showSaveFileExplorer(String fileDescription, String fileExtension) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(fileDescription, "*." + fileExtension)
+        );
+
+        File fileLocation = fileChooser.showSaveDialog(sample.Main.getPrimaryStage());
+
+        return fileLocation;
+    }
+
+    public void resizeCanvas(Double stageWidth, Double stageHeight) {
+        Double currentCanvasHeight = stageHeight - 66 - 25 - 10;
+        Double currentCanvasWidth = stageWidth - 10;
+        Double smallestCanvasDimension;
+
+        if (currentCanvasWidth <= currentCanvasHeight) {
+            smallestCanvasDimension = currentCanvasWidth;
+        } else {
+            smallestCanvasDimension = currentCanvasHeight;
+        }
+
+        windowSize = smallestCanvasDimension;
+
+        containerPane.setPrefWidth(smallestCanvasDimension + 10);
+        containerPane.setPrefHeight(smallestCanvasDimension + 101);
+
+        canvasPane.setPrefWidth(smallestCanvasDimension + 10);
+        canvasPane.setPrefHeight(smallestCanvasDimension + 10);
+
+        canvasContainer.setPrefWidth(smallestCanvasDimension);
+        canvasContainer.setPrefHeight(smallestCanvasDimension);
+
+        gridAnchorPane.setPrefWidth(smallestCanvasDimension);
+        gridAnchorPane.setPrefHeight(smallestCanvasDimension);
+
+        gridCanvas.setWidth(smallestCanvasDimension);
+        gridCanvas.setHeight(smallestCanvasDimension);
+
+        canvasAnchorPane.setPrefWidth(smallestCanvasDimension);
+        canvasAnchorPane.setPrefHeight(smallestCanvasDimension);
+
+        canvas.setWidth(smallestCanvasDimension);
+        canvas.setHeight(smallestCanvasDimension);
+
+        if (showGrid) {
+            gridAnchorPane.getChildren().remove(gridCanvas);
+            gridCanvas = new Canvas(windowSize, windowSize);
+            gridAnchorPane.getChildren().add(gridCanvas);
+            drawGrid(gridSize);
+        }
+
+        drawAllShapes();
+    }
+
+    private void drawGrid(Double gridSize) {
+        GraphicsContext grid = gridCanvas.getGraphicsContext2D();
+
+        Color gridColor = Color.web("#C3C3C3");
+        //double gridSize = 0.01;
+        double calculatedGridSize = gridSize * windowSize;
+
+        double gridlinesRequired = 1 / gridSize;
+
+        grid.setStroke(gridColor);
+        grid.setLineWidth(0.5);
+
+
+        for (int i = 0; i < gridlinesRequired; i++) {
+            grid.strokeLine(0, calculatedGridSize * i, windowSize, calculatedGridSize * i);
+            grid.strokeLine(calculatedGridSize * i, 0, calculatedGridSize * i, windowSize);
+        }
+    }
+
+    private int getResolution() {
+        String resolutionString = showPopup("Export Resolution", "720", null, "Resolution:");
+
+        if (resolutionString == null || resolutionString == "") {
+            return -1;
+        }
+
+        int resolution = 720;
+
+        try {
+            resolution = Integer.parseInt(resolutionString);
+
+            if (resolution < 0) {
+                System.out.println("Less Than 0");
+                getResolution();
+            }
+        } catch (Exception e) {
+            System.out.println("Illegal Characters");
+            getResolution();
+        }
+
+        return resolution;
+    }
+
+    private void alert(String title, String contentText, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+
+        alert.setTitle(title);
+        alert.setContentText(contentText);
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+
+        alert.showAndWait();
+
+    }
+
+    private String showPopup(String title, String defaultValue, String headerText, String contentText) {
+        TextInputDialog dialog = new TextInputDialog(defaultValue);
+        dialog.setTitle(title);
+        dialog.setContentText(contentText);
+        dialog.setHeaderText(headerText);
+        dialog.setGraphic(null);
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            return result.get();
+        }
+
+        return null;
+    }
+
+    private void refreshColors() {
+        lineColor = lineColorPicker.getValue();
+        fillColor = fillColorPicker.getValue();
+    }
+
+    public void drawAllShapes() {
         InstructionBufferProcessor.BUFFER_PROCESSOR.drawShapes(-1);
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        showGrid = false;
 
-        Color transparent = Color.web("0xffffff00", 0);
+    ///////////  Extra/Misc Functions ///////////
 
-        lineColorPicker.setValue(Color.BLACK);
-        fillColorPicker.setValue(transparent);
-
-        lineColorPicker.getStyleClass().add("button");
-        fillColorPicker.getStyleClass().add("button");
-
-        brush = canvas.getGraphicsContext2D();
-        brush.setLineWidth(1);
-        refreshColors();
-
-    }
 }

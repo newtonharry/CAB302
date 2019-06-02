@@ -8,16 +8,21 @@ import java.util.List;
 
 public class EllipseInstruction extends Shape {
 
-
+    /**
+     * Constructs an ellipse shape which takes a list of coordinates.
+     * The list must contain 4 coordinates.
+     * @param coordinates
+     * @throws ShapeException
+     */
     public EllipseInstruction(List<Double> coordinates) throws ShapeException {
         super(InstructionType.ELLIPSE,coordinates);
-        if(coordinates.size() < 4){
+        if(coordinates.size() != 4){
             throw new ShapeException(InstructionType.ELLIPSE + ": Incorrect number of co-ordinates");
         }
     }
 
     /**
-     * Draws an ellipse when editing, parsing .vec files, or exporting
+     * Draws an ellipse to the canvas given the shapes coordinates.
      */
     @Override
     public void draw() {

@@ -8,9 +8,10 @@ import java.util.List;
 public class PlotInstruction extends Shape {
 
     /**
-    * A Child object of the Shape class. Take coordinates which must
-    * have a size greater than 2.
-    * @param coordinates
+     * Constructs a plot shape which takes a list of coordinates.
+     * The list must contain 2 coordinates.
+     * @param coordinates
+     * @throws ShapeException
     */
     public PlotInstruction(List<Double> coordinates) throws ShapeException {
         super(InstructionType.PLOT,coordinates);
@@ -21,7 +22,7 @@ public class PlotInstruction extends Shape {
     }
 
     /**
-     * Inherited draw function which draws a plot to the canvas.
+     * Draws a plot to the canvas given the shapes coordinates
      */
     @Override
     public void draw() {

@@ -9,6 +9,12 @@ import javafx.scene.paint.Color;
 
 public class PolygonInstruction extends Shape {
 
+    /**
+     * Constructs a polygon shape which takes a list of coordinates.
+     * The list must contain 4 or more coordinates.
+     * @param coordinates
+     * @throws ShapeException
+     */
     public PolygonInstruction(List<Double> coordinates) throws ShapeException {
         super(InstructionType.POLYGON, coordinates);
         if (coordinates.size() < 4) {
@@ -17,7 +23,7 @@ public class PolygonInstruction extends Shape {
     }
 
     /**
-     * Draws a polygon when editing, parsing .vec files, or exporting
+     * Draws a polygon to the canvas given the shapes coordinates.
      */
     @Override
     public void draw() {
@@ -40,16 +46,6 @@ public class PolygonInstruction extends Shape {
         brush.setFill(InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
         brush.setStroke(InstructionBufferProcessor.BUFFER_PROCESSOR.lineColor);
 
-
-        /*for (int i = 0; i < this.getCoordinates().size(); i++) {
-            if (i % 2 == 0)
-                xCoords[i / 2] = convertXCoord(this.getCoordinates().get(i));
-            else
-                yCoords[(i - 1) / 2] = convertYCoord(this.getCoordinates().get(i));
-        }*/
-
-
-        //System.out.println();
         brush.setLineWidth(1);
         brush.strokePolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
         brush.fillPolygon(xCoords, yCoords, this.getCoordinates().size() / 2);

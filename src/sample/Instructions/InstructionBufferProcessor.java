@@ -11,12 +11,19 @@ import java.util.List;
 public class InstructionBufferProcessor {
     public static final InstructionBufferProcessor BUFFER_PROCESSOR = new InstructionBufferProcessor();
 
-
+    // List which stores VecInstructions
     private ObservableList<VecInstruction> quedInsturctions = new InstructionList();
 
+    // Reference to canvas in controller
     public Canvas canvas;
+
+    // Reference to brush in controller
     public GraphicsContext brush;
+
+    // Reference to lineColor in controller
     public Color lineColor;
+
+    // Reference to fillColor in controller
     public Color fillColor;
 
     /**
@@ -31,8 +38,6 @@ public class InstructionBufferProcessor {
     /**
      * Removes a VecInstruction of the quedInstructions list
      * if the size is greater than or equal to 1
-     *
-     * @return void
      */
     public void undoInstruction() {
         if (quedInsturctions.size() >= 1) {
@@ -107,7 +112,7 @@ public class InstructionBufferProcessor {
                 ListChangeListener.Change<? extends VecInstruction> instructions) -> {
             while (instructions.next())
                 if (instructions.wasAdded() || instructions.wasRemoved())
-                    drawShapes(quedInsturctions.size());
+                    drawShapes(-1);
         });
     }
 }

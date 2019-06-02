@@ -18,7 +18,7 @@ public class FillInstruction implements VecInstruction {
         if(colour.equals("OFF")){
             return String.format("%s %s", this.type.toString(), colour);
         }else{
-            return String.format("%s #%s", this.type.toString(), colour);
+            return String.format("%s #%s", this.type.toString(), colour.replaceAll("0x","").toUpperCase());
         }
     }
 

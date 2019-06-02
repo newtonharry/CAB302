@@ -15,7 +15,8 @@ public class PenInstruction implements VecInstruction {
 
     @Override
     public String toString() {
-        return String.format("%s %s", this.type.toString(), colour);
+        colour = colour.replaceAll("0x","");
+        return String.format("%s #%s", this.type.toString(), colour.toUpperCase());
     }
 
     @Override

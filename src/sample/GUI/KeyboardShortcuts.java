@@ -10,12 +10,10 @@ public class KeyboardShortcuts {
     }
 
     static public void saveCommand() {
-        System.out.println("Save");
         sample.Main.getController().saveMenuBtnClick();
     }
 
     static public void exportCommand() {
-        System.out.println("Export");
         sample.Main.getController().exportMenuBtnClick();
     }
 

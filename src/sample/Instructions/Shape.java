@@ -19,23 +19,26 @@ public abstract class Shape implements VecInstruction {
     }
 
     /**
-     *
-     * @return List<Double>
+     * Returns the shapes current list of coordinates
+     * @return Returns a list of doubles which contain coordinates
+     * for where the shape needs to be drawn.
      */
     public List<Double> getCoordinates(){
         return this.coordinates;
     }
 
+    /**
+     * Returns the shapes current InstructionType
+     * @return Returns an InstructionType enum
+     */
     public InstructionType getType(){
         return this.type;
     }
 
     /**
-     * Converts a fractional x-coordinate into an integer based on the
-     * current width of the canvas
-     *
+     * Gets the current shapes type and coordinates and converts it into a string
      * @return A string representation of the object, in order for it
-     * to be written in a VEC file format
+     * to be written into a VEC file.
      */
     @Override
     public String toString() {

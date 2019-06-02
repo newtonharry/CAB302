@@ -65,6 +65,7 @@ public class Parser {
             } else if (colourMatcher.find()) {
                 matchColour(colourMatcher);
             } else {
+                InstructionBufferProcessor.BUFFER_PROCESSOR.clearInstructions();
                 throw new ParserException("Could not read VEC file, incorrect syntax");
             }
 
@@ -140,9 +141,6 @@ public class Parser {
 
     public String getFileName(){
         return this.vecFile.getFileName().toString();
-    }
-    public void setFileName(String fileName){
-        this.vecFile = Paths.get(fileName);
     }
 }
 

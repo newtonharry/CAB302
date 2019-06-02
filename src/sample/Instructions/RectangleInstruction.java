@@ -6,16 +6,21 @@ import sample.Exceptions.ShapeException;
 import java.util.List;
 
 public class RectangleInstruction extends Shape {
-
+    /**
+     * Constructs a rectangle shape which takes a list of coordinates.
+     * The list must contain 4 coordinates.
+     * @param coordinates
+     * @throws ShapeException
+     */
     public RectangleInstruction(List<Double> coordinates) throws ShapeException {
         super(InstructionType.RECTANGLE, coordinates);
-        if (coordinates.size() < 4) {
+        if (coordinates.size() != 4) {
             throw new ShapeException(InstructionType.RECTANGLE + ": Incorrect number of co-ordinates");
         }
     }
 
     /**
-     * Draws a rectangle when editing, parsing .vec files, or exporting
+     * Draws a rectangle to the canvas given the shapes coordinates.
      */
     @Override
     public void draw() {
