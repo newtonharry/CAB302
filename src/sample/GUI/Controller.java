@@ -1,11 +1,5 @@
 package sample.GUI;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,21 +7,27 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import sample.Exceptions.FileExistsException;
-import sample.Exceptions.InvalidPathException;
 import sample.Exceptions.ParserException;
 import sample.Exceptions.ShapeException;
 import sample.Instructions.*;
 import sample.Parser.Parser;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
@@ -178,7 +178,7 @@ public class Controller implements Initializable {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
 
-        for (int i = 0; i < polygonPointsX.length; i++) {
+        for (int i = 0; i < polygonPointsCount; i++) {
             coordinates.add((polygonPointsX[i] / canvas.getWidth()) * 1.0);
             coordinates.add((polygonPointsY[i] / canvas.getHeight()) * 1.0);
         }
@@ -821,8 +821,6 @@ public class Controller implements Initializable {
      * @param fileName   The file name for the BMP to be saved (e.g. "CanvasImage.bmp")
      * @param resolution The number of pixels across one edge of the BMP image
      * @throws IOException          Thrown if the BMP data cannot be interpreted when saving
-     * @throws FileExistsException  Thrown if the BMP file to be saved already exists
-     * @throws InvalidPathException Thrown if the path for the BMP file is invalid
      */
 
     private void exportBMP(String fileName, int resolution) throws IOException {

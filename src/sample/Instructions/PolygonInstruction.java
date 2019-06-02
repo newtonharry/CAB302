@@ -5,8 +5,6 @@ import sample.Exceptions.ShapeException;
 
 import java.util.List;
 
-import javafx.scene.paint.Color;
-
 public class PolygonInstruction extends Shape {
 
     /**
@@ -23,24 +21,18 @@ public class PolygonInstruction extends Shape {
     }
 
     /**
-     * Draws a polygon to the canvas given the shapes coordinates.
+     * Draws a polygon to the canvas given the shape's coordinates.
      */
     @Override
     public void draw() {
         GraphicsContext brush = InstructionBufferProcessor.BUFFER_PROCESSOR.brush;
 
         double[] xCoords = new double[this.getCoordinates().size() / 2],
-                yCoords = new double[this.getCoordinates().size() / 2];
+                 yCoords = new double[this.getCoordinates().size() / 2];
 
-
-        int startingPoint = 0;
-        for(int x=0; x<Math.ceil(this.getCoordinates().size()); x++){
-            if(x == Math.ceil(this.getCoordinates().size()/2)) {startingPoint = x;}
-            if(x < Math.ceil(this.getCoordinates().size()/2)){
-                xCoords[x] = convertXCoord(this.getCoordinates().get(x));
-            } else {
-                yCoords[x-startingPoint] = convertYCoord(this.getCoordinates().get(x));
-            }
+        for (int i = 0; i < this.getCoordinates().size(); i += 2) {
+            xCoords[i / 2] = convertXCoord(this.getCoordinates().get(i));
+            yCoords[i / 2] = convertXCoord(this.getCoordinates().get(i + 1));
         }
 
         brush.setFill(InstructionBufferProcessor.BUFFER_PROCESSOR.fillColor);
@@ -49,6 +41,5 @@ public class PolygonInstruction extends Shape {
         brush.setLineWidth(1);
         brush.strokePolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
         brush.fillPolygon(xCoords, yCoords, this.getCoordinates().size() / 2);
-
     }
 }
