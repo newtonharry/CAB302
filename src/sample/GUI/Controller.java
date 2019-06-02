@@ -362,12 +362,11 @@ public class Controller implements Initializable {
         File importVec = fileChooser.showOpenDialog(canvas.getScene().getWindow());
 
         brush.clearRect(0, 0, 700, 700);
-        InstructionBufferProcessor.BUFFER_PROCESSOR.clearInstructions();
         try {
             parser = new Parser(importVec.toString());
             parser.readInstructions();
         } catch (IOException e) {
-            e.printStackTrace();
+            alert("IO Error", e.getMessage(), Alert.AlertType.INFORMATION);
         } catch (ParserException e) {
             alert("Parsing Error", e.getMessage(), Alert.AlertType.INFORMATION);
         } catch (ShapeException e) {
@@ -603,7 +602,7 @@ public class Controller implements Initializable {
         try {
             PlotInst = new PlotInstruction(coordinates);
         } catch (ShapeException e) {
-            e.printStackTrace();
+            alert("Shape Error", e.getMessage(), Alert.AlertType.INFORMATION);
         } finally {
             if (PlotInst != null) {
                 InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(PlotInst);
@@ -646,7 +645,7 @@ public class Controller implements Initializable {
                 try {
                     LineInst = new LineInstruction(coordinates);
                 } catch (ShapeException e) {
-                    e.printStackTrace();
+                    alert("Shape Error", e.getMessage(), Alert.AlertType.INFORMATION);
                 } finally {
                     if (LineInst != null) {
                         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(LineInst);
@@ -687,7 +686,7 @@ public class Controller implements Initializable {
                 try {
                     RectangleInst = new RectangleInstruction(coordinates);
                 } catch (ShapeException e) {
-                    e.printStackTrace();
+                    alert("Shape Error", e.getMessage(), Alert.AlertType.INFORMATION);
                 } finally {
                     if (RectangleInst != null) {
                         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(RectangleInst);
@@ -749,7 +748,7 @@ public class Controller implements Initializable {
                 try {
                     ellipseInst = new EllipseInstruction(coordinates);
                 } catch (ShapeException e) {
-                    e.printStackTrace();
+                    alert("Shape Error", e.getMessage(), Alert.AlertType.INFORMATION);
                 } finally {
                     if (ellipseInst != null) {
                         InstructionBufferProcessor.BUFFER_PROCESSOR.queNewInstruction(ellipseInst); // NEED to translate coordinates to normal number

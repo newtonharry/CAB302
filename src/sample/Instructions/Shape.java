@@ -18,9 +18,9 @@ public abstract class Shape implements VecInstruction {
     Shape(InstructionType type, List<Double> coordinates) throws ShapeException {
         for(Double coordinate: coordinates){
             if(coordinate < 0){
-                throw new ShapeException("Coordinates cannot be negative");
+                throw new ShapeException("Coordinates cannot be negative or go over the canvas edge");
             }else if(coordinate > 1.0){
-                throw new ShapeException("Coordinates cannot be greater than 1");
+                throw new ShapeException("Coordinates cannot be greater than 1.0 or go over canvas edge");
             }
         }
         this.type = type;
@@ -56,7 +56,6 @@ public abstract class Shape implements VecInstruction {
                 this.type.toString(),
                 this.coordinates
                 .stream()
-                //.map(num -> Math.round(num * 10000.0 ) / 10000.0)
                 .map(Object::toString)
                 .collect(Collectors.joining(" ")));
     }

@@ -37,21 +37,26 @@ public class Parser {
     private Pattern colourInstruction = Pattern
             .compile("(?<type>FILL|PEN) #?(?<value>([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})|(?<=FILL )OFF)");
 
-    /*
-    Parser to begin reading/writing from/to a file
+    /**
+     * Creates a parser constructor. The filename must not me empty or blank.
+     * @param file
+     * @throws IOException
      */
     public Parser(String file) throws IOException{
         if (file.isEmpty() || file.isBlank())
             throw new IOException("Filename cannot be blank or empty");
 
         this.vecFile = Paths.get(file);
-
-        if(Files.notExists(vecFile)){
-            throw new IOException("File does not exist");
-        }
     }
 
+    /**
+     * Reads instructions from a vec file into the quedInstructions list.
+     * @throws IOException
+     * @throws ParserException
+     * @throws ShapeException
+     */
     public void readInstructions() throws IOException, ParserException, ShapeException {
+        InstructionBufferProcessor.BUFFER_PROCESSOR.clearInstructions();
 
         List<String> lines = Files.readAllLines(this.vecFile, this.charset); // Lines from VEC file
 
@@ -76,6 +81,10 @@ public class Parser {
         }
     }
 
+    /**
+     * Writes instructions from the quedInstructions list into a VEC file.
+     * @throws IOException
+     */
     public void writeInstructions() throws IOException {
         String instructions = InstructionBufferProcessor.BUFFER_PROCESSOR.getInstructions()
                 .stream()
@@ -85,6 +94,12 @@ public class Parser {
         Files.writeString(this.vecFile, instructions, this.charset); // Overwrites file with new instructions
     }
 
+    /**
+     * Helper method which uses regex to check the syntax of the instructions to see if it is
+     * correct. If so, it adds the instruction to the quedInstructions list
+     * @param shapeMatcher
+     * @throws ShapeException
+     */
     private void matchShape(Matcher shapeMatcher) throws ShapeException {
         instruction = InstructionType.valueOf(shapeMatcher.group("type"));
         List<Double> coordinates; // Used to generate coordinates from instructions
@@ -124,7 +139,12 @@ public class Parser {
         }
     }
 
-    private void matchColour(Matcher colourMatcher) {
+    /**
+     * Helper method which uses regex to check the syntax of the instructions to see if it is
+     * correct. If so, it adds the instruction to the quedInstructions list
+     * @param colourMatcher
+     */
+    private void matchColour(Matcher colourMatcher){
         instruction = InstructionType.valueOf(colourMatcher.group("type"));
         String value = colourMatcher.group("value");
         switch (instruction) {
@@ -142,6 +162,10 @@ public class Parser {
         }
     }
 
+    /**
+     * Gets the current filename of the VEC file the parser is currently using
+     * @return A string containing the filename.
+     */
     public String getFileName(){
         return this.vecFile.getFileName().toString();
     }
