@@ -144,16 +144,9 @@ public class Controller implements Initializable {
         canvasAnchorPane.getChildren().remove(tempDrawingLayer);
         List<Double> coordinates = new ArrayList<>();
 
-        for (Double num : polygonPointsX) {
-            if (num != 0.0) {
-                coordinates.add((num / canvas.getWidth()) * 1.0);
-            }
-        }
-
-        for (Double num : polygonPointsY) {
-            if (num != 0.0) {
-                coordinates.add((num / canvas.getHeight()) * 1.0);
-            }
+        for (int i = 0; i < polygonPointsX.length; i++) {
+                coordinates.add((polygonPointsX[i] / canvas.getWidth()) * 1.0);
+                coordinates.add((polygonPointsY[i] / canvas.getHeight()) * 1.0);
         }
 
         PolygonInstruction PolyInstr;
